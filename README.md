@@ -1,8 +1,9 @@
 # Juniper Math 1
 
 A purpose-built, approximately five-million-parameter mathematical language
-model. **No model is trained yet.** This repository is currently in
-**Phase 0: Foundation and Recovery** — engineering scaffolding only.
+model. **No model is trained yet.** This repository has an implemented,
+mechanically-validated architecture (Phase 1) — not a trained model, and not
+yet mathematical capability of any kind.
 
 ## Research question
 
@@ -17,7 +18,8 @@ model. **No model is trained yet.** This repository is currently in
 
 ```
 Phase 0 — Foundation and Recovery: COMPLETE
-Phase 1 — Architecture:            AUTHORIZED (not started)
+Phase 1 — Architecture:            IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW
+Phase 2 — Tokenizer and Data:      NOT AUTHORIZED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -27,14 +29,29 @@ re-verified. The independent audit initially returned **CHANGES REQUIRED**
 evaluation suite. Every finding was resolved and re-verified before
 approval.
 
-Phase 1 is authorized but **has not begun**: no model, attention, RoPE,
-tokenizer, dataset, or training code exists in this repository.
+Phase 1 implements and mechanically validates the frozen architecture: the
+Transformer itself (exactly 5,004,032 trainable parameters, programmatically
+verified), causal masking, weight tying, loss semantics, full training-state
+checkpointing with bitwise-exact CPU resume, a tiny controlled
+memorization experiment, and benchmarking on the actual RTX 2060/Ryzen 7
+5700G target hardware. **This is not trained mathematical capability** — it
+is proof that the architecture mechanics (forward pass, backward pass,
+gradients, checkpointing, hardware fit) are correct. No tokenizer, real
+dataset, or Cinqic Calculator integration exists yet. Phase 1 has been
+self-reviewed by Claude Sonnet 5 but **not yet independently reviewed** —
+it awaits GPT-5.6 Terra's audit, remediation if necessary, and final
+approval before Phase 2 can begin.
 
 - Canonical machine-readable status: [`config/project.yaml`](config/project.yaml)
-- Independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
-- Remediation record: [`reports/PHASE0_REMEDIATION.md`](reports/PHASE0_REMEDIATION.md)
-- Final approval: [`reports/PHASE0_FINAL_APPROVAL.md`](reports/PHASE0_FINAL_APPROVAL.md)
-- Engineering report: [`reports/PHASE0_REPORT.md`](reports/PHASE0_REPORT.md)
+- Phase 0 independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
+- Phase 0 remediation record: [`reports/PHASE0_REMEDIATION.md`](reports/PHASE0_REMEDIATION.md)
+- Phase 0 final approval: [`reports/PHASE0_FINAL_APPROVAL.md`](reports/PHASE0_FINAL_APPROVAL.md)
+- Phase 0 engineering report: [`reports/PHASE0_REPORT.md`](reports/PHASE0_REPORT.md)
+- Phase 1 engineering report: [`reports/PHASE1_REPORT.md`](reports/PHASE1_REPORT.md)
+- Phase 1 architecture validation: [`reports/PHASE1_ARCHITECTURE_VALIDATION.md`](reports/PHASE1_ARCHITECTURE_VALIDATION.md)
+- Phase 1 benchmarks: [`reports/PHASE1_BENCHMARKS.md`](reports/PHASE1_BENCHMARKS.md)
+- Phase 1 self-review: [`reports/PHASE1_SELF_REVIEW.md`](reports/PHASE1_SELF_REVIEW.md)
+- Phase 1 Terra handoff package: [`reports/PHASE1_TERRA_HANDOFF.md`](reports/PHASE1_TERRA_HANDOFF.md)
 
 ## Principles
 
@@ -47,13 +64,19 @@ tokenizer, dataset, or training code exists in this repository.
 - **Phase discipline.** Each phase's scope is frozen and reviewed before the
   next begins — see [`docs/adr/`](docs/adr/).
 
-## Architecture target (frozen Phase 0 design intent — not yet implemented)
+## Architecture (frozen design, implemented in Phase 1)
 
 Decoder-only causal Transformer, `d_model=256`, 5 layers, 4 query/KV heads
 (head_dim 64), SwiGLU FFN (`d_ff=688`), RMSNorm Pre-Norm, RoPE (theta
-10,000), no biases, vocab 4,096, weight-tied, 1,024-token context,
-~5,004,032 parameters. Full details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md),
-canonical config: [`config/architecture.yaml`](config/architecture.yaml).
+10,000), no biases, vocab 4,096, weight-tied, 1,024-token context, exactly
+5,004,032 trainable parameters (programmatically verified, not estimated).
+Full details: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), canonical
+config: [`config/architecture.yaml`](config/architecture.yaml),
+implementation: [`src/juniper_math/model.py`](src/juniper_math/model.py).
+
+```bash
+python -m juniper_math model   # construct, verify param count, synthetic forward pass
+```
 
 ## Target hardware
 
@@ -70,9 +93,9 @@ evals/        Frozen evaluation suites
 manifests/    Source, license, and artifact provenance/integrity metadata
 scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
-tests/        Automated test suite (128 tests)
+tests/        Automated test suite (202 tests)
 tools/        (reserved) deterministic math tool contracts — Phase 3
-training/     (reserved) training entry points — Phase 1+
+training/     (reserved) real training entry points — Phase 6/7
 experiments/  Experiment metadata
 checkpoints/  Checkpoint metadata (binaries stored externally — see policy)
 releases/     Release metadata
@@ -118,12 +141,14 @@ python -m juniper_math evals verify         # recompute deterministic answers on
 python -m juniper_math hash verify          # verify frozen artifact hashes
 python -m juniper_math manifests-validate   # source/license manifests + dependency cross-check
 python -m juniper_math deps-check           # pyproject deps vs licenses.yaml
+python -m juniper_math model                # construct frozen architecture, verify param count
+python -m juniper_math checkpoint inspect <path>  # safe checkpoint metadata inspection
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). Commands for later
-phases (`model`, `train`, `tokenizer`, `dataset`, `tool-test`, ...) exist as
-honest placeholders that report "not implemented until Phase N" — they
-never fake success.
+phases (`train`, `tokenizer`, `dataset`, `evaluate`, `infer`, `tool-test`)
+exist as honest placeholders that report "not implemented until Phase N" —
+they never fake success.
 
 ## Testing
 
@@ -162,8 +187,8 @@ actually exercised — see
 | Phase | Scope | Status |
 |---|---|---|
 | 0 | Foundation and Recovery | **COMPLETE** |
-| 1 | Architecture — Transformer implementation and training loop | **AUTHORIZED** (not started) |
-| 2 | Tokenizer training | Not started |
+| 1 | Architecture — Transformer implementation, validation, benchmarking | **IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW** |
+| 2 | Tokenizer and data | **NOT AUTHORIZED** |
 | 3 | Deterministic tool integration ("Cinqic Calculator") | Not started |
 | 4 | Dataset construction | Not started |
 

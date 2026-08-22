@@ -1,0 +1,88 @@
+{
+  "environment": {
+    "python_version": "3.12.3",
+    "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+    "torch_version": "2.13.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "gpu_name": "NVIDIA GeForce RTX 2060",
+    "git_commit": "f9e3659efe37183bae60ffafc2762b3d342cd047",
+    "juniper_math_version": "0.1.0",
+    "device_under_test": "cuda"
+  },
+  "methodology": {
+    "warmup_iters": 5,
+    "measured_iters": 20,
+    "cuda_sync_policy": "torch.cuda.synchronize() before timing start and after timing end",
+    "vram_source": "torch.cuda.max_memory_allocated/reserved (peak reset per configuration)",
+    "ram_source": "/proc/self/status VmRSS (process RSS, not total system RAM)"
+  },
+  "model": {
+    "trainable_parameters": 5004032,
+    "parameter_memory_mb_fp32": 19.0888671875
+  },
+  "checkpoint_sizes": {
+    "model_state_only_mb": 19.106921195983887,
+    "full_training_checkpoint_mb": 57.3353910446167,
+    "note": "full checkpoint is larger because it also serializes AdamW optimizer state (exp_avg, exp_avg_sq per parameter \u2014 roughly 2x parameter memory) plus RNG state and metadata, not just model weights."
+  },
+  "host_ram_process_rss_mb": 1200.0625,
+  "training": [
+    {
+      "seq_len": 128,
+      "batch_size": 4,
+      "iters": 20,
+      "elapsed_seconds": 0.23714810000092257,
+      "tokens_per_second": 43179.76825435314,
+      "peak_vram_allocated_mb": 159.33642578125,
+      "peak_vram_reserved_mb": 188.0
+    },
+    {
+      "seq_len": 512,
+      "batch_size": 4,
+      "iters": 20,
+      "elapsed_seconds": 0.5988363279975601,
+      "tokens_per_second": 68399.32396380416,
+      "peak_vram_allocated_mb": 417.66650390625,
+      "peak_vram_reserved_mb": 476.0
+    },
+    {
+      "seq_len": 1024,
+      "batch_size": 4,
+      "iters": 20,
+      "elapsed_seconds": 1.279409990998829,
+      "tokens_per_second": 64029.51405440055,
+      "peak_vram_allocated_mb": 757.56494140625,
+      "peak_vram_reserved_mb": 840.0
+    }
+  ],
+  "inference": [
+    {
+      "seq_len": 128,
+      "batch_size": 1,
+      "iters": 20,
+      "elapsed_seconds": 0.05553496300126426,
+      "forward_tokens_per_second": 46097.08662166069,
+      "peak_vram_allocated_mb": 37.96484375,
+      "peak_vram_reserved_mb": 840.0
+    },
+    {
+      "seq_len": 512,
+      "batch_size": 1,
+      "iters": 20,
+      "elapsed_seconds": 0.060797173999162624,
+      "forward_tokens_per_second": 168428.88125262267,
+      "peak_vram_allocated_mb": 44.3427734375,
+      "peak_vram_reserved_mb": 840.0
+    },
+    {
+      "seq_len": 1024,
+      "batch_size": 1,
+      "iters": 20,
+      "elapsed_seconds": 0.10218256100051804,
+      "forward_tokens_per_second": 200425.58925388622,
+      "peak_vram_allocated_mb": 52.8466796875,
+      "peak_vram_reserved_mb": 840.0
+    }
+  ]
+}

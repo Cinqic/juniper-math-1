@@ -1,0 +1,76 @@
+{
+  "environment": {
+    "python_version": "3.12.3",
+    "platform": "Linux-7.0.0-30-generic-x86_64-with-glibc2.39",
+    "torch_version": "2.13.0+cu130",
+    "cuda_available": true,
+    "cuda_version": "13.0",
+    "gpu_name": null,
+    "git_commit": "f9e3659efe37183bae60ffafc2762b3d342cd047",
+    "juniper_math_version": "0.1.0",
+    "device_under_test": "cpu"
+  },
+  "methodology": {
+    "warmup_iters": 5,
+    "measured_iters": 20,
+    "cuda_sync_policy": "torch.cuda.synchronize() before timing start and after timing end",
+    "vram_source": "torch.cuda.max_memory_allocated/reserved (peak reset per configuration)",
+    "ram_source": "/proc/self/status VmRSS (process RSS, not total system RAM)"
+  },
+  "model": {
+    "trainable_parameters": 5004032,
+    "parameter_memory_mb_fp32": 19.0888671875
+  },
+  "checkpoint_sizes": {
+    "model_state_only_mb": 19.106310844421387,
+    "full_training_checkpoint_mb": 57.3333158493042,
+    "note": "full checkpoint is larger because it also serializes AdamW optimizer state (exp_avg, exp_avg_sq per parameter \u2014 roughly 2x parameter memory) plus RNG state and metadata, not just model weights."
+  },
+  "host_ram_process_rss_mb": 1357.44921875,
+  "training": [
+    {
+      "seq_len": 128,
+      "batch_size": 4,
+      "iters": 20,
+      "elapsed_seconds": 1.394023910001124,
+      "tokens_per_second": 7345.641582282289
+    },
+    {
+      "seq_len": 512,
+      "batch_size": 4,
+      "iters": 20,
+      "elapsed_seconds": 5.304985323000437,
+      "tokens_per_second": 7721.0392689330765
+    },
+    {
+      "seq_len": 1024,
+      "batch_size": 4,
+      "iters": 20,
+      "elapsed_seconds": 11.8621445280005,
+      "tokens_per_second": 6906.002519749147
+    }
+  ],
+  "inference": [
+    {
+      "seq_len": 128,
+      "batch_size": 1,
+      "iters": 20,
+      "elapsed_seconds": 0.12009142999886535,
+      "forward_tokens_per_second": 21317.091486246667
+    },
+    {
+      "seq_len": 512,
+      "batch_size": 1,
+      "iters": 20,
+      "elapsed_seconds": 0.3778463210001064,
+      "forward_tokens_per_second": 27100.965209602018
+    },
+    {
+      "seq_len": 1024,
+      "batch_size": 1,
+      "iters": 20,
+      "elapsed_seconds": 0.9001199890008138,
+      "forward_tokens_per_second": 22752.522163999496
+    }
+  ]
+}

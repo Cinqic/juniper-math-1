@@ -22,9 +22,9 @@ parameter_target: 5004032
 architecture_version: "0.1.0"
 architecture_config: "config/architecture.yaml"
 
-current_phase: 0
-phase_name: "Foundation and Recovery"
-phase_status: "COMPLETE"
+current_phase: 1
+phase_name: "Architecture"
+phase_status: "AWAITING_GPT_5_6_TERRA_REVIEW"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -36,21 +36,26 @@ review_chain:
   - role: "Primary Phase 0 Engineer"
     actor: "Claude Sonnet 5"
     stage: "implementation, testing, recovery validation, documentation, self-review"
-  - role: "Independent Reviewer"
+  - role: "Independent Reviewer (Phase 0)"
     actor: "Claude Opus 5"
     stage: "independent technical review"
-  - role: "Final Human Reviewer"
+  - role: "Final Human Reviewer (Phase 0)"
     actor: "Cinqic"
     stage: "final inspection and phase authorization"
-  - role: "Final Remediation and Verification"
+  - role: "Final Remediation and Verification (Phase 0)"
     actor: "Claude Opus 5"
     stage: "remediation of review findings, full regression, final approval"
+  - role: "Primary Phase 1 Engineer"
+    actor: "Claude Sonnet 5"
+    stage: "implementation, testing, benchmarking, documentation, self-review"
+  - role: "Independent Reviewer / Auditor / Remediator / Approval Authority (Phase 1)"
+    actor: "GPT-5.6 Terra"
+    stage: "independent review, audit, remediation if necessary, final approval and tagging"
 
-# Phase 0 approval record. The independent review initially returned
-# CHANGES REQUIRED (1 HIGH, 4 MEDIUM, 6 LOW); those findings were remediated
-# and re-verified. See reports/OPUS5_PHASE0_REVIEW.md,
-# reports/PHASE0_REMEDIATION.md, and reports/PHASE0_FINAL_APPROVAL.md.
-phase_approval:
+# Phase 0 final approval record — frozen, not re-litigated by Phase 1.
+# See reports/OPUS5_PHASE0_REVIEW.md, reports/PHASE0_REMEDIATION.md,
+# reports/PHASE0_FINAL_APPROVAL.md.
+phase_0_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
   opus_5_independent_review: "changes_required_then_approved_after_remediation"
@@ -60,12 +65,25 @@ phase_approval:
   review_candidate_tag: "phase-0-review-candidate"
   final_tag: "phase-0-foundation"
 
+# Phase 1 approval record — in progress. Sonnet 5 engineering is complete;
+# Terra has not yet reviewed. See reports/PHASE1_REPORT.md,
+# reports/PHASE1_SELF_REVIEW.md, reports/PHASE1_TERRA_HANDOFF.md.
+phase_approval:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "pending"
+  terra_final_approval: "pending"
+  review_candidate_tag: "phase-1-review-candidate"
+  final_tag: "phase-1-architecture"
+  starting_foundation_commit: "f9e3659efe37183bae60ffafc2762b3d342cd047"
+  starting_foundation_tag: "phase-0-foundation"
+
 next_phase:
-  number: 1
-  name: "Architecture"
-  status: "AUTHORIZED"
+  number: 2
+  name: "Tokenizer and Data"
+  status: "NOT_AUTHORIZED"
   started: false
   note: >
-    Phase 1 is authorized but has not begun. No model, attention, RoPE,
-    RMSNorm, SwiGLU, tokenizer, or training implementation exists in this
-    repository.
+    Phase 2 remains blocked until Phase 1 receives GPT-5.6 Terra's
+    independent review, remediation if necessary, and final approval
+    (final tag phase-1-architecture).

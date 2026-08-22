@@ -5,11 +5,11 @@ Usage: `python -m juniper_math <command> ...` or the installed
 style and use it consistently; both resolve here).
 
 Commands are split into two honest categories:
-  - Fully functional now (Phase 0): status, validate-env, validate-config,
+  - Fully functional now (Phase 0/1): status, validate-env, validate-config,
     seed-test, evals validate, evals verify, hash verify,
-    manifests-validate, deps-check.
-  - Not yet implemented (later phases): tokenizer, dataset, model, train,
-    evaluate, infer, tool-test, checkpoint. These print an explicit
+    manifests-validate, deps-check, model, checkpoint inspect.
+  - Not yet implemented (later phases): tokenizer, dataset, train,
+    evaluate, infer, tool-test. These print an explicit
     "not implemented until Phase N" message and exit non-zero — they never
     silently pretend to succeed.
 """
@@ -37,17 +37,26 @@ from juniper_math.manifests import (
 from juniper_math.metadata import load_project_metadata
 from juniper_math.seed import DEFAULT_PROJECT_SEED, set_global_seed
 
+_MODEL_IMPORT_ERROR: Exception | None
+try:
+    import torch
+
+    from juniper_math.checkpoint import CheckpointError, inspect_checkpoint_metadata
+    from juniper_math.model import JuniperModelError, build_model, count_trainable_parameters
+
+    _MODEL_IMPORT_ERROR = None
+except ImportError as exc:  # pragma: no cover - exercised only without torch installed
+    _MODEL_IMPORT_ERROR = exc
+
 logger = get_logger(__name__)
 
 _NOT_IMPLEMENTED = {
     "tokenizer": 2,
     "dataset": 4,
-    "model": 1,
     "train": 1,
     "evaluate": 1,
     "infer": 1,
     "tool-test": 3,
-    "checkpoint": 1,
 }
 
 
@@ -251,6 +260,88 @@ def _cmd_deps_check(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_model(args: argparse.Namespace) -> int:
+    if _MODEL_IMPORT_ERROR is not None:
+        print(
+            f"FAIL: model construction requires PyTorch, which is not importable: {_MODEL_IMPORT_ERROR}",
+            file=sys.stderr,
+        )
+        return 1
+    try:
+        config = load_architecture_config()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    try:
+        model = build_model(config)
+    except JuniperModelError as exc:
+        print(f"FAIL: model construction failed: {exc}", file=sys.stderr)
+        return 1
+
+    device_str = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
+    try:
+        device = torch.device(device_str)
+        model = model.to(device)
+    except (RuntimeError, ValueError) as exc:
+        print(f"FAIL: could not move model to device {device_str!r}: {exc}", file=sys.stderr)
+        return 1
+
+    actual = count_trainable_parameters(model)
+    print(f"Architecture:        {config.architecture_class} v{config.architecture_version}")
+    print(
+        f"d_model={config.d_model} n_layers={config.n_layers} "
+        f"n_heads={config.n_query_heads} d_ff={config.d_ff} vocab={config.vocab_size} "
+        f"context={config.max_context_length}"
+    )
+    print(f"Trainable parameters: {actual:,}")
+    print(f"Parameter target:     {config.parameter_target:,}")
+    print(f"Device:               {device}")
+
+    if actual != config.parameter_target:
+        print(
+            f"FAIL: parameter count mismatch (expected {config.parameter_target:,}, got {actual:,})",
+            file=sys.stderr,
+        )
+        return 1
+    print("PASS: parameter count matches frozen target exactly")
+
+    if args.forward_check:
+        try:
+            model.eval()
+            with torch.no_grad():
+                sample = torch.randint(0, config.vocab_size, (1, 8), device=device)
+                out = model(sample)
+            finite = bool(torch.isfinite(out.logits).all())
+            print(
+                f"Synthetic forward pass: logits shape={tuple(out.logits.shape)}, "
+                f"dtype={out.logits.dtype}, finite={finite}"
+            )
+            if not finite:
+                print("FAIL: forward pass produced non-finite logits", file=sys.stderr)
+                return 1
+            print("PASS: synthetic forward pass succeeded")
+        except JuniperModelError as exc:
+            print(f"FAIL: synthetic forward pass raised: {exc}", file=sys.stderr)
+            return 1
+
+    return 0
+
+
+def _cmd_checkpoint_inspect(args: argparse.Namespace) -> int:
+    if _MODEL_IMPORT_ERROR is not None:
+        print(f"FAIL: checkpoint inspection requires PyTorch: {_MODEL_IMPORT_ERROR}", file=sys.stderr)
+        return 1
+    try:
+        meta = inspect_checkpoint_metadata(Path(args.path))
+    except CheckpointError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    for key, value in meta.items():
+        print(f"{key}: {value}")
+    return 0
+
+
 def _make_not_implemented(command: str, phase: int):
     def _handler(_args: argparse.Namespace) -> int:
         print(
@@ -309,6 +400,29 @@ def build_parser() -> argparse.ArgumentParser:
         "deps-check",
         help="Cross-check pyproject direct dependencies against manifests/licenses.yaml",
     ).set_defaults(func=_cmd_deps_check)
+
+    model_parser = subparsers.add_parser(
+        "model", help="Construct the frozen architecture and verify its parameter count"
+    )
+    model_parser.add_argument("--device", default=None, help="cpu or cuda (default: auto-detect)")
+    model_parser.add_argument(
+        "--forward-check",
+        action="store_true",
+        default=True,
+        help="run a harmless synthetic forward pass (default: on)",
+    )
+    model_parser.add_argument(
+        "--no-forward-check", dest="forward_check", action="store_false", help="skip the forward pass check"
+    )
+    model_parser.set_defaults(func=_cmd_model)
+
+    checkpoint_parser = subparsers.add_parser("checkpoint", help="Checkpoint operations")
+    checkpoint_sub = checkpoint_parser.add_subparsers(dest="checkpoint_command", required=True)
+    checkpoint_inspect_parser = checkpoint_sub.add_parser(
+        "inspect", help="Safely report checkpoint metadata without restoring state"
+    )
+    checkpoint_inspect_parser.add_argument("path")
+    checkpoint_inspect_parser.set_defaults(func=_cmd_checkpoint_inspect)
 
     for command, phase in _NOT_IMPLEMENTED.items():
         sub = subparsers.add_parser(command, help=f"(Phase {phase}) not yet implemented")

@@ -57,5 +57,11 @@ jobs:
       - name: Verify artifact hashes
         run: python -m juniper_math hash verify
 
+      - name: Construct model and verify exact parameter count (CPU)
+        run: python -m juniper_math model --device cpu
+
+      - name: Tiny controlled overfit (CPU, architecture validation only)
+        run: python scripts/tiny_overfit.py --device cpu --steps 150
+
       - name: Environment report (informational; CUDA WARNING expected on CI)
         run: python -m juniper_math validate-env || true

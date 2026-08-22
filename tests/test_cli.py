@@ -9,7 +9,7 @@ def test_status_exits_zero(capsys):
     assert main(["status"]) == 0
     out = capsys.readouterr().out
     assert "Juniper Math 1" in out
-    assert "COMPLETE" in out
+    assert "AWAITING_GPT_5_6_TERRA_REVIEW" in out
 
 
 def test_validate_config_exits_zero(capsys):
@@ -53,11 +53,61 @@ def test_hash_file_missing_returns_nonzero(capsys, tmp_path):
 
 
 def test_unimplemented_commands_are_honest(capsys):
-    for command in ["model", "train", "evaluate", "infer", "tokenizer", "tool-test", "dataset", "checkpoint"]:
+    for command in ["train", "evaluate", "infer", "tokenizer", "tool-test", "dataset"]:
         exit_code = main([command])
         assert exit_code == 2, f"{command} should exit 2"
         err = capsys.readouterr().err
         assert "not implemented until Phase" in err
+
+
+def test_model_command_exits_zero_and_verifies_param_count(capsys):
+    assert main(["model", "--device", "cpu"]) == 0
+    out = capsys.readouterr().out
+    assert "5,004,032" in out
+    assert "PASS: parameter count matches frozen target exactly" in out
+    assert "PASS: synthetic forward pass succeeded" in out
+
+
+def test_model_command_no_forward_check(capsys):
+    assert main(["model", "--device", "cpu", "--no-forward-check"]) == 0
+    out = capsys.readouterr().out
+    assert "synthetic forward pass" not in out
+
+
+def test_checkpoint_inspect_missing_file_returns_nonzero(capsys, tmp_path):
+    exit_code = main(["checkpoint", "inspect", str(tmp_path / "missing.pt")])
+    assert exit_code == 1
+    assert "FAIL" in capsys.readouterr().err
+
+
+def test_checkpoint_inspect_reports_metadata(capsys, tmp_path):
+
+    from juniper_math.architecture import load_architecture_config
+    from juniper_math.checkpoint import build_checkpoint, save_checkpoint_atomic
+    from juniper_math.model import build_model
+
+    config = load_architecture_config()
+    model = build_model(config)
+    ckpt = build_checkpoint(
+        architecture=config,
+        model=model,
+        optimizer=None,
+        scheduler=None,
+        scaler=None,
+        step=3,
+        tokens_seen=99,
+        training_config={},
+        data_stream_position={},
+        seed=1,
+        git_commit="abc123",
+    )
+    path = tmp_path / "ckpt.pt"
+    save_checkpoint_atomic(ckpt, path)
+
+    assert main(["checkpoint", "inspect", str(path)]) == 0
+    out = capsys.readouterr().out
+    assert "step: 3" in out
+    assert "tokens_seen: 99" in out
 
 
 def test_unknown_command_rejected():
