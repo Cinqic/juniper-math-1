@@ -660,8 +660,8 @@ were remediated. Per-finding fixes, tests, and verification are tabulated in
 | | |
 |---|---|
 | Original candidate (failed) | `b39e60031e85822a293ca60b5676ce5b7286a66f`, tag `phase-0-review-candidate` |
-| Remediation commit | `REMEDIATION_SHA_PLACEHOLDER` |
-| Final approved commit | `FINAL_SHA_PLACEHOLDER`, tag `phase-0-foundation` |
+| Remediation commit | `39132dedfb54e6a7ea99097188ea8743a3bc5156` |
+| Final approved commit | the commit tagged `phase-0-foundation` (adds the final approval report on top of the remediation commit) |
 
 Original history is intact: the candidate commit was never amended, reset, or
 force-pushed. Remediation is additive.
