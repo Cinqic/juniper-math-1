@@ -1,0 +1,97 @@
+{
+  "tokenizer_version": "juniper-math-tokenizer-v1",
+  "tokenizer_type": "bpe",
+  "library": "sentencepiece",
+  "library_version": "0.2.2",
+  "vocab_size": 4096,
+  "training": {
+    "seed": 20260201,
+    "corpus_total_lines": 200000,
+    "model_type": "bpe",
+    "character_coverage": 0.9995,
+    "split_digits": true,
+    "byte_fallback": true,
+    "normalization_rule_name": "identity",
+    "add_dummy_prefix": false,
+    "remove_extra_whitespace": false,
+    "unk_id": 0,
+    "bos_id": 1,
+    "eos_id": 2,
+    "pad_id": 3
+  },
+  "digit_symbols": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9"
+  ],
+  "special_tokens": [
+    {
+      "token": "<tool_call>",
+      "purpose": "opens a tool invocation",
+      "user_visible": false,
+      "generated_by_model": true,
+      "runtime_only": true
+    },
+    {
+      "token": "<tool_result>",
+      "purpose": "wraps a tool's returned result",
+      "user_visible": false,
+      "generated_by_model": false,
+      "runtime_only": true
+    },
+    {
+      "token": "<final>",
+      "purpose": "marks the model's final answer",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "<unsupported>",
+      "purpose": "marks a request the model declines as out of scope",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "<error>",
+      "purpose": "marks a runtime/tool error condition",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": true
+    }
+  ],
+  "core_tokens": [
+    {
+      "token": "<unk>",
+      "purpose": "unknown-token fallback (byte fallback makes this effectively unused on valid UTF-8 text)"
+    },
+    {
+      "token": "<s>",
+      "purpose": "beginning-of-sequence marker"
+    },
+    {
+      "token": "</s>",
+      "purpose": "end-of-sequence marker"
+    },
+    {
+      "token": "<pad>",
+      "purpose": "padding for batched sequences"
+    }
+  ],
+  "unicode_normalization_policy": "Conservative / identity. No lowercasing, no accent stripping, no rewriting of mathematical operators or Unicode math symbols. SentencePiece's normalization_rule_name is set to \"identity\" (no NFKC folding), so distinct Unicode math characters (×, ÷, √, π, ≤, …) are preserved exactly and are never silently collapsed into ASCII lookalikes. See reports/PHASE2_TOKENIZER_VALIDATION.md for round-trip evidence.\n",
+  "output": {
+    "model_dir": "releases/tokenizer",
+    "model_file": "juniper-math-tokenizer-v1.model",
+    "vocab_file": "juniper-math-tokenizer-v1.vocab",
+    "special_token_map_file": "juniper-math-tokenizer-v1.special_tokens.json",
+    "config_snapshot_file": "juniper-math-tokenizer-v1.config_snapshot.json"
+  }
+}

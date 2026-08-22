@@ -19,6 +19,7 @@ dependencies = [
     "torch>=2.2,<3.0",
     "pyyaml>=6.0,<7.0",
     "numpy>=1.26,<3.0",
+    "sentencepiece>=0.2.0,<0.3.0",
 ]
 
 [project.optional-dependencies]
@@ -27,6 +28,11 @@ dev = [
     "ruff>=0.6,<1.0",
     "mypy>=1.10,<2.0",
     "types-PyYAML>=6.0,<7.0",
+    # Phase 2 general-purpose tokenizer baseline (Sec. 55-56 of the Phase 2
+    # instructions). Informational comparison only — not used at runtime by
+    # any project code path, so it lives in dev, not the runtime dependency
+    # set. See scripts/tokenizer_benchmark.py.
+    "tiktoken>=0.7,<1.0",
 ]
 
 [project.scripts]

@@ -1,0 +1,177 @@
+{
+  "tokenizer_version": "juniper-math-tokenizer-v1",
+  "vocab_size": 4096,
+  "tokens": [
+    {
+      "token": "<unk>",
+      "id": 0,
+      "category": "core",
+      "purpose": "unknown-token fallback",
+      "user_visible": false,
+      "generated_by_model": false,
+      "runtime_only": true
+    },
+    {
+      "token": "<s>",
+      "id": 1,
+      "category": "core",
+      "purpose": "beginning-of-sequence marker",
+      "user_visible": false,
+      "generated_by_model": false,
+      "runtime_only": true
+    },
+    {
+      "token": "</s>",
+      "id": 2,
+      "category": "core",
+      "purpose": "end-of-sequence marker",
+      "user_visible": false,
+      "generated_by_model": false,
+      "runtime_only": true
+    },
+    {
+      "token": "<pad>",
+      "id": 3,
+      "category": "core",
+      "purpose": "padding for batched sequences",
+      "user_visible": false,
+      "generated_by_model": false,
+      "runtime_only": true
+    },
+    {
+      "token": "<tool_call>",
+      "id": 4,
+      "category": "control",
+      "purpose": "opens a tool invocation",
+      "user_visible": false,
+      "generated_by_model": true,
+      "runtime_only": true
+    },
+    {
+      "token": "<tool_result>",
+      "id": 5,
+      "category": "control",
+      "purpose": "wraps a tool's returned result",
+      "user_visible": false,
+      "generated_by_model": false,
+      "runtime_only": true
+    },
+    {
+      "token": "<final>",
+      "id": 6,
+      "category": "control",
+      "purpose": "marks the model's final answer",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "<unsupported>",
+      "id": 7,
+      "category": "control",
+      "purpose": "marks a request the model declines as out of scope",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "<error>",
+      "id": 8,
+      "category": "control",
+      "purpose": "marks a runtime/tool error condition",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": true
+    },
+    {
+      "token": "0",
+      "id": 9,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "1",
+      "id": 10,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "2",
+      "id": 11,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "3",
+      "id": 12,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "4",
+      "id": 13,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "5",
+      "id": 14,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "6",
+      "id": 15,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "7",
+      "id": 16,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "8",
+      "id": 17,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    },
+    {
+      "token": "9",
+      "id": 18,
+      "category": "digit",
+      "purpose": "atomic decimal digit",
+      "user_visible": true,
+      "generated_by_model": true,
+      "runtime_only": false
+    }
+  ]
+}

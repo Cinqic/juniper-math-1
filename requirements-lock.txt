@@ -36,11 +36,14 @@
 #   # then re-add this header, re-run the full Phase 0 gate, and update
 #   # manifests/licenses.yaml + manifests/artifacts.yaml as needed.
 
+certifi==2026.7.22
+charset-normalizer==3.5.1
 cuda-bindings==13.3.1
 cuda-pathfinder==1.6.1
 cuda-toolkit==13.0.3.0
 filelock==3.32.3
 fsspec==2026.7.0
+idna==3.19
 iniconfig==2.3.0
 Jinja2==3.1.6
 librt==0.15.0
@@ -71,10 +74,15 @@ pluggy==1.6.0
 Pygments==2.21.0
 pytest==8.4.2
 PyYAML==6.0.3
+regex==2026.7.19
+requests==2.34.2
 ruff==0.16.4
+sentencepiece==0.2.2
 setuptools==84.0.0
 sympy==1.14.0
+tiktoken==0.14.0
 torch==2.13.0
 triton==3.7.1
 types-PyYAML==6.0.12.20260815
 typing_extensions==4.16.0
+urllib3==2.7.0

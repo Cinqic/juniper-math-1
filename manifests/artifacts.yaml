@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "0c2cd5d7492e3c8ba0967ffb0fd909a2e1149ddb149b8638c2c6a2dc5e7b1f02"
+    sha256: "977c756f572652a44ed4b2cad6a6d17aa74ca4b96f4dbc3a56db2d071066a85f"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -22,15 +22,40 @@ artifacts:
 
   - artifact_id: "sources_manifest"
     path: "manifests/sources.yaml"
-    sha256: "3f2cbc883776f347a29a652cf52d1874ab3de0aa9a6d6f89feec99565d12d29d"
+    sha256: "82f0aa26a8b86ab3a6589974884e6fe195a10ab6ad2a32b98e770ef143b1b0e0"
     description: "Source provenance manifest."
 
   - artifact_id: "dependency_lock"
     path: "requirements-lock.txt"
-    sha256: "4be89c45f8c26963decc4833951dbba44c2220b4be26ee654cfd0e7f6199d341"
-    description: "Exact validated Phase 0 Python environment lock."
+    sha256: "92d005231cc711c567c1d8b9297f1421d044319d21bf92787ebb3c42673c311d"
+    description: "Exact validated Python environment lock."
 
   - artifact_id: "licenses_manifest"
     path: "manifests/licenses.yaml"
-    sha256: "ad6736459ff574c12f2efca9fb053cad1a92754354dcc8ccc89be218bf5a4cf3"
+    sha256: "75b674d436810c91400b9859be2bdf51dec58c156beba119c326cc2164bb03b9"
     description: "License manifest."
+
+  - artifact_id: "tokenizer_config"
+    path: "config/tokenizer.yaml"
+    sha256: "5b426b046db53d8b8dc54e7f34a651d44d8a00c4cb74de53a4bf95988f35cdf4"
+    description: "Canonical Phase 2 tokenizer training configuration (juniper-math-tokenizer-v1)."
+
+  - artifact_id: "tokenizer_model"
+    path: "releases/tokenizer/juniper-math-tokenizer-v1.model"
+    sha256: "a855b35bffbbd4b934c25f82afc7cad733f83a66f614e4fea40c112f3072fd97"
+    description: "Frozen juniper-math-tokenizer-v1 SentencePiece BPE model (4096 pieces, byte fallback)."
+
+  - artifact_id: "tokenizer_vocab"
+    path: "releases/tokenizer/juniper-math-tokenizer-v1.vocab"
+    sha256: "0fe994195142e04974ec6ce75807a53e7f85bbab468b0825873dd8df0e26e3dc"
+    description: "Human-readable vocabulary listing for juniper-math-tokenizer-v1."
+
+  - artifact_id: "tokenizer_special_token_map"
+    path: "releases/tokenizer/juniper-math-tokenizer-v1.special_tokens.json"
+    sha256: "e00cdb409a57546b191ccad198d052d4224f5cdca0f56179ee6815a8a1abba67"
+    description: "Machine-readable special/control/digit token ID map for juniper-math-tokenizer-v1."
+
+  - artifact_id: "tokenizer_config_snapshot"
+    path: "releases/tokenizer/juniper-math-tokenizer-v1.config_snapshot.json"
+    sha256: "941d3406f74e773557a6eb9ccb2700fe613cf8479d5226b47acf819aa77ecac4"
+    description: "JSON snapshot of the exact tokenizer.yaml used to train juniper-math-tokenizer-v1."

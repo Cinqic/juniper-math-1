@@ -2,8 +2,9 @@
 
 A purpose-built, approximately five-million-parameter mathematical language
 model. **No model is trained yet.** This repository has an implemented,
-mechanically-validated architecture (Phase 1) — not a trained model, and not
-yet mathematical capability of any kind.
+mechanically-validated architecture (Phase 1) and a trained, validated
+math-specific tokenizer (Phase 2, awaiting independent review) — not a
+trained model, and not yet mathematical capability of any kind.
 
 ## Research question
 
@@ -17,9 +18,10 @@ yet mathematical capability of any kind.
 ## Current status
 
 ```
-Phase 0 — Foundation and Recovery: COMPLETE
-Phase 1 — Architecture:            COMPLETE
-Phase 2 — Math Tokenizer:          AUTHORIZED — NOT STARTED
+Phase 0 — Foundation and Recovery:          COMPLETE
+Phase 1 — Architecture:                     COMPLETE
+Phase 2 — Math Tokenizer:                   IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW
+Phase 3 — Cinqic Calculator Tool Runtime:   NOT AUTHORIZED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -36,10 +38,23 @@ checkpointing with bitwise-exact CPU resume, a tiny controlled
 memorization experiment, and benchmarking on the actual RTX 2060/Ryzen 7
 5700G target hardware. **This is not trained mathematical capability** — it
 is proof that the architecture mechanics (forward pass, backward pass,
-gradients, checkpointing, hardware fit) are correct. No tokenizer, real
-dataset, or Cinqic Calculator integration exists yet. Phase 1 was
-independently audited and remediated by GPT-5.6 Terra. Phase 2 is authorized
-but has not begun.
+gradients, checkpointing, hardware fit) are correct. Phase 1 was
+independently audited and remediated by GPT-5.6 Terra.
+
+Phase 2 trains and validates the canonical Juniper Math 1 tokenizer: a
+4,096-token, math-specialized, byte-fallback BPE model (SentencePiece),
+built from a deterministic synthetic corpus. Digits 0-9 are guaranteed
+atomic (`split_digits` pretokenization, not hoped-for BPE behavior),
+unauthorized multi-digit vocabulary pieces are rejected by an automated
+audit, required control tokens (`<tool_call>`, `<tool_result>`, `<final>`,
+`<unsupported>`, `<error>`) are frozen at stable IDs, byte fallback and
+Unicode math notation are validated, and the artifact is reproducible
+byte-for-byte from the committed corpus generator and config. Real
+dataset construction and Cinqic Calculator integration remain later-phase
+work. Phase 2 has been engineered and self-reviewed by Claude Sonnet 5 but
+**not yet independently reviewed or approved** — see
+[`reports/PHASE2_TERRA_HANDOFF.md`](reports/PHASE2_TERRA_HANDOFF.md). Phase 3
+is not authorized until GPT-5.6 Terra approves Phase 2.
 
 - Canonical machine-readable status: [`config/project.yaml`](config/project.yaml)
 - Phase 0 independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
@@ -54,6 +69,12 @@ but has not begun.
 - Phase 1 independent review: [`reports/TERRA_PHASE1_REVIEW.md`](reports/TERRA_PHASE1_REVIEW.md)
 - Phase 1 remediation: [`reports/PHASE1_REMEDIATION.md`](reports/PHASE1_REMEDIATION.md)
 - Phase 1 final approval: [`reports/PHASE1_FINAL_APPROVAL.md`](reports/PHASE1_FINAL_APPROVAL.md)
+- Phase 2 engineering report: [`reports/PHASE2_REPORT.md`](reports/PHASE2_REPORT.md)
+- Phase 2 tokenizer validation: [`reports/PHASE2_TOKENIZER_VALIDATION.md`](reports/PHASE2_TOKENIZER_VALIDATION.md)
+- Phase 2 tokenizer benchmarks: [`reports/PHASE2_TOKENIZER_BENCHMARKS.md`](reports/PHASE2_TOKENIZER_BENCHMARKS.md)
+- Phase 2 tokenizer manual inspection: [`reports/PHASE2_TOKENIZER_INSPECTION.md`](reports/PHASE2_TOKENIZER_INSPECTION.md)
+- Phase 2 self-review: [`reports/PHASE2_SELF_REVIEW.md`](reports/PHASE2_SELF_REVIEW.md)
+- Phase 2 Terra handoff package: [`reports/PHASE2_TERRA_HANDOFF.md`](reports/PHASE2_TERRA_HANDOFF.md)
 
 ## Principles
 
@@ -95,12 +116,13 @@ evals/        Frozen evaluation suites
 manifests/    Source, license, and artifact provenance/integrity metadata
 scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
-tests/        Automated test suite (208 tests)
+tests/        Automated test suite
 tools/        (reserved) deterministic math tool contracts — Phase 3
 training/     (reserved) real training entry points — Phase 6/7
 experiments/  Experiment metadata
 checkpoints/  Checkpoint metadata (binaries stored externally — see policy)
-releases/     Release metadata
+releases/     Release metadata; releases/tokenizer/ holds the frozen Phase 2
+              tokenizer artifacts (small enough for ordinary Git)
 ```
 
 ## Setup
@@ -145,12 +167,18 @@ python -m juniper_math manifests-validate   # source/license manifests + depende
 python -m juniper_math deps-check           # pyproject deps vs licenses.yaml
 python -m juniper_math model                # construct frozen architecture, verify param count
 python -m juniper_math checkpoint inspect <path>  # safe checkpoint metadata inspection
+python -m juniper_math tokenizer train      # generate corpus + train the tokenizer (refuses to overwrite)
+python -m juniper_math tokenizer inspect    # vocabulary stats + special-token table
+python -m juniper_math tokenizer encode "2x + 5 = 11"
+python -m juniper_math tokenizer decode --ids 12,10,...
+python -m juniper_math tokenizer validate   # full Phase 2 validation battery
+python -m juniper_math tokenizer benchmark  # per-category token efficiency + baseline comparison
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). Commands for later
-phases (`train`, `tokenizer`, `dataset`, `evaluate`, `infer`, `tool-test`)
-exist as honest placeholders that report "not implemented until Phase N" —
-they never fake success.
+phases (`train`, `dataset`, `evaluate`, `infer`, `tool-test`) exist as
+honest placeholders that report "not implemented until Phase N" — they
+never fake success.
 
 ## Testing
 
@@ -190,8 +218,8 @@ actually exercised — see
 |---|---|---|
 | 0 | Foundation and Recovery | **COMPLETE** |
 | 1 | Architecture — Transformer implementation, validation, benchmarking | **COMPLETE** |
-| 2 | Math Tokenizer | **AUTHORIZED — NOT STARTED** |
-| 3 | Deterministic tool integration ("Cinqic Calculator") | Not started |
+| 2 | Math Tokenizer | **IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW** |
+| 3 | Deterministic tool integration ("Cinqic Calculator") | Not authorized |
 | 4 | Dataset construction | Not started |
 
 ## License

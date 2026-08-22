@@ -43,7 +43,7 @@ def test_every_runtime_dependency_has_an_entry():
     }
     assert declared["runtime"] <= licensed
     assert declared["dev"] <= licensed
-    assert declared["runtime"] == {"torch", "pyyaml", "numpy"}
+    assert declared["runtime"] == {"torch", "pyyaml", "numpy", "sentencepiece"}
 
 
 def test_missing_license_entry_is_detected(tmp_path):

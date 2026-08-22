@@ -63,5 +63,11 @@ jobs:
       - name: Tiny controlled overfit (CPU, architecture validation only)
         run: python scripts/tiny_overfit.py --device cpu --steps 150
 
+      - name: Tokenizer validation battery (Phase 2)
+        run: python -m juniper_math tokenizer validate
+
+      - name: Tokenizer inspection (Phase 2)
+        run: python -m juniper_math tokenizer inspect
+
       - name: Environment report (informational; CUDA WARNING expected on CI)
         run: python -m juniper_math validate-env || true

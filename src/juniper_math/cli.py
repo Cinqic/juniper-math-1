@@ -5,13 +5,13 @@ Usage: `python -m juniper_math <command> ...` or the installed
 style and use it consistently; both resolve here).
 
 Commands are split into two honest categories:
-  - Fully functional now (Phase 0/1): status, validate-env, validate-config,
+  - Fully functional now (Phase 0/1/2): status, validate-env, validate-config,
     seed-test, evals validate, evals verify, hash verify,
-    manifests-validate, deps-check, model, checkpoint inspect.
-  - Not yet implemented (later phases): tokenizer, dataset, train,
-    evaluate, infer, tool-test. These print an explicit
-    "not implemented until Phase N" message and exit non-zero — they never
-    silently pretend to succeed.
+    manifests-validate, deps-check, model, checkpoint inspect,
+    tokenizer train/inspect/encode/decode/validate/benchmark.
+  - Not yet implemented (later phases): dataset, train, evaluate, infer,
+    tool-test. These print an explicit "not implemented until Phase N"
+    message and exit non-zero — they never silently pretend to succeed.
 """
 
 from __future__ import annotations
@@ -51,13 +51,28 @@ except ImportError as exc:  # pragma: no cover - exercised only without torch in
 logger = get_logger(__name__)
 
 _NOT_IMPLEMENTED = {
-    "tokenizer": 2,
     "dataset": 4,
     "train": 1,
     "evaluate": 1,
     "infer": 1,
     "tool-test": 3,
 }
+
+_TOKENIZER_IMPORT_ERROR: Exception | None
+try:
+    from juniper_math.tokenizer import (
+        JuniperTokenizer,
+        JuniperTokenizerError,
+        audit_vocabulary,
+        load_tokenizer_config,
+        rebuild_corpus_for_config,
+        tokenizer_artifact_hashes,
+        train_tokenizer,
+    )
+
+    _TOKENIZER_IMPORT_ERROR = None
+except ImportError as exc:  # pragma: no cover - exercised only without sentencepiece installed
+    _TOKENIZER_IMPORT_ERROR = exc
 
 
 GIT_UNKNOWN = "unknown"
@@ -342,6 +357,140 @@ def _cmd_checkpoint_inspect(args: argparse.Namespace) -> int:
     return 0
 
 
+def _require_tokenizer_module() -> int | None:
+    if _TOKENIZER_IMPORT_ERROR is not None:
+        print(
+            f"FAIL: tokenizer operations require sentencepiece, which is not importable: "
+            f"{_TOKENIZER_IMPORT_ERROR}",
+            file=sys.stderr,
+        )
+        return 1
+    return None
+
+
+def _cmd_tokenizer_train(args: argparse.Namespace) -> int:
+    if (fail := _require_tokenizer_module()) is not None:
+        return fail
+    try:
+        config = load_tokenizer_config()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    corpus_path = Path(args.corpus) if args.corpus else Path("/tmp") / "juniper_tokenizer_corpus.txt"
+    n_lines = rebuild_corpus_for_config(config, corpus_path)
+    print(f"Generated corpus: {n_lines:,} lines -> {corpus_path}")
+
+    try:
+        train_tokenizer(config, corpus_path, overwrite=args.overwrite)
+    except JuniperTokenizerError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"PASS: trained {config.tokenizer_version} -> {config.model_path}")
+    for name, digest in tokenizer_artifact_hashes(config).items():
+        print(f"  {name}: {digest}")
+    return 0
+
+
+def _cmd_tokenizer_inspect(_args: argparse.Namespace) -> int:
+    if (fail := _require_tokenizer_module()) is not None:
+        return fail
+    try:
+        tok = JuniperTokenizer.load()
+    except (JuniperTokenizerError, JuniperConfigError) as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    print(f"vocab_size: {tok.vocab_size}")
+    stats = audit_vocabulary(tok)
+    for key, value in stats.items():
+        if isinstance(value, list):
+            print(f"{key}: {len(value)}")
+        else:
+            print(f"{key}: {value}")
+    print("\nspecial tokens:")
+    for entry in tok.special_tokens:
+        print(f"  [{entry['id']:4d}] {entry['token']!r:20} {entry['category']:10} {entry['purpose']}")
+    return 0
+
+
+def _cmd_tokenizer_encode(args: argparse.Namespace) -> int:
+    if (fail := _require_tokenizer_module()) is not None:
+        return fail
+    try:
+        tok = JuniperTokenizer.load()
+    except (JuniperTokenizerError, JuniperConfigError) as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    ids = tok.encode(args.text)
+    pieces = tok.encode_pieces(args.text)
+    print(f"ids: {ids}")
+    print(f"pieces: {pieces}")
+    return 0
+
+
+def _cmd_tokenizer_decode(args: argparse.Namespace) -> int:
+    if (fail := _require_tokenizer_module()) is not None:
+        return fail
+    try:
+        tok = JuniperTokenizer.load()
+    except (JuniperTokenizerError, JuniperConfigError) as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    try:
+        ids = [int(x) for x in args.ids.split(",") if x.strip()]
+    except ValueError:
+        print("FAIL: --ids must be a comma-separated list of integers", file=sys.stderr)
+        return 1
+    print(tok.decode(ids))
+    return 0
+
+
+def _cmd_tokenizer_validate(_args: argparse.Namespace) -> int:
+    if (fail := _require_tokenizer_module()) is not None:
+        return fail
+    from juniper_math.tokenizer_validation import run_full_validation
+
+    try:
+        config = load_tokenizer_config()
+        tok = JuniperTokenizer.load(config)
+    except (JuniperTokenizerError, JuniperConfigError) as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    results = run_full_validation(tok, config)
+    ok = True
+    for name, passed, detail in results:
+        status = "PASS" if passed else "FAIL"
+        print(f"[{status}] {name}: {detail}")
+        ok = ok and passed
+    return 0 if ok else 1
+
+
+def _cmd_tokenizer_benchmark(_args: argparse.Namespace) -> int:
+    if (fail := _require_tokenizer_module()) is not None:
+        return fail
+    from juniper_math.tokenizer_benchmark import run_benchmark
+
+    try:
+        tok = JuniperTokenizer.load()
+    except (JuniperTokenizerError, JuniperConfigError) as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    report = run_benchmark(tok)
+    for category, stats in report["categories"].items():
+        tpc, tps = stats["tokens_per_char"], stats["tokens_per_sample"]
+        print(f"{category:32} tokens/char={tpc:.3f}  tokens/sample={tps:.2f}")
+    if report["baseline"] is not None:
+        print(f"\nbaseline ({report['baseline']['identity']}):")
+        for category, stats in report["baseline"]["categories"].items():
+            print(f"{category:32} tokens/char={stats['tokens_per_char']:.3f}")
+    else:
+        print(f"\nbaseline unavailable: {report['baseline_error']}")
+    return 0
+
+
 def _make_not_implemented(command: str, phase: int):
     def _handler(_args: argparse.Namespace) -> int:
         print(
@@ -423,6 +572,36 @@ def build_parser() -> argparse.ArgumentParser:
     )
     checkpoint_inspect_parser.add_argument("path")
     checkpoint_inspect_parser.set_defaults(func=_cmd_checkpoint_inspect)
+
+    tokenizer_parser = subparsers.add_parser("tokenizer", help="Phase 2 math tokenizer operations")
+    tokenizer_sub = tokenizer_parser.add_subparsers(dest="tokenizer_command", required=True)
+
+    train_parser = tokenizer_sub.add_parser("train", help="Generate the corpus and train the tokenizer")
+    train_parser.add_argument("--corpus", default=None, help="corpus output path (default: scratch tmp file)")
+    train_parser.add_argument(
+        "--overwrite", action="store_true", help="allow overwriting an existing frozen artifact"
+    )
+    train_parser.set_defaults(func=_cmd_tokenizer_train)
+
+    tokenizer_sub.add_parser("inspect", help="Report vocabulary statistics and special tokens").set_defaults(
+        func=_cmd_tokenizer_inspect
+    )
+
+    encode_parser = tokenizer_sub.add_parser("encode", help="Encode text and print ids/pieces")
+    encode_parser.add_argument("text")
+    encode_parser.set_defaults(func=_cmd_tokenizer_encode)
+
+    decode_parser = tokenizer_sub.add_parser("decode", help="Decode a comma-separated list of ids")
+    decode_parser.add_argument("--ids", required=True)
+    decode_parser.set_defaults(func=_cmd_tokenizer_decode)
+
+    tokenizer_sub.add_parser(
+        "validate", help="Run the full Phase 2 tokenizer validation battery"
+    ).set_defaults(func=_cmd_tokenizer_validate)
+
+    tokenizer_sub.add_parser(
+        "benchmark", help="Report per-category token efficiency (and baseline comparison)"
+    ).set_defaults(func=_cmd_tokenizer_benchmark)
 
     for command, phase in _NOT_IMPLEMENTED.items():
         sub = subparsers.add_parser(command, help=f"(Phase {phase}) not yet implemented")

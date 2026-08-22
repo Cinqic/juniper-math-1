@@ -30,6 +30,17 @@ same code path, not two separate implementations.)
 | `model [--device cpu\|cuda] [--no-forward-check]` | Construct the frozen architecture, verify the exact trainable parameter count (5,004,032), run a synthetic forward pass |
 | `checkpoint inspect <path>` | Safely report checkpoint metadata (step, tokens seen, architecture identity, schema version, size) without restoring model/optimizer/RNG state |
 
+## Functional in Phase 2
+
+| Command | Purpose |
+|---|---|
+| `tokenizer train [--corpus <path>] [--overwrite]` | Generate the deterministic corpus and train the tokenizer; refuses to overwrite a frozen artifact without `--overwrite` |
+| `tokenizer inspect` | Report vocabulary statistics (special tokens, digits, byte-fallback pieces, unauthorized multi-digit pieces) and the special-token ID table |
+| `tokenizer encode <text>` | Encode text, print token ids and pieces |
+| `tokenizer decode --ids <comma-separated ids>` | Decode a list of ids back to text |
+| `tokenizer validate` | Run the full Phase 2 validation battery (vocab size, ID range, digit atomicity, byte fallback, round trips, etc.) |
+| `tokenizer benchmark` | Report per-category token efficiency and an informational general-purpose baseline comparison |
+
 ## Not yet implemented (later phases)
 
 These commands exist as honest placeholders — they print an explicit
@@ -41,7 +52,6 @@ silently succeed or fabricate output.
 | `train` | Phase 6/7 (real training) |
 | `evaluate` | later |
 | `infer` | later |
-| `tokenizer` | Phase 2 |
 | `tool-test` | Phase 3 |
 | `dataset` | Phase 4 |
 
@@ -56,6 +66,9 @@ python -m juniper_math evals validate
 python -m juniper_math hash verify
 python -m juniper_math model
 python -m juniper_math checkpoint inspect path/to/checkpoint.pt
+python -m juniper_math tokenizer train
+python -m juniper_math tokenizer validate
+python -m juniper_math tokenizer benchmark
 python -m juniper_math --version
 ```
 

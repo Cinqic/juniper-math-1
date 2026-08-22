@@ -22,9 +22,9 @@ parameter_target: 5004032
 architecture_version: "0.1.0"
 architecture_config: "config/architecture.yaml"
 
-current_phase: 1
-phase_name: "Architecture"
-phase_status: "COMPLETE"
+current_phase: 2
+phase_name: "Math Tokenizer"
+phase_status: "AWAITING_GPT_5_6_TERRA_REVIEW"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -51,6 +51,12 @@ review_chain:
   - role: "Independent Reviewer / Auditor / Remediator / Approval Authority (Phase 1)"
     actor: "GPT-5.6 Terra"
     stage: "independent review, audit, remediation if necessary, final approval and tagging"
+  - role: "Primary Phase 2 Engineer"
+    actor: "Claude Sonnet 5"
+    stage: "tokenizer design, training, validation, benchmarking, documentation, self-review"
+  - role: "Independent Reviewer / Auditor / Remediator / Approval Authority (Phase 2)"
+    actor: "GPT-5.6 Terra"
+    stage: "independent review, audit, remediation if necessary, final approval and tagging"
 
 # Phase 0 final approval record — frozen, not re-litigated by Phase 1.
 # See reports/OPUS5_PHASE0_REVIEW.md, reports/PHASE0_REMEDIATION.md,
@@ -65,9 +71,10 @@ phase_0_approval:
   review_candidate_tag: "phase-0-review-candidate"
   final_tag: "phase-0-foundation"
 
-# Phase 1 approval record. See reports/PHASE1_REMEDIATION.md,
-# reports/TERRA_PHASE1_REVIEW.md, and reports/PHASE1_FINAL_APPROVAL.md.
-phase_approval:
+# Phase 1 approval record — frozen, not re-litigated by Phase 2.
+# See reports/PHASE1_REMEDIATION.md, reports/TERRA_PHASE1_REVIEW.md, and
+# reports/PHASE1_FINAL_APPROVAL.md.
+phase_1_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
   terra_independent_review: "approved"
@@ -77,10 +84,25 @@ phase_approval:
   starting_foundation_commit: "f9e3659efe37183bae60ffafc2762b3d342cd047"
   starting_foundation_tag: "phase-0-foundation"
 
+# Phase 2 approval record — in progress. Sonnet does not self-approve Phase
+# 2; terra_independent_review / terra_final_approval remain "pending" until
+# GPT-5.6 Terra completes independent review. See reports/PHASE2_REPORT.md
+# and reports/PHASE2_TERRA_HANDOFF.md.
+phase_approval:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "pending"
+  terra_final_approval: "pending"
+  review_candidate_tag: "phase-2-review-candidate"
+  final_tag: null
+  starting_foundation_commit: "83d6106bae2a465a1c166c3137b10b87eda22f91"
+  starting_foundation_tag: "phase-1-architecture"
+
 next_phase:
-  number: 2
-  name: "Math Tokenizer"
-  status: "AUTHORIZED"
+  number: 3
+  name: "Cinqic Calculator Tool Runtime"
+  status: "NOT_AUTHORIZED"
   started: false
   note: >
-    Phase 2 is authorized after Phase 1 final approval but has not started.
+    Phase 3 requires GPT-5.6 Terra's independent review and final approval
+    of Phase 2 first. Sonnet does not self-authorize Phase 3.

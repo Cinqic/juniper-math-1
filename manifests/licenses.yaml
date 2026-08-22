@@ -101,6 +101,31 @@ licenses:
     redistribution_status: "ALLOWED"
     notes: "Static type checker. Development-only; not redistributed with the project. Verified against mypy 1.20.2 package metadata."
 
+  - license_id: "sentencepiece"
+    scope: "dependency"
+    package: "sentencepiece"
+    spdx_identifier: "Apache-2.0"
+    reference: "https://github.com/google/sentencepiece/blob/master/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard Apache-2.0 notice retention"
+    redistribution_status: "ALLOWED"
+    notes: >
+      Phase 2 tokenizer training/inference library (BPE with byte fallback). Verified against
+      sentencepiece 0.2.2 package metadata.
+
+  - license_id: "tiktoken"
+    scope: "dev_dependency"
+    package: "tiktoken"
+    spdx_identifier: "MIT"
+    reference: "https://github.com/openai/tiktoken/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: >
+      General-purpose tokenizer used only as an informational Phase 2 benchmark baseline
+      (Sec. 55-56 of the Phase 2 instructions). Not imported by any runtime project code path.
+      Verified against tiktoken 0.14.0 package metadata.
+
   - license_id: "types-pyyaml"
     scope: "dev_dependency"
     package: "types-pyyaml"

@@ -1,0 +1,100 @@
+# Juniper Math 1 — canonical Phase 2 tokenizer configuration.
+#
+# This file is the single source of truth for tokenizer identity. Nothing
+# here is duplicated as a hardcoded constant elsewhere in the codebase —
+# src/juniper_math/tokenizer.py reads this file. Changing any field here
+# and retraining produces a NEW tokenizer version (Sec. 47 of the Phase 2
+# instructions); it never mutates a frozen v1 artifact in place.
+
+tokenizer_version: "juniper-math-tokenizer-v1"
+tokenizer_type: "bpe"
+library: "sentencepiece"
+# Pinned in pyproject.toml / requirements-lock.txt; recorded here too so the
+# identity of "what produced this artifact" travels with the config itself.
+library_version: "0.2.2"
+
+vocab_size: 4096
+
+training:
+  seed: 20260201
+  corpus_total_lines: 200000
+  # SentencePiece's own knobs, passed through verbatim to SentencePieceTrainer.
+  model_type: "bpe"
+  character_coverage: 0.9995
+  # Forces the pretokenizer to split every digit into its own symbol before
+  # BPE merge learning ever runs, so multi-digit merges are structurally
+  # impossible to learn — not merely undertrained away. This is the
+  # non-negotiable digit-atomicity mechanism (Sec. 20-22).
+  split_digits: true
+  byte_fallback: true
+  # Neither used, but declared explicitly rather than left implicit.
+  normalization_rule_name: "identity"
+  add_dummy_prefix: false
+  remove_extra_whitespace: false
+  unk_id: 0
+  bos_id: 1
+  eos_id: 2
+  pad_id: 3
+
+# Digits are also listed as user_defined_symbols (below) so each one is
+# guaranteed a stable vocabulary entry even if a digit happens to be rare in
+# the training corpus. split_digits is what prevents multi-digit merges;
+# this list is what guarantees existence.
+digit_symbols: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+# Required control strings (Sec. 17-19). Represented as SentencePiece
+# user_defined_symbols so they tokenize as single atomic pieces and
+# round-trip through ordinary decode — Phase 3 protocol design is out of
+# scope for Phase 2; this only guarantees clean, stable tokenization.
+special_tokens:
+  - token: "<tool_call>"
+    purpose: "opens a tool invocation"
+    user_visible: false
+    generated_by_model: true
+    runtime_only: true
+  - token: "<tool_result>"
+    purpose: "wraps a tool's returned result"
+    user_visible: false
+    generated_by_model: false
+    runtime_only: true
+  - token: "<final>"
+    purpose: "marks the model's final answer"
+    user_visible: true
+    generated_by_model: true
+    runtime_only: false
+  - token: "<unsupported>"
+    purpose: "marks a request the model declines as out of scope"
+    user_visible: true
+    generated_by_model: true
+    runtime_only: false
+  - token: "<error>"
+    purpose: "marks a runtime/tool error condition"
+    user_visible: true
+    generated_by_model: true
+    runtime_only: true
+
+# Core SentencePiece control tokens, required for model operation.
+core_tokens:
+  - token: "<unk>"
+    purpose: "unknown-token fallback (byte fallback makes this effectively unused on valid UTF-8 text)"
+  - token: "<s>"
+    purpose: "beginning-of-sequence marker"
+  - token: "</s>"
+    purpose: "end-of-sequence marker"
+  - token: "<pad>"
+    purpose: "padding for batched sequences"
+
+unicode_normalization_policy: >
+  Conservative / identity. No lowercasing, no accent stripping, no rewriting
+  of mathematical operators or Unicode math symbols. SentencePiece's
+  normalization_rule_name is set to "identity" (no NFKC folding), so
+  distinct Unicode math characters (×, ÷, √, π, ≤, …) are preserved exactly
+  and are never silently collapsed into ASCII lookalikes. See
+  reports/PHASE2_TOKENIZER_VALIDATION.md for round-trip evidence.
+
+output:
+  model_dir: "releases/tokenizer"
+  model_file: "juniper-math-tokenizer-v1.model"
+  vocab_file: "juniper-math-tokenizer-v1.vocab"
+  special_token_map_file: "juniper-math-tokenizer-v1.special_tokens.json"
+  config_snapshot_file: "juniper-math-tokenizer-v1.config_snapshot.json"

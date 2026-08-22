@@ -2,5 +2,29 @@
 # Phase 0 does not acquire the training corpus; this establishes the schema
 # and provenance-tracking infrastructure before data accumulates (Phase 4).
 # Add an entry here whenever an external source is acquired.
+#
+# Phase 2 acquires no external text: the tokenizer-training corpus is 100%
+# synthetic and project-generated (Sec. 11-12 of the Phase 2 instructions),
+# so it is recorded here as a project-controlled synthetic source rather
+# than an externally-sourced one. redistribution_status is NOT_APPLICABLE
+# because nothing was acquired from a third party to redistribute.
 
-sources: []
+sources:
+  - source_id: "phase2-synthetic-tokenizer-corpus-v1"
+    source_name: "Juniper Math 1 synthetic tokenizer-training corpus"
+    publisher: "Juniper Math 1 project (generator: src/juniper_math/tokenizer_corpus.py)"
+    source_url: "src/juniper_math/tokenizer_corpus.py"
+    source_version: "juniper-math-tokenizer-v1 (MASTER_SEED=20260201, total_lines=200000)"
+    acquisition_date: "2026-08-22"
+    intended_use: "Phase 2 tokenizer BPE segmentation training only — not a Phase 4 model-training corpus."
+    license_id: "juniper-math-1-code"
+    redistribution_status: "NOT_APPLICABLE"
+    transformation_status: "generated; not acquired or transformed from any external source"
+    checksum: "reconstructible deterministically; see config/tokenizer.yaml training.seed and training.corpus_total_lines"
+    notes: >
+      Deterministic, seeded synthetic generation across 12 categories (natural-language math problems,
+      arithmetic, algebra, percentages, ratios/proportions, units, financial math, scientific notation,
+      explanations, tool syntax, errors, general English) per CATEGORY_PROPORTIONS in
+      src/juniper_math/tokenizer_corpus.py. Reconstructed via
+      `python -m juniper_math tokenizer train` (see reports/PHASE2_REPORT.md for full provenance and
+      category counts). No third-party text was acquired.
