@@ -91,6 +91,16 @@ licenses:
     redistribution_status: "ALLOWED"
     notes: "Linter and formatter. Development-only; not redistributed with the project. Verified against ruff 0.16.4 package metadata."
 
+  - license_id: "protobuf"
+    scope: "dev_dependency"
+    package: "protobuf"
+    spdx_identifier: "BSD-3-Clause"
+    reference: "https://github.com/protocolbuffers/protobuf/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Development-only protobuf reader used for raw serialized SentencePiece ModelProto audit tests. Verified against protobuf 6.33.6 package metadata."
+
   - license_id: "mypy"
     scope: "dev_dependency"
     package: "mypy"

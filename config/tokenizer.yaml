@@ -98,3 +98,7 @@ output:
   vocab_file: "juniper-math-tokenizer-v1.vocab"
   special_token_map_file: "juniper-math-tokenizer-v1.special_tokens.json"
   config_snapshot_file: "juniper-math-tokenizer-v1.config_snapshot.json"
+  # The exact bytes of the deterministic generated corpus used for this
+  # release.  This makes corpus reconstruction independently verifiable,
+  # rather than inferring it only from a matching tokenizer model.
+  corpus_digest_file: "juniper-math-tokenizer-v1.corpus.sha256"

@@ -92,6 +92,7 @@
     "model_file": "juniper-math-tokenizer-v1.model",
     "vocab_file": "juniper-math-tokenizer-v1.vocab",
     "special_token_map_file": "juniper-math-tokenizer-v1.special_tokens.json",
-    "config_snapshot_file": "juniper-math-tokenizer-v1.config_snapshot.json"
+    "config_snapshot_file": "juniper-math-tokenizer-v1.config_snapshot.json",
+    "corpus_digest_file": "juniper-math-tokenizer-v1.corpus.sha256"
   }
 }

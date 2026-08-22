@@ -27,6 +27,9 @@ dev = [
     "pytest>=8.0,<9.0",
     "ruff>=0.6,<1.0",
     "mypy>=1.10,<2.0",
+    # Used only by Terra's raw SentencePiece ModelProto audit test. SentencePiece
+    # itself remains the sole runtime tokenizer dependency.
+    "protobuf>=6.0,<7.0",
     "types-PyYAML>=6.0,<7.0",
     # Phase 2 general-purpose tokenizer baseline (Sec. 55-56 of the Phase 2
     # instructions). Informational comparison only — not used at runtime by

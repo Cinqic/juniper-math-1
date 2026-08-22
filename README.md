@@ -20,8 +20,8 @@ trained model, and not yet mathematical capability of any kind.
 ```
 Phase 0 — Foundation and Recovery:          COMPLETE
 Phase 1 — Architecture:                     COMPLETE
-Phase 2 — Math Tokenizer:                   IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW
-Phase 3 — Cinqic Calculator Tool Runtime:   NOT AUTHORIZED
+Phase 2 — Math Tokenizer:                   COMPLETE
+Phase 3 — Cinqic Calculator Tool Runtime:   AUTHORIZED — NOT STARTED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -51,10 +51,8 @@ audit, required control tokens (`<tool_call>`, `<tool_result>`, `<final>`,
 Unicode math notation are validated, and the artifact is reproducible
 byte-for-byte from the committed corpus generator and config. Real
 dataset construction and Cinqic Calculator integration remain later-phase
-work. Phase 2 has been engineered and self-reviewed by Claude Sonnet 5 but
-**not yet independently reviewed or approved** — see
-[`reports/PHASE2_TERRA_HANDOFF.md`](reports/PHASE2_TERRA_HANDOFF.md). Phase 3
-is not authorized until GPT-5.6 Terra approves Phase 2.
+work. Phase 2 was independently audited, remediated, and approved by GPT-5.6
+Terra. Phase 3 is authorized but has not started.
 
 - Canonical machine-readable status: [`config/project.yaml`](config/project.yaml)
 - Phase 0 independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
@@ -75,6 +73,9 @@ is not authorized until GPT-5.6 Terra approves Phase 2.
 - Phase 2 tokenizer manual inspection: [`reports/PHASE2_TOKENIZER_INSPECTION.md`](reports/PHASE2_TOKENIZER_INSPECTION.md)
 - Phase 2 self-review: [`reports/PHASE2_SELF_REVIEW.md`](reports/PHASE2_SELF_REVIEW.md)
 - Phase 2 Terra handoff package: [`reports/PHASE2_TERRA_HANDOFF.md`](reports/PHASE2_TERRA_HANDOFF.md)
+- Phase 2 independent review: [`reports/TERRA_PHASE2_REVIEW.md`](reports/TERRA_PHASE2_REVIEW.md)
+- Phase 2 remediation: [`reports/PHASE2_REMEDIATION.md`](reports/PHASE2_REMEDIATION.md)
+- Phase 2 final approval: [`reports/PHASE2_FINAL_APPROVAL.md`](reports/PHASE2_FINAL_APPROVAL.md)
 
 ## Principles
 
@@ -218,8 +219,8 @@ actually exercised — see
 |---|---|---|
 | 0 | Foundation and Recovery | **COMPLETE** |
 | 1 | Architecture — Transformer implementation, validation, benchmarking | **COMPLETE** |
-| 2 | Math Tokenizer | **IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW** |
-| 3 | Deterministic tool integration ("Cinqic Calculator") | Not authorized |
+| 2 | Math Tokenizer | **COMPLETE** |
+| 3 | Deterministic tool integration ("Cinqic Calculator") | **AUTHORIZED — NOT STARTED** |
 | 4 | Dataset construction | Not started |
 
 ## License

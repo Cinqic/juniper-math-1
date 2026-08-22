@@ -20,7 +20,7 @@ sources:
     license_id: "juniper-math-1-code"
     redistribution_status: "NOT_APPLICABLE"
     transformation_status: "generated; not acquired or transformed from any external source"
-    checksum: "reconstructible deterministically; see config/tokenizer.yaml training.seed and training.corpus_total_lines"
+    checksum: "SHA-256 recorded in releases/tokenizer/juniper-math-tokenizer-v1.corpus.sha256"
     notes: >
       Deterministic, seeded synthetic generation across 12 categories (natural-language math problems,
       arithmetic, algebra, percentages, ratios/proportions, units, financial math, scientific notation,

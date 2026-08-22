@@ -73,6 +73,7 @@ class TokenizerTrainingConfig:
     vocab_file: str
     special_token_map_file: str
     config_snapshot_file: str
+    corpus_digest_file: str
     raw: dict[str, Any]
 
     @property
@@ -90,6 +91,10 @@ class TokenizerTrainingConfig:
     @property
     def config_snapshot_path(self) -> Path:
         return REPO_ROOT / self.model_dir / self.config_snapshot_file
+
+    @property
+    def corpus_digest_path(self) -> Path:
+        return REPO_ROOT / self.model_dir / self.corpus_digest_file
 
     @property
     def user_defined_symbols(self) -> list[str]:
@@ -141,6 +146,7 @@ def load_tokenizer_config(path: Path | None = None) -> TokenizerTrainingConfig:
             vocab_file=output["vocab_file"],
             special_token_map_file=output["special_token_map_file"],
             config_snapshot_file=output["config_snapshot_file"],
+            corpus_digest_file=output["corpus_digest_file"],
             raw=raw,
         )
     except (KeyError, TypeError) as exc:
@@ -178,38 +184,50 @@ def train_tokenizer(
     # training parameters, which is what Sec. 51/75 deterministic
     # reconstruction actually requires.
     staging_dir = Path(tempfile.gettempdir()) / "juniper_tokenizer_build"
-    if staging_dir.exists():
+    try:
+        # mkdir is atomic.  Refusing an existing staging directory is safer
+        # than recursively deleting a stale (or another process's) directory
+        # in a shared temp area.  It also prevents silent stale-file reuse.
+        staging_dir.mkdir(mode=0o700)
+    except FileExistsError as exc:
+        raise JuniperTokenizerError(
+            f"Refusing to use existing deterministic staging directory {staging_dir}. "
+            "Remove it only after inspecting its owner and contents, then retry."
+        ) from exc
+
+    try:
+        staging_corpus = staging_dir / "corpus.txt"
+        shutil.copyfile(corpus_path, staging_corpus)
+        staging_prefix = staging_dir / config.model_path.stem
+
+        spm.SentencePieceTrainer.Train(
+            input=str(staging_corpus),
+            model_prefix=str(staging_prefix),
+            vocab_size=config.vocab_size,
+            model_type=config.model_type,
+            character_coverage=config.character_coverage,
+            split_digits=config.split_digits,
+            byte_fallback=config.byte_fallback,
+            normalization_rule_name=config.normalization_rule_name,
+            add_dummy_prefix=config.add_dummy_prefix,
+            remove_extra_whitespaces=config.remove_extra_whitespace,
+            unk_id=config.unk_id,
+            bos_id=config.bos_id,
+            eos_id=config.eos_id,
+            pad_id=config.pad_id,
+            user_defined_symbols=config.user_defined_symbols,
+            num_threads=1,  # deterministic reconstruction (Sec. 51) over training speed
+            shuffle_input_sentence=False,
+            input_sentence_size=0,
+            train_extremely_large_corpus=False,
+        )
+
+        shutil.copyfile(staging_prefix.with_suffix(".model"), config.model_path)
+        shutil.copyfile(staging_prefix.with_suffix(".vocab"), config.vocab_path)
+    finally:
+        # This process created the directory with mkdir above; never remove a
+        # directory that predates the invocation.
         shutil.rmtree(staging_dir)
-    staging_dir.mkdir(parents=True)
-    staging_corpus = staging_dir / "corpus.txt"
-    shutil.copyfile(corpus_path, staging_corpus)
-    staging_prefix = staging_dir / config.model_path.stem
-
-    spm.SentencePieceTrainer.Train(
-        input=str(staging_corpus),
-        model_prefix=str(staging_prefix),
-        vocab_size=config.vocab_size,
-        model_type=config.model_type,
-        character_coverage=config.character_coverage,
-        split_digits=config.split_digits,
-        byte_fallback=config.byte_fallback,
-        normalization_rule_name=config.normalization_rule_name,
-        add_dummy_prefix=config.add_dummy_prefix,
-        remove_extra_whitespaces=config.remove_extra_whitespace,
-        unk_id=config.unk_id,
-        bos_id=config.bos_id,
-        eos_id=config.eos_id,
-        pad_id=config.pad_id,
-        user_defined_symbols=config.user_defined_symbols,
-        num_threads=1,  # deterministic reconstruction (Sec. 51) over training speed
-        shuffle_input_sentence=False,
-        input_sentence_size=0,
-        train_extremely_large_corpus=False,
-    )
-
-    shutil.copyfile(staging_prefix.with_suffix(".model"), config.model_path)
-    shutil.copyfile(staging_prefix.with_suffix(".vocab"), config.vocab_path)
-    shutil.rmtree(staging_dir)
 
     sp = spm.SentencePieceProcessor(model_file=str(config.model_path))
     special_map = _build_special_token_map(config, sp)
@@ -218,6 +236,9 @@ def train_tokenizer(
     )
     config.config_snapshot_path.write_text(
         json.dumps(config.raw, indent=2, ensure_ascii=False, default=str) + "\n", encoding="utf-8"
+    )
+    config.corpus_digest_path.write_text(
+        f"{sha256_file(corpus_path)}  {config.tokenizer_version}.corpus.txt\n", encoding="utf-8"
     )
 
 
@@ -292,9 +313,15 @@ class JuniperTokenizer:
         return cls(sp, special_map)
 
     def encode(self, text: str) -> list[int]:
+        if not isinstance(text, str):
+            raise TypeError("JuniperTokenizer.encode accepts str only; decode byte input before tokenizing.")
         return list(self._sp.encode(text, out_type=int))
 
     def encode_pieces(self, text: str) -> list[str]:
+        if not isinstance(text, str):
+            raise TypeError(
+                "JuniperTokenizer.encode_pieces accepts str only; decode byte input before tokenizing."
+            )
         return list(self._sp.encode(text, out_type=str))
 
     def decode(self, ids: list[int]) -> str:
@@ -362,6 +389,7 @@ def tokenizer_artifact_hashes(config: TokenizerTrainingConfig) -> dict[str, str]
         "vocab": sha256_file(config.vocab_path),
         "special_token_map": sha256_file(config.special_token_map_path),
         "config_snapshot": sha256_file(config.config_snapshot_path),
+        "corpus_digest": sha256_file(config.corpus_digest_path),
     }
 
 

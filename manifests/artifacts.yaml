@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "977c756f572652a44ed4b2cad6a6d17aa74ca4b96f4dbc3a56db2d071066a85f"
+    sha256: "8de598715a17ff9154cd77dfaff762de12743a84aa0059903fe77f81043b0839"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -22,22 +22,22 @@ artifacts:
 
   - artifact_id: "sources_manifest"
     path: "manifests/sources.yaml"
-    sha256: "82f0aa26a8b86ab3a6589974884e6fe195a10ab6ad2a32b98e770ef143b1b0e0"
+    sha256: "c22db3c8b097a7ad82374408eaef8330650a5e19141a42773952aa91de2005d0"
     description: "Source provenance manifest."
 
   - artifact_id: "dependency_lock"
     path: "requirements-lock.txt"
-    sha256: "92d005231cc711c567c1d8b9297f1421d044319d21bf92787ebb3c42673c311d"
+    sha256: "abe81a5d98b3f157468e714fc75c32a4c81b49a014a5eea61600bcf6fe0ef599"
     description: "Exact validated Python environment lock."
 
   - artifact_id: "licenses_manifest"
     path: "manifests/licenses.yaml"
-    sha256: "75b674d436810c91400b9859be2bdf51dec58c156beba119c326cc2164bb03b9"
+    sha256: "422fcc3f245f7cabb718812c217c5488a596240f64e971b377e76c68b1b776e2"
     description: "License manifest."
 
   - artifact_id: "tokenizer_config"
     path: "config/tokenizer.yaml"
-    sha256: "5b426b046db53d8b8dc54e7f34a651d44d8a00c4cb74de53a4bf95988f35cdf4"
+    sha256: "fdc19a5a34840e74a7d4f3ae9bf1fc3ad52b366d986b7029024b6ca8a171088e"
     description: "Canonical Phase 2 tokenizer training configuration (juniper-math-tokenizer-v1)."
 
   - artifact_id: "tokenizer_model"
@@ -57,5 +57,10 @@ artifacts:
 
   - artifact_id: "tokenizer_config_snapshot"
     path: "releases/tokenizer/juniper-math-tokenizer-v1.config_snapshot.json"
-    sha256: "941d3406f74e773557a6eb9ccb2700fe613cf8479d5226b47acf819aa77ecac4"
+    sha256: "17fb7c191a81453d44786264769cc2bc446d31224279ecc0a513a5a8da99de67"
     description: "JSON snapshot of the exact tokenizer.yaml used to train juniper-math-tokenizer-v1."
+
+  - artifact_id: "tokenizer_corpus_digest"
+    path: "releases/tokenizer/juniper-math-tokenizer-v1.corpus.sha256"
+    sha256: "86c3afa92b2cc109b9d3ba340ce59e920e84092fd88347154b006529db7fd13f"
+    description: "SHA-256 identity of the deterministic synthetic corpus used for tokenizer training."

@@ -4,6 +4,7 @@ import json
 import shutil
 
 import pytest
+from sentencepiece import sentencepiece_model_pb2
 
 from juniper_math.errors import JuniperConfigError
 from juniper_math.hashing import sha256_file
@@ -58,6 +59,20 @@ def test_audit_reports_no_unauthorized_multi_digit_pieces():
     assert stats["unauthorized_multi_digit_pieces"] == []
     assert stats["vocab_size"] == 4096
     assert stats["byte_fallback_pieces"] == 256
+
+
+def test_serialized_sentencepiece_spec_matches_frozen_contract():
+    model = sentencepiece_model_pb2.ModelProto()
+    model.ParseFromString(CONFIG.model_path.read_bytes())
+    trainer = model.trainer_spec
+    normalizer = model.normalizer_spec
+    assert trainer.model_type == sentencepiece_model_pb2.TrainerSpec.BPE
+    assert trainer.vocab_size == 4096
+    assert trainer.split_digits is True
+    assert trainer.byte_fallback is True
+    assert (trainer.unk_id, trainer.bos_id, trainer.eos_id, trainer.pad_id) == (0, 1, 2, 3)
+    assert list(trainer.user_defined_symbols) == [*CONFIG.user_defined_symbols]
+    assert normalizer.name == "identity"
 
 
 # --------------------------------------------------------------------------
@@ -118,6 +133,21 @@ def test_multi_digit_numbers_decompose_into_atomic_digits(text):
     pieces = TOKENIZER.encode_pieces(text)
     digit_pieces = [p.replace("▁", "") for p in pieces if p.replace("▁", "").isdigit()]
     assert all(len(p) == 1 for p in digit_pieces)
+
+
+def test_terra_numeric_property_suite_has_no_digit_merges():
+    # Independently generated unseen decimal strings spanning short, long,
+    # leading-zero, and 50+ digit cases.  Exact digit order must survive.
+    cases = []
+    for n in range(20_000):
+        digits = str((n * 982_451_653) % 10**20).zfill(20)
+        cases.append(digits[: 1 + (n % 6)])
+        cases.append("0" * (50 + (n % 11)) + digits)
+    for text in cases:
+        pieces = TOKENIZER.encode_pieces(text)
+        encoded_digits = "".join(p.replace("▁", "") for p in pieces if p.replace("▁", "").isdigit())
+        assert encoded_digits == text
+        assert TOKENIZER.decode(TOKENIZER.encode(text)) == text
 
 
 # --------------------------------------------------------------------------
@@ -202,6 +232,30 @@ def test_deterministic_rebuild_produces_byte_identical_artifact(tmp_path):
     model_b = (out_dir_b / CONFIG.model_file).read_bytes()
     assert model_a == model_b
     assert sha256_file(out_dir_a / CONFIG.model_file) == sha256_file(out_dir_b / CONFIG.model_file)
+    for filename in (
+        CONFIG.vocab_file,
+        CONFIG.special_token_map_file,
+        CONFIG.config_snapshot_file,
+        CONFIG.corpus_digest_file,
+    ):
+        assert (out_dir_a / filename).read_bytes() == (out_dir_b / filename).read_bytes()
+
+
+def test_existing_staging_directory_is_never_deleted(tmp_path, monkeypatch):
+    import juniper_math.tokenizer as tokenizer_module
+
+    monkeypatch.setattr(tokenizer_module.tempfile, "gettempdir", lambda: str(tmp_path))
+    staging = tmp_path / "juniper_tokenizer_build"
+    staging.mkdir()
+    sentinel = staging / "do-not-delete"
+    sentinel.write_text("owned by an interrupted or concurrent process", encoding="utf-8")
+    corpus = tmp_path / "corpus.txt"
+    rebuild_corpus_for_config(CONFIG, corpus)
+    cfg = load_tokenizer_config()
+    object.__setattr__(cfg, "model_dir", str(tmp_path / "out"))
+    with pytest.raises(JuniperTokenizerError, match="Refusing to use existing"):
+        train_tokenizer(cfg, corpus, overwrite=True)
+    assert sentinel.read_text(encoding="utf-8") == "owned by an interrupted or concurrent process"
 
 
 def test_train_refuses_to_overwrite_without_flag(tmp_path):
@@ -265,7 +319,19 @@ def test_special_token_map_hash_changes_when_corrupted(tmp_path):
 
 def test_artifact_hashes_are_64_char_hex():
     hashes = tokenizer_artifact_hashes(CONFIG)
-    assert set(hashes) == {"model", "vocab", "special_token_map", "config_snapshot"}
+    assert set(hashes) == {"model", "vocab", "special_token_map", "config_snapshot", "corpus_digest"}
     for digest in hashes.values():
         assert len(digest) == 64
         int(digest, 16)  # raises if not valid hex
+
+
+def test_corpus_digest_matches_a_fresh_generated_corpus(tmp_path):
+    corpus = tmp_path / "corpus.txt"
+    assert rebuild_corpus_for_config(CONFIG, corpus) == 200_000
+    recorded = CONFIG.corpus_digest_path.read_text(encoding="utf-8").split()[0]
+    assert recorded == sha256_file(corpus)
+
+
+def test_bytes_are_rejected_at_the_wrapper_boundary():
+    with pytest.raises(TypeError, match="accepts str only"):
+        TOKENIZER.encode(b"not decoded text")  # type: ignore[arg-type]
