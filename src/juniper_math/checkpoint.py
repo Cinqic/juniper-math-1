@@ -20,6 +20,7 @@ either has the old checkpoint or the new one, never a corrupt partial one.
 
 from __future__ import annotations
 
+import copy
 import os
 import random
 import tempfile
@@ -229,6 +230,29 @@ def verify_checkpoint_compatibility(raw: dict[str, Any], architecture: Architect
         )
 
 
+def _validate_checkpoint_payload(raw: dict[str, Any]) -> None:
+    """Reject incomplete checkpoint payloads before mutating caller-owned state."""
+    required = {
+        "model_state_dict": dict,
+        "rng_state": dict,
+        "step": int,
+        "tokens_seen": int,
+        "training_config": dict,
+        "data_stream_position": dict,
+        "seed": int,
+    }
+    for key, expected_type in required.items():
+        value = raw.get(key)
+        if isinstance(value, bool) or not isinstance(value, expected_type):
+            raise CheckpointError(
+                f"Checkpoint has invalid or missing {key!r}; expected {expected_type.__name__}."
+            )
+    for key in ("optimizer_state_dict", "scheduler_state_dict", "scaler_state_dict"):
+        value = raw.get(key)
+        if value is not None and not isinstance(value, dict):
+            raise CheckpointError(f"Checkpoint field {key!r} must be a dict or null.")
+
+
 def load_checkpoint(
     path: Path,
     architecture: ArchitectureConfig,
@@ -239,19 +263,43 @@ def load_checkpoint(
     scaler: torch.amp.GradScaler | None = None,
     restore_rng: bool = True,
 ) -> TrainingCheckpoint:
-    """Load a checkpoint, verify compatibility, and restore state into the given objects."""
+    """Load a compatible checkpoint transactionally into the given objects.
+
+    State is restored only after payload validation. If any individual restore
+    operation fails, this function restores the caller-owned objects and RNG
+    state to their pre-load snapshots before raising ``CheckpointError``.
+    """
     raw = load_checkpoint_raw(path)
     verify_checkpoint_compatibility(raw, architecture)
+    _validate_checkpoint_payload(raw)
 
-    model.load_state_dict(raw["model_state_dict"])
-    if optimizer is not None and raw.get("optimizer_state_dict") is not None:
-        optimizer.load_state_dict(raw["optimizer_state_dict"])
-    if scheduler is not None and raw.get("scheduler_state_dict") is not None:
-        scheduler.load_state_dict(raw["scheduler_state_dict"])
-    if scaler is not None and raw.get("scaler_state_dict") is not None:
-        scaler.load_state_dict(raw["scaler_state_dict"])
-    if restore_rng and raw.get("rng_state") is not None:
-        restore_rng_state(raw["rng_state"])
+    model_before = copy.deepcopy(model.state_dict())
+    optimizer_before = copy.deepcopy(optimizer.state_dict()) if optimizer is not None else None
+    scheduler_before = copy.deepcopy(scheduler.state_dict()) if scheduler is not None else None
+    scaler_before = copy.deepcopy(scaler.state_dict()) if scaler is not None else None
+    rng_before = capture_rng_state() if restore_rng else None
+
+    try:
+        model.load_state_dict(raw["model_state_dict"], strict=True)
+        if optimizer is not None and raw.get("optimizer_state_dict") is not None:
+            optimizer.load_state_dict(raw["optimizer_state_dict"])
+        if scheduler is not None and raw.get("scheduler_state_dict") is not None:
+            scheduler.load_state_dict(raw["scheduler_state_dict"])
+        if scaler is not None and raw.get("scaler_state_dict") is not None:
+            scaler.load_state_dict(raw["scaler_state_dict"])
+        if restore_rng:
+            restore_rng_state(raw["rng_state"])
+    except Exception as exc:  # noqa: BLE001 - normalize framework-specific restore errors
+        model.load_state_dict(model_before, strict=True)
+        if optimizer is not None and optimizer_before is not None:
+            optimizer.load_state_dict(optimizer_before)
+        if scheduler is not None and scheduler_before is not None:
+            scheduler.load_state_dict(scheduler_before)
+        if scaler is not None and scaler_before is not None:
+            scaler.load_state_dict(scaler_before)
+        if rng_before is not None:
+            restore_rng_state(rng_before)
+        raise CheckpointError(f"Checkpoint restoration failed; prior state was preserved: {exc}") from exc
 
     return TrainingCheckpoint(
         schema_version=raw["schema_version"],

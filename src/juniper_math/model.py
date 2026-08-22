@@ -237,6 +237,20 @@ class JuniperMathModel(nn.Module):
                     f"attention_mask shape {tuple(attention_mask.shape)} must match "
                     f"input_ids shape {tuple(input_ids.shape)}."
                 )
+            if attention_mask.device != input_ids.device:
+                raise JuniperModelError("attention_mask must be on the same device as input_ids.")
+            if attention_mask.dtype is not torch.bool and not torch.is_floating_point(attention_mask):
+                allowed = (torch.int8, torch.int16, torch.int32, torch.int64, torch.uint8)
+                if attention_mask.dtype not in allowed:
+                    raise JuniperModelError(
+                        f"attention_mask must have boolean or integer dtype, got {attention_mask.dtype}."
+                    )
+            if torch.is_floating_point(attention_mask):
+                raise JuniperModelError(
+                    f"attention_mask must have boolean or integer dtype, got {attention_mask.dtype}."
+                )
+            if attention_mask.numel() and not bool(((attention_mask == 0) | (attention_mask == 1)).all()):
+                raise JuniperModelError("attention_mask values must be 0/1 (False/True).")
 
     def forward(
         self,
@@ -258,6 +272,13 @@ class JuniperMathModel(nn.Module):
                 raise JuniperModelError(
                     f"labels shape {tuple(labels.shape)} must match input_ids shape {tuple(input_ids.shape)}."
                 )
+            if labels.device != input_ids.device:
+                raise JuniperModelError("labels must be on the same device as input_ids.")
+            if torch.is_floating_point(labels) or labels.dtype not in (torch.int16, torch.int32, torch.int64):
+                raise JuniperModelError(f"labels must be an integer dtype, got {labels.dtype}.")
+            valid_labels = (labels == -100) | ((labels >= 0) & (labels < self.vocab_size))
+            if not bool(valid_labels.all()):
+                raise JuniperModelError(f"labels must be -100 or token ids in [0, {self.vocab_size}).")
             shift_logits = logits[:, :-1, :].contiguous()
             shift_labels = labels[:, 1:].contiguous()
             flat_labels = shift_labels.view(-1)

@@ -116,6 +116,32 @@ def test_checkpoint_corrupted_file_rejected(tmp_path):
         load_checkpoint_raw(path)
 
 
+def test_checkpoint_restore_failure_rolls_back_model_state(tmp_path):
+    source = build_model(CONFIG)
+    checkpoint = _make_checkpoint(source, None)
+    raw = checkpoint.to_dict()
+    raw["model_state_dict"] = {"embed_tokens.weight": source.embed_tokens.weight.detach().clone()}
+    path = tmp_path / "incomplete_model_state.pt"
+    torch.save(raw, path)
+
+    target = build_model(CONFIG)
+    before = {name: parameter.detach().clone() for name, parameter in target.named_parameters()}
+    with pytest.raises(CheckpointError, match="prior state was preserved"):
+        load_checkpoint(path, CONFIG, model=target)
+    for name, parameter in target.named_parameters():
+        assert torch.equal(parameter, before[name]), f"{name} changed after failed restore"
+
+
+def test_checkpoint_missing_required_payload_rejected_before_restore(tmp_path):
+    model = build_model(CONFIG)
+    raw = _make_checkpoint(model, None).to_dict()
+    del raw["rng_state"]
+    path = tmp_path / "missing_rng.pt"
+    torch.save(raw, path)
+    with pytest.raises(CheckpointError, match="rng_state"):
+        load_checkpoint(path, CONFIG, model=build_model(CONFIG))
+
+
 def test_atomic_save_does_not_clobber_good_checkpoint_on_failure(tmp_path, monkeypatch):
     model = build_model(CONFIG)
     ckpt = _make_checkpoint(model, None)

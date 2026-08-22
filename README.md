@@ -18,8 +18,8 @@ yet mathematical capability of any kind.
 
 ```
 Phase 0 — Foundation and Recovery: COMPLETE
-Phase 1 — Architecture:            IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW
-Phase 2 — Tokenizer and Data:      NOT AUTHORIZED
+Phase 1 — Architecture:            COMPLETE
+Phase 2 — Math Tokenizer:          AUTHORIZED — NOT STARTED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -37,10 +37,9 @@ memorization experiment, and benchmarking on the actual RTX 2060/Ryzen 7
 5700G target hardware. **This is not trained mathematical capability** — it
 is proof that the architecture mechanics (forward pass, backward pass,
 gradients, checkpointing, hardware fit) are correct. No tokenizer, real
-dataset, or Cinqic Calculator integration exists yet. Phase 1 has been
-self-reviewed by Claude Sonnet 5 but **not yet independently reviewed** —
-it awaits GPT-5.6 Terra's audit, remediation if necessary, and final
-approval before Phase 2 can begin.
+dataset, or Cinqic Calculator integration exists yet. Phase 1 was
+independently audited and remediated by GPT-5.6 Terra. Phase 2 is authorized
+but has not begun.
 
 - Canonical machine-readable status: [`config/project.yaml`](config/project.yaml)
 - Phase 0 independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
@@ -52,6 +51,9 @@ approval before Phase 2 can begin.
 - Phase 1 benchmarks: [`reports/PHASE1_BENCHMARKS.md`](reports/PHASE1_BENCHMARKS.md)
 - Phase 1 self-review: [`reports/PHASE1_SELF_REVIEW.md`](reports/PHASE1_SELF_REVIEW.md)
 - Phase 1 Terra handoff package: [`reports/PHASE1_TERRA_HANDOFF.md`](reports/PHASE1_TERRA_HANDOFF.md)
+- Phase 1 independent review: [`reports/TERRA_PHASE1_REVIEW.md`](reports/TERRA_PHASE1_REVIEW.md)
+- Phase 1 remediation: [`reports/PHASE1_REMEDIATION.md`](reports/PHASE1_REMEDIATION.md)
+- Phase 1 final approval: [`reports/PHASE1_FINAL_APPROVAL.md`](reports/PHASE1_FINAL_APPROVAL.md)
 
 ## Principles
 
@@ -93,7 +95,7 @@ evals/        Frozen evaluation suites
 manifests/    Source, license, and artifact provenance/integrity metadata
 scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
-tests/        Automated test suite (202 tests)
+tests/        Automated test suite (208 tests)
 tools/        (reserved) deterministic math tool contracts — Phase 3
 training/     (reserved) real training entry points — Phase 6/7
 experiments/  Experiment metadata
@@ -187,8 +189,8 @@ actually exercised — see
 | Phase | Scope | Status |
 |---|---|---|
 | 0 | Foundation and Recovery | **COMPLETE** |
-| 1 | Architecture — Transformer implementation, validation, benchmarking | **IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW** |
-| 2 | Tokenizer and data | **NOT AUTHORIZED** |
+| 1 | Architecture — Transformer implementation, validation, benchmarking | **COMPLETE** |
+| 2 | Math Tokenizer | **AUTHORIZED — NOT STARTED** |
 | 3 | Deterministic tool integration ("Cinqic Calculator") | Not started |
 | 4 | Dataset construction | Not started |
 

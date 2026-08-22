@@ -24,7 +24,7 @@ architecture_config: "config/architecture.yaml"
 
 current_phase: 1
 phase_name: "Architecture"
-phase_status: "AWAITING_GPT_5_6_TERRA_REVIEW"
+phase_status: "COMPLETE"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -65,14 +65,13 @@ phase_0_approval:
   review_candidate_tag: "phase-0-review-candidate"
   final_tag: "phase-0-foundation"
 
-# Phase 1 approval record — in progress. Sonnet 5 engineering is complete;
-# Terra has not yet reviewed. See reports/PHASE1_REPORT.md,
-# reports/PHASE1_SELF_REVIEW.md, reports/PHASE1_TERRA_HANDOFF.md.
+# Phase 1 approval record. See reports/PHASE1_REMEDIATION.md,
+# reports/TERRA_PHASE1_REVIEW.md, and reports/PHASE1_FINAL_APPROVAL.md.
 phase_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
-  terra_independent_review: "pending"
-  terra_final_approval: "pending"
+  terra_independent_review: "approved"
+  terra_final_approval: "approved"
   review_candidate_tag: "phase-1-review-candidate"
   final_tag: "phase-1-architecture"
   starting_foundation_commit: "f9e3659efe37183bae60ffafc2762b3d342cd047"
@@ -80,10 +79,8 @@ phase_approval:
 
 next_phase:
   number: 2
-  name: "Tokenizer and Data"
-  status: "NOT_AUTHORIZED"
+  name: "Math Tokenizer"
+  status: "AUTHORIZED"
   started: false
   note: >
-    Phase 2 remains blocked until Phase 1 receives GPT-5.6 Terra's
-    independent review, remediation if necessary, and final approval
-    (final tag phase-1-architecture).
+    Phase 2 is authorized after Phase 1 final approval but has not started.

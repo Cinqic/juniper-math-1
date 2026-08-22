@@ -271,6 +271,15 @@ def test_padding_mask_shape_validation():
         model(x, attention_mask=bad_mask)
 
 
+def test_padding_mask_dtype_and_values_validation():
+    model = build_model(CONFIG)
+    x = torch.randint(0, CONFIG.vocab_size, (1, 4))
+    with pytest.raises(JuniperModelError, match="boolean or integer dtype"):
+        model(x, attention_mask=torch.ones(1, 4, dtype=torch.float32))
+    with pytest.raises(JuniperModelError, match="values must be 0/1"):
+        model(x, attention_mask=torch.tensor([[1, 1, 2, 0]]))
+
+
 def test_padding_positions_not_attended():
     """Changing a padded (masked-out) token's id must not change any valid position's logits."""
     torch.manual_seed(1)
@@ -366,6 +375,17 @@ def test_labels_shape_mismatch_rejected():
     bad_labels = torch.randint(0, CONFIG.vocab_size, (1, 4))
     with pytest.raises(JuniperModelError, match="labels shape"):
         model(x, labels=bad_labels)
+
+
+def test_labels_dtype_and_range_rejected():
+    model = build_model(CONFIG)
+    x = torch.randint(0, CONFIG.vocab_size, (1, 8))
+    with pytest.raises(JuniperModelError, match="integer dtype"):
+        model(x, labels=x.float())
+    labels = x.clone()
+    labels[0, 0] = -1
+    with pytest.raises(JuniperModelError, match="-100 or token ids"):
+        model(x, labels=labels)
 
 
 # ---------------------------------------------------------------------------
