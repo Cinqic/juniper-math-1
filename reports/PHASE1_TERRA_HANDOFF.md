@@ -10,7 +10,7 @@ necessary, and approve Phase 1 is either in this document or linked from it.
 |---|---|
 | Repository | `https://github.com/Cinqic/juniper-math-1` |
 | Branch | `main` |
-| Phase 1 review candidate commit | `6a49586ca04c97721c4cf0fad4938f2a2a3f2da5` (this handoff doc is committed in a follow-up commit on top of that commit; the tag `phase-1-review-candidate` points at the final commit including this file) |
+| Phase 1 review candidate commit | resolve via `git rev-parse phase-1-review-candidate^{commit}` on the cloned repo — the tag is the authoritative pointer; do not trust a hardcoded SHA in this doc, which would go stale on any follow-up commit |
 | Candidate tag | `phase-1-review-candidate` (non-final — points at the Sonnet 5 candidate; Terra owns `phase-1-architecture`, the final tag) |
 | Starting foundation | tag `phase-0-foundation`, commit `f9e3659efe37183bae60ffafc2762b3d342cd047` |
 
