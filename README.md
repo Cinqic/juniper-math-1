@@ -3,8 +3,8 @@
 A purpose-built, approximately five-million-parameter mathematical language
 model. **No model is trained yet.** This repository has an implemented,
 mechanically-validated architecture (Phase 1) and a trained, validated
-math-specific tokenizer (Phase 2, awaiting independent review) — not a
-trained model, and not yet mathematical capability of any kind.
+math-specific tokenizer (Phase 2, complete) — not a trained model, and not
+yet mathematical capability of any kind.
 
 ## Research question
 
@@ -53,6 +53,16 @@ byte-for-byte from the committed corpus generator and config. Real
 dataset construction and Cinqic Calculator integration remain later-phase
 work. Phase 2 was independently audited, remediated, and approved by GPT-5.6
 Terra. Phase 3 is authorized but has not started.
+
+### Phase 2 release verification
+
+The approved tokenizer is frozen at [`phase-2-tokenizer`](https://github.com/Cinqic/juniper-math-1/tree/phase-2-tokenizer),
+which resolves to `eaf8fd33837b7bb73c41f2f21bc81386d09dc516`. Its deterministic
+200,000-line corpus has SHA-256
+`86c3afa92b2cc109b9d3ba340ce59e920e84092fd88347154b006529db7fd13f`.
+The final audit recorded 294 passing tests, a green
+[GitHub Actions run](https://github.com/Cinqic/juniper-math-1/actions/runs/32588215850),
+and successful fresh-clone reconstruction of all tokenizer artifacts.
 
 - Canonical machine-readable status: [`config/project.yaml`](config/project.yaml)
 - Phase 0 independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
