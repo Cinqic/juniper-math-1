@@ -13,7 +13,23 @@ datacenter resources:
 
 ## Supported Python
 
-Python `>=3.10,<3.13`, as declared in [`pyproject.toml`](../pyproject.toml).
+Python `>=3.12,<3.13`, as declared in [`pyproject.toml`](../pyproject.toml).
+Narrowed from `>=3.10` during Opus 5 Phase 0 remediation so that declared
+support equals *tested* support: the validated dependency set requires 3.12
+(`numpy` 2.5.2 needs >= 3.12), so installing on 3.10/3.11 would silently
+resolve a different environment.
+
+On Debian, Ubuntu, and Linux Mint, venv and pip support ship separately from
+the interpreter and must be installed explicitly:
+
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip
+```
+
+Without `python3-venv`, `python3 -m venv` fails with
+`ensurepip is not available`. `scripts/bootstrap.sh` detects this up front and
+tells you what to install; it never runs `sudo` itself.
 
 ## System-level assumptions (not covered by Python packaging)
 
@@ -32,7 +48,13 @@ reproducible purely from this repository:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip
-pip install -e ".[dev]"
+
+# Exact validated environment (preferred — see requirements-lock.txt):
+pip install -r requirements-lock.txt
+pip install -e . --no-deps
+
+# Or resolve from pyproject.toml ranges (only when testing upgrades):
+# pip install -e ".[dev]"
 ```
 
 ## Validating the environment

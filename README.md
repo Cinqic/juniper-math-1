@@ -16,16 +16,25 @@ model. **No model is trained yet.** This repository is currently in
 ## Current status
 
 ```
-Phase:  0 — Foundation and Recovery
-Status: AWAITING_OPUS_5_REVIEW
+Phase 0 — Foundation and Recovery: COMPLETE
+Phase 1 — Architecture:            AUTHORIZED (not started)
 ```
 
-Phase 0 implementation and self-review by Claude Sonnet 5 are complete.
-The phase is awaiting independent review by Claude Opus 5 and final
-inspection by Cinqic. **Phase 1 is not authorized.** See
-[`config/project.yaml`](config/project.yaml) for the canonical,
-machine-readable status and [`reports/PHASE0_REPORT.md`](reports/PHASE0_REPORT.md)
-for the full engineering report.
+Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
+audited by Claude Opus 5, reviewed by Cinqic, then remediated and
+re-verified. The independent audit initially returned **CHANGES REQUIRED**
+(1 HIGH, 4 MEDIUM, 6 LOW) — most importantly a wrong answer in the frozen
+evaluation suite. Every finding was resolved and re-verified before
+approval.
+
+Phase 1 is authorized but **has not begun**: no model, attention, RoPE,
+tokenizer, dataset, or training code exists in this repository.
+
+- Canonical machine-readable status: [`config/project.yaml`](config/project.yaml)
+- Independent review (incl. final re-review): [`reports/OPUS5_PHASE0_REVIEW.md`](reports/OPUS5_PHASE0_REVIEW.md)
+- Remediation record: [`reports/PHASE0_REMEDIATION.md`](reports/PHASE0_REMEDIATION.md)
+- Final approval: [`reports/PHASE0_FINAL_APPROVAL.md`](reports/PHASE0_FINAL_APPROVAL.md)
+- Engineering report: [`reports/PHASE0_REPORT.md`](reports/PHASE0_REPORT.md)
 
 ## Principles
 
@@ -61,7 +70,7 @@ evals/        Frozen evaluation suites
 manifests/    Source, license, and artifact provenance/integrity metadata
 scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
-tests/        Automated test suite
+tests/        Automated test suite (128 tests)
 tools/        (reserved) deterministic math tool contracts — Phase 3
 training/     (reserved) training entry points — Phase 1+
 experiments/  Experiment metadata
@@ -71,15 +80,32 @@ releases/     Release metadata
 
 ## Setup
 
+Requires Python 3.12. On Debian, Ubuntu, or Linux Mint, install venv support
+first — it is **not** bundled with `python3`:
+
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip
+```
+
+Then:
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+pip install --upgrade pip
+pip install -r requirements-lock.txt   # exact validated environment
+pip install -e . --no-deps
 python -m juniper_math validate-env
 ```
 
+Or just run [`scripts/bootstrap.sh`](scripts/bootstrap.sh), which performs the
+prerequisite preflight and the above. `requirements-lock.txt` pins the exact
+Python environment that passed the Phase 0 gate; `pyproject.toml`'s ranges are
+compatibility metadata, not a reproducible environment.
+
 See [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md) and
-[`scripts/bootstrap.sh`](scripts/bootstrap.sh).
+[`docs/RECOVERY.md`](docs/RECOVERY.md).
 
 ## Common commands
 
@@ -87,9 +113,11 @@ See [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md) and
 python -m juniper_math status              # current phase/status
 python -m juniper_math validate-env         # environment PASS/WARNING/FAIL
 python -m juniper_math validate-config      # architecture + project config
-python -m juniper_math evals validate       # frozen evaluation suite integrity
+python -m juniper_math evals validate       # suite schema + deterministic ground truth
+python -m juniper_math evals verify         # recompute deterministic answers only
 python -m juniper_math hash verify          # verify frozen artifact hashes
-python -m juniper_math manifests-validate   # source/license manifests
+python -m juniper_math manifests-validate   # source/license manifests + dependency cross-check
+python -m juniper_math deps-check           # pyproject deps vs licenses.yaml
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). Commands for later
@@ -111,9 +139,16 @@ See [`docs/TESTING.md`](docs/TESTING.md).
 ## Evaluation
 
 A frozen, versioned, hashed baseline evaluation suite
-([`evals/phase0_v1.json`](evals/phase0_v1.json)) exists ahead of any model —
-see [`docs/EVALUATIONS.md`](docs/EVALUATIONS.md). It validates schema/ID/
-category integrity now; scoring a real model against it is later-phase work.
+([`evals/phase0_v1.json`](evals/phase0_v1.json), `suite_version 0.1.1`, 22
+cases) exists ahead of any model — see
+[`docs/EVALUATIONS.md`](docs/EVALUATIONS.md). It validates schema/ID/category
+integrity **and** recomputes every deterministic answer from structured
+verification metadata. Scoring a real model against it is later-phase work.
+
+Version 0.1.1 corrected an invalid ground-truth answer found during
+independent review (`tool-001`: `84317 * 9926` was recorded as `837042742`;
+the correct product is `836930542`) and added the verification infrastructure
+that makes that class of error detectable automatically.
 
 ## Recovery
 
@@ -126,8 +161,8 @@ actually exercised — see
 
 | Phase | Scope | Status |
 |---|---|---|
-| 0 | Foundation and Recovery | AWAITING_OPUS_5_REVIEW |
-| 1 | Transformer implementation and training loop | Not started |
+| 0 | Foundation and Recovery | **COMPLETE** |
+| 1 | Architecture — Transformer implementation and training loop | **AUTHORIZED** (not started) |
 | 2 | Tokenizer training | Not started |
 | 3 | Deterministic tool integration ("Cinqic Calculator") | Not started |
 | 4 | Dataset construction | Not started |

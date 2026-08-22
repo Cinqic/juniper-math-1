@@ -1,4 +1,17 @@
-# Recovery Test Report
+# Recovery Test Report (Sonnet 5 candidate — superseded)
+
+> **CORRECTION NOTICE — added during Opus 5 Phase 0 remediation.**
+>
+> This report is preserved as written, as historical evidence of the Phase 0
+> candidate's own assessment. Independent review subsequently found that some
+> of its claims were **false**. The report has NOT been rewritten to hide
+> that. Corrections are listed at the end under "Claims corrected after
+> independent review". See `reports/OPUS5_PHASE0_REVIEW.md` and
+> `reports/PHASE0_REMEDIATION.md`.
+
+> **Superseded by** the final recovery test recorded in
+> `reports/PHASE0_FINAL_APPROVAL.md`, which was run against the approved
+> commit with the corrected documentation and the dependency lock.
 
 ## Identification
 
@@ -96,3 +109,33 @@ repository-controlled instructions, reaches the expected Phase 0 state:
 environment validation passes, all configuration and manifests validate,
 all frozen artifact hashes verify, the full test suite passes, and the
 project reports the correct phase status.
+
+---
+
+## Claims corrected after independent review
+
+Added by Claude Opus 5 during Phase 0 remediation. Original text unchanged.
+
+1. **The `python3-venv` / `ensurepip` issue was misattributed (F-04).**
+   This report called it "this container's" quirk and "a known limitation of
+   the *test sandbox*, not the recovery procedure." That is wrong. It was
+   independently reproduced on the actual development host (Linux Mint 22.3),
+   where the system `python3` has no `ensurepip`, no `pip`, and no working
+   `venv`. On Debian, Ubuntu, and Linux Mint, venv support is a separate
+   package. `docs/RECOVERY.md` documented only "install Python", so the
+   documented procedure failed at its own step 3 on the platform it targets.
+   Fixed: prerequisites now name `python3-venv`/`python3-pip` explicitly, and
+   `scripts/bootstrap.sh` performs an `ensurepip` preflight with an actionable
+   message.
+
+2. **This test did not cover the review candidate (F-06).**
+   It records commit `13081285…` and "58 passed". The review candidate was
+   `b39e600…` with 63 tests — two commits later. No recovery evidence existed
+   for the state actually submitted for review. The independent reviewer
+   re-ran recovery at `b39e600`, and the final recovery test was re-run again
+   against the approved commit.
+
+3. **Dependency installation was not reproducible.**
+   This test installed from `pyproject.toml` ranges, so it validated *a*
+   resolvable environment rather than *the* validated one. Recovery now
+   installs from `requirements-lock.txt`.

@@ -6,11 +6,17 @@ own judgment — disagreement with anything below is the point of this gate.
 ## Where things are
 
 - **Repository:** `https://github.com/Cinqic/juniper-math-1`, branch `main`.
-- **Candidate commit:** the `HEAD` of `main` at the time this file was
-  pushed — run `git log -1 --format=%H` against `origin/main` for the exact
-  hash, or see the commit history: `9954daf` and everything after it on
-  `main` (this file's own commit included) constitute the full Phase 0
-  candidate.
+- **Candidate commit (pinned):** `b39e60031e85822a293ca60b5676ce5b7286a66f`,
+  tagged `phase-0-review-candidate`.
+
+  > **Correction (F-11):** this originally described the candidate as "the
+  > `HEAD` of `main` at the time this file was pushed" — a moving reference.
+  > An audit handoff must pin the exact commit so the reviewed state is
+  > unambiguous. The SHA above is the state that was actually reviewed.
+  >
+  > **That candidate did not pass review.** It returned CHANGES REQUIRED
+  > (1 HIGH, 4 MEDIUM, 6 LOW). See `reports/OPUS5_PHASE0_REVIEW.md`. The
+  > approved state is tagged `phase-0-foundation`.
 - **Phase 0 report:** `reports/PHASE0_REPORT.md`
 - **Self-review report:** `reports/SELF_REVIEW.md`
 - **Recovery test report:** `reports/RECOVERY_TEST_REPORT.md`
@@ -20,8 +26,11 @@ own judgment — disagreement with anything below is the point of this gate.
 ```bash
 git clone https://github.com/Cinqic/juniper-math-1.git
 cd juniper-math-1
+# Debian/Ubuntu/Linux Mint: sudo apt install -y python3-venv python3-pip
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e ".[dev]"
+pip install --upgrade pip
+pip install -r requirements-lock.txt
+pip install -e . --no-deps
 
 python -m juniper_math validate-env
 python -m juniper_math validate-config
@@ -29,6 +38,8 @@ pytest -v
 python -m juniper_math hash verify
 python -m juniper_math evals validate
 python -m juniper_math manifests-validate
+python -m juniper_math deps-check
+python -m juniper_math evals verify
 python -m juniper_math status
 ruff check . && ruff format --check . && mypy
 ```

@@ -24,6 +24,7 @@ _VALID_PHASE_STATUSES = {
     "AWAITING_OPUS_5_REVIEW",
     "AWAITING_HUMAN_REVIEW",
     "APPROVED",
+    "COMPLETE",
 }
 
 
@@ -43,6 +44,8 @@ class ProjectMetadata:
     phase_status: str
     primary_hardware: dict[str, Any]
     review_chain: list[dict[str, Any]]
+    phase_approval: dict[str, Any]
+    next_phase: dict[str, Any]
 
 
 def _require(raw: dict, key: str, expected_type: type) -> Any:
@@ -89,4 +92,6 @@ def load_project_metadata(path: Path | None = None) -> ProjectMetadata:
         phase_status=phase_status,
         primary_hardware=_require(raw, "primary_hardware", dict),
         review_chain=_require(raw, "review_chain", list),
+        phase_approval=_require(raw, "phase_approval", dict),
+        next_phase=_require(raw, "next_phase", dict),
     )

@@ -24,7 +24,7 @@ architecture_config: "config/architecture.yaml"
 
 current_phase: 0
 phase_name: "Foundation and Recovery"
-phase_status: "AWAITING_OPUS_5_REVIEW"
+phase_status: "COMPLETE"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -42,3 +42,30 @@ review_chain:
   - role: "Final Human Reviewer"
     actor: "Cinqic"
     stage: "final inspection and phase authorization"
+  - role: "Final Remediation and Verification"
+    actor: "Claude Opus 5"
+    stage: "remediation of review findings, full regression, final approval"
+
+# Phase 0 approval record. The independent review initially returned
+# CHANGES REQUIRED (1 HIGH, 4 MEDIUM, 6 LOW); those findings were remediated
+# and re-verified. See reports/OPUS5_PHASE0_REVIEW.md,
+# reports/PHASE0_REMEDIATION.md, and reports/PHASE0_FINAL_APPROVAL.md.
+phase_approval:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  opus_5_independent_review: "changes_required_then_approved_after_remediation"
+  cinqic_final_review: "approved"
+  opus_5_final_verification: "approved"
+  original_review_candidate: "b39e60031e85822a293ca60b5676ce5b7286a66f"
+  review_candidate_tag: "phase-0-review-candidate"
+  final_tag: "phase-0-foundation"
+
+next_phase:
+  number: 1
+  name: "Architecture"
+  status: "AUTHORIZED"
+  started: false
+  note: >
+    Phase 1 is authorized but has not begun. No model, attention, RoPE,
+    RMSNorm, SwiGLU, tokenizer, or training implementation exists in this
+    repository.

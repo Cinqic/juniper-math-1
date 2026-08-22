@@ -9,17 +9,22 @@ be reported honestly as CPU-only, never faked as CUDA-available.
 
 from __future__ import annotations
 
+import os
 import platform
 import subprocess
 import sys
 from dataclasses import dataclass, field
-from enum import Enum
+from enum import StrEnum
 
-_MIN_PYTHON = (3, 10)
+# Must stay in sync with pyproject.toml's requires-python. Narrowed from 3.10
+# during Opus 5 Phase 0 remediation so declared support equals tested support
+# (see reports/OPUS5_PHASE0_REVIEW.md NOTE-A).
+_MIN_PYTHON = (3, 12)
 _MAX_PYTHON_EXCLUSIVE = (3, 13)
+_SUPPORTED_RANGE = "3.12"
 
 
-class CheckStatus(str, Enum):
+class CheckStatus(StrEnum):
     PASS = "PASS"
     WARNING = "WARNING"
     FAIL = "FAIL"
@@ -53,12 +58,16 @@ def _check_python(report: EnvironmentReport) -> None:
     version = sys.version_info[:3]
     version_str = ".".join(str(v) for v in version)
     if _MIN_PYTHON <= version[:2] < _MAX_PYTHON_EXCLUSIVE:
-        report.add("python_version", CheckStatus.PASS, f"Python {version_str} (supported range 3.10–3.12)")
+        report.add(
+            "python_version",
+            CheckStatus.PASS,
+            f"Python {version_str} (supported: {_SUPPORTED_RANGE})",
+        )
     else:
         report.add(
             "python_version",
             CheckStatus.FAIL,
-            f"Python {version_str} is outside the supported range 3.10–3.12",
+            f"Python {version_str} is outside the supported range ({_SUPPORTED_RANGE})",
         )
 
 
@@ -120,7 +129,7 @@ def _check_hardware(report: EnvironmentReport) -> None:
     report.add(
         "cpu_info",
         CheckStatus.PASS,
-        f"{platform.processor() or platform.machine()} ({__import__('os').cpu_count()} logical cores)",
+        f"{platform.processor() or platform.machine()} ({os.cpu_count()} logical cores)",
     )
     try:
         with open("/proc/meminfo", encoding="utf-8") as handle:

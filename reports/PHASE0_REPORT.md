@@ -1,5 +1,14 @@
 # Phase 0 Candidate Completion Report
 
+> **CORRECTION NOTICE — added during Opus 5 Phase 0 remediation.**
+>
+> This is the Sonnet 5 *candidate* report, preserved as written, as historical evidence of the Phase 0
+> candidate's own assessment. Independent review subsequently found that some
+> of its claims were **false**. The report has NOT been rewritten to hide
+> that. Corrections are listed at the end under "Claims corrected after
+> independent review". See `reports/OPUS5_PHASE0_REVIEW.md` and
+> `reports/PHASE0_REMEDIATION.md`.
+
 ## Identification
 
 - **Project:** Juniper Math 1
@@ -171,3 +180,24 @@ MEDIUM, 3 LOW severity) — see `reports/SELF_REVIEW.md` for the full table.
 
 Opus 5 independent technical review of this Phase 0 candidate. Phase 1 is
 **not** authorized until both Opus 5 and Cinqic approve.
+
+---
+
+## Claims corrected after independent review
+
+Added by Claude Opus 5 during Phase 0 remediation. The original text above is
+unchanged. This report described the candidate at `b39e600`, which **did not
+pass** independent review.
+
+| Claim | Verdict | Correction |
+|---|---|---|
+| "22 cases ... with schema validation, unique IDs, and **hand-verified deterministic answers where applicable**" | **INCORRECT** | `tool-001` was wrong (`837042742` vs `836930542`). Corrected in suite `0.1.1`; deterministic verification is now automated (F-01, F-02). |
+| "pinned/bounded dependencies" | **PARTIAL** | Bounded, not pinned. `requirements-lock.txt` now records the exact validated environment (F-03). |
+| "A real recovery test ... **PASS**" | **PARTIAL** | The procedure worked, but was run at `1308128` (58 tests), not the candidate `b39e600` (63 tests), and required an undocumented workaround for a missing `python3-venv` (F-04, F-06). |
+| "`manifests/licenses.yaml` — 3 entries" | **INCOMPLETE** | NumPy, a declared runtime dependency, had no entry; nothing cross-checked. Now 8 entries with an enforced cross-check (F-05). |
+| "Supported Python: 3.10–3.12" | **NOT VERIFIED** | Only 3.12 was ever tested, and the validated dependency set requires 3.12. Now declared as `>=3.12,<3.13` (NOTE-A). |
+| Evaluation suite SHA-256 `9f181afb…` | **SUPERSEDED** | That hash is correct for suite `0.1.0`, which contained the wrong answer. Suite `0.1.1` hashes to `46d65c9c2bdcd065e8c0123391b5748133ccfe40245de02b24ad8187027007e7`. |
+| "63 automated tests" | **SUPERSEDED** | Now 128, including regression tests for every finding above. |
+| Architecture, hashes, CI, secrets, phase discipline, CUDA/determinism honesty | **VERIFIED** | Independently reproduced and confirmed correct. |
+
+Final approved state: see `reports/PHASE0_FINAL_APPROVAL.md`.

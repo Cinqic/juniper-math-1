@@ -12,20 +12,25 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "96a554297b2a565698020fd56f0feb61b1cfea35a85a957f6137b871e9973090"
+    sha256: "f257621c371946635d272d17b47b38643252fdbbcdb7ac0608c002cf3e0a0ebf"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
     path: "evals/phase0_v1.json"
-    sha256: "9f181afb16b0730e4c7432cd287f5ebc12556ee003be8c0f2ec8df9fb30b66ac"
-    description: "Frozen Phase 0 baseline mathematical evaluation suite."
+    sha256: "46d65c9c2bdcd065e8c0123391b5748133ccfe40245de02b24ad8187027007e7"
+    description: "Frozen Phase 0 baseline mathematical evaluation suite (suite_version 0.1.1)."
 
   - artifact_id: "sources_manifest"
     path: "manifests/sources.yaml"
     sha256: "3f2cbc883776f347a29a652cf52d1874ab3de0aa9a6d6f89feec99565d12d29d"
     description: "Source provenance manifest."
 
+  - artifact_id: "dependency_lock"
+    path: "requirements-lock.txt"
+    sha256: "4be89c45f8c26963decc4833951dbba44c2220b4be26ee654cfd0e7f6199d341"
+    description: "Exact validated Phase 0 Python environment lock."
+
   - artifact_id: "licenses_manifest"
     path: "manifests/licenses.yaml"
-    sha256: "92a8a63a31dc18b91b113a5ee5b44e7da106a229858bdba3aae79355afd157c4"
+    sha256: "ad6736459ff574c12f2efca9fb053cad1a92754354dcc8ccc89be218bf5a4cf3"
     description: "License manifest."

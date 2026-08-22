@@ -1,10 +1,24 @@
 """Fixed evaluation suite loading and integrity validation.
 
 Phase 0 freezes a small baseline suite (evals/phase0_v1.json) BEFORE any
-model exists. Its purpose at this stage is schema/ID/category integrity and
-deterministic-reference validation — not scoring a model. Scoring
-infrastructure that actually runs a model against these cases is later-phase
-work.
+model exists. Its purpose at this stage is integrity — not scoring a model.
+Scoring infrastructure that actually runs a model against these cases is
+later-phase work.
+
+Two distinct kinds of validation are provided, and the distinction matters:
+
+* **Schema validation** (:func:`load_eval_suite`) — required fields, unique
+  IDs, known categories/difficulties/behaviors, well-formed types.
+* **Deterministic ground-truth validation**
+  (:mod:`juniper_math.verification`) — recomputes each deterministic case's
+  answer from structured ``verification`` metadata and compares it against
+  the recorded ``expected_answer``.
+
+Suite version 0.1.0 had schema validation only. That was insufficient: it
+declared answers "hand-verified" while case ``tool-001`` carried an
+arithmetically wrong product. Version 0.1.1 corrects the answer and adds the
+``verification`` block that makes such an error detectable automatically.
+See ``reports/OPUS5_PHASE0_REVIEW.md`` (F-01, F-02).
 """
 
 from __future__ import annotations
@@ -16,6 +30,7 @@ from typing import Any
 
 from juniper_math.errors import JuniperConfigError
 from juniper_math.paths import EVALS_DIR
+from juniper_math.verification import VALID_VERIFICATION_MODES, VerificationResult, verify_suite
 
 DEFAULT_SUITE_PATH = EVALS_DIR / "phase0_v1.json"
 
@@ -44,12 +59,18 @@ _VALID_CATEGORIES = {
     "error_recognition",
 }
 
+# Closed behavior vocabulary. `flag_undefined` was added in suite 0.1.1 to
+# distinguish undefined mathematics (5 / 0) from missing information (an
+# operand that was simply never supplied) — conflating them would train and
+# measure the wrong distinction. The unused `refuse_ambiguous` was removed in
+# the same version; `request_clarification` already covers that behavior.
+# See reports/OPUS5_PHASE0_REVIEW.md (F-08).
 _VALID_EXPECTED_BEHAVIORS = {
     "answer",
-    "refuse_ambiguous",
     "request_clarification",
     "refuse_unsupported",
     "flag_missing_information",
+    "flag_undefined",
     "flag_incorrect_answer",
     "invoke_tool",
 }
@@ -63,6 +84,7 @@ _REQUIRED_CASE_FIELDS = {
     "expected_answer",
     "tolerance",
     "tool_required",
+    "verification",
     "provenance",
     "notes",
 }
@@ -80,6 +102,7 @@ class EvalCase:
     expected_answer: Any
     tolerance: float | None
     tool_required: bool
+    verification: dict[str, Any]
     provenance: str
     notes: str
 
@@ -122,6 +145,18 @@ def _validate_case(raw: dict, index: int, source: Path) -> None:
         raise JuniperConfigError(
             f"{source}: case[{index}] id={raw['id']!r} 'tolerance' must be null or numeric"
         )
+    verification = raw["verification"]
+    if not isinstance(verification, dict):
+        raise JuniperConfigError(f"{source}: case[{index}] id={raw['id']!r} 'verification' must be a mapping")
+    if verification.get("mode") not in VALID_VERIFICATION_MODES:
+        raise JuniperConfigError(
+            f"{source}: case[{index}] id={raw['id']!r} has unknown verification mode "
+            f"{verification.get('mode')!r}; expected one of {sorted(VALID_VERIFICATION_MODES)}"
+        )
+    if "expression" not in verification:
+        raise JuniperConfigError(
+            f"{source}: case[{index}] id={raw['id']!r} 'verification' is missing 'expression'"
+        )
 
 
 def load_eval_suite(path: Path | None = None) -> EvalSuite:
@@ -156,9 +191,20 @@ def load_eval_suite(path: Path | None = None) -> EvalSuite:
                 expected_answer=raw_case["expected_answer"],
                 tolerance=raw_case["tolerance"],
                 tool_required=raw_case["tool_required"],
+                verification=raw_case["verification"],
                 provenance=raw_case["provenance"],
                 notes=raw_case["notes"],
             )
         )
 
     return EvalSuite(suite_version=raw["suite_version"], suite_id=raw["suite_id"], cases=cases)
+
+
+def verify_suite_ground_truth(suite: EvalSuite) -> list[VerificationResult]:
+    """Recompute every deterministic case's answer and report the results.
+
+    Schema validity says nothing about arithmetic correctness; this is the
+    check that does. Returns one result per case (semantic cases report as
+    verified with an explanatory detail).
+    """
+    return verify_suite(suite)

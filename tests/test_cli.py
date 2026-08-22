@@ -9,7 +9,7 @@ def test_status_exits_zero(capsys):
     assert main(["status"]) == 0
     out = capsys.readouterr().out
     assert "Juniper Math 1" in out
-    assert "AWAITING_OPUS_5_REVIEW" in out
+    assert "COMPLETE" in out
 
 
 def test_validate_config_exits_zero(capsys):

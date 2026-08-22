@@ -1,7 +1,25 @@
 # License manifest.
-# Tracks licensing for project code, dependencies, and (later) datasets/assets.
+#
+# SCOPE (explicit, per Opus 5 review finding F-05): this manifest tracks the
+# project's own code plus EVERY direct dependency declared in pyproject.toml —
+# both runtime dependencies and development extras. It does not attempt to
+# enumerate the full transitive dependency tree; transitive licensing is
+# inherited through the direct dependencies recorded here and is revisited if
+# anything is ever redistributed.
+#
+# Every `scope: dependency` / `scope: dev_dependency` entry carries a
+# `package` field naming its pyproject distribution. `juniper-math
+# deps-check` fails if a declared direct dependency has no entry here, so the
+# omission that produced F-05 (NumPy declared but unlicensed) cannot recur
+# silently.
+#
 # Never guess a license: use "UNKNOWN" or "REQUIRES_REVIEW" when uncertain.
 # Unknown licensing is not permission to use or redistribute.
+#
+# spdx_identifier records the license expression the upstream distribution
+# actually declares (read from installed package metadata in the validated
+# Phase 0 environment), not a simplified summary. Several projects ship
+# aggregate expressions because they vendor third-party components.
 
 licenses:
   - license_id: "juniper-math-1-code"
@@ -15,18 +33,83 @@ licenses:
 
   - license_id: "pytorch"
     scope: "dependency"
-    spdx_identifier: "BSD-3-Clause"
+    package: "torch"
+    spdx_identifier: "Apache-2.0 AND Apache-2.0 WITH LLVM-exception AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT"
     reference: "https://github.com/pytorch/pytorch/blob/main/LICENSE"
     attribution_required: true
-    restrictions: "none beyond standard BSD notice retention"
+    restrictions: "notice retention for each bundled component; PyTorch's own code is BSD-3-Clause"
     redistribution_status: "ALLOWED"
-    notes: "Core training/inference framework dependency."
+    notes: >
+      Core training/inference framework dependency. The distributed wheel declares an aggregate
+      SPDX expression because it vendors third-party components (LLVM, Eigen, and others). The
+      manifest previously recorded only "BSD-3-Clause", which is PyTorch's own project license but
+      not the full expression of the artifact actually installed. Corrected during Opus 5 Phase 0
+      remediation; verified against torch 2.13.0 package metadata.
 
   - license_id: "pyyaml"
     scope: "dependency"
+    package: "pyyaml"
     spdx_identifier: "MIT"
     reference: "https://github.com/yaml/pyyaml/blob/main/LICENSE"
     attribution_required: true
     restrictions: "none beyond standard MIT notice retention"
     redistribution_status: "ALLOWED"
-    notes: "Configuration file parsing dependency (used with yaml.safe_load only)."
+    notes: "Configuration file parsing dependency (used with yaml.safe_load only). Verified against PyYAML 6.0.3 package metadata."
+
+  - license_id: "numpy"
+    scope: "dependency"
+    package: "numpy"
+    spdx_identifier: "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0"
+    reference: "https://github.com/numpy/numpy/blob/main/LICENSE.txt"
+    attribution_required: true
+    restrictions: "notice retention for each bundled component; NumPy's own code is BSD-3-Clause"
+    redistribution_status: "ALLOWED"
+    notes: >
+      Numerical array dependency, declared explicitly in pyproject.toml (torch requires it, and an
+      undeclared NumPy caused a torch initialization warning). This entry was MISSING from the
+      Phase 0 review candidate despite NumPy being a declared runtime dependency — Opus 5
+      independent review finding F-05. Verified against numpy 2.5.2 package metadata, which
+      declares an aggregate expression because NumPy vendors third-party components.
+
+  - license_id: "pytest"
+    scope: "dev_dependency"
+    package: "pytest"
+    spdx_identifier: "MIT"
+    reference: "https://github.com/pytest-dev/pytest/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Test runner. Development-only; not redistributed with the project. Verified against pytest 8.4.2 package metadata."
+
+  - license_id: "ruff"
+    scope: "dev_dependency"
+    package: "ruff"
+    spdx_identifier: "MIT"
+    reference: "https://github.com/astral-sh/ruff/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Linter and formatter. Development-only; not redistributed with the project. Verified against ruff 0.16.4 package metadata."
+
+  - license_id: "mypy"
+    scope: "dev_dependency"
+    package: "mypy"
+    spdx_identifier: "MIT"
+    reference: "https://github.com/python/mypy/blob/master/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Static type checker. Development-only; not redistributed with the project. Verified against mypy 1.20.2 package metadata."
+
+  - license_id: "types-pyyaml"
+    scope: "dev_dependency"
+    package: "types-pyyaml"
+    spdx_identifier: "Apache-2.0"
+    reference: "https://github.com/python/typeshed/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "Apache-2.0 notice and NOTICE-file retention"
+    redistribution_status: "ALLOWED"
+    notes: >
+      PyYAML type stubs from typeshed. Development-only; not redistributed with the project.
+      Typeshed is Apache-2.0, not MIT — verified against types-PyYAML 6.0.12.20260815 package
+      metadata rather than assumed from PyYAML's own license.

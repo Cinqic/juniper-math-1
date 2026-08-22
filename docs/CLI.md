@@ -51,3 +51,15 @@ python -m juniper_math evals validate
 python -m juniper_math hash verify
 python -m juniper_math --version
 ```
+
+## Commands added during Opus 5 Phase 0 remediation
+
+| Command | Purpose |
+|---|---|
+| `evals verify` | Recompute every deterministic evaluation answer from its structured `verification` metadata and compare against the recorded `expected_answer`. Exits 1 on any mismatch. |
+| `deps-check` | Cross-check the direct dependencies declared in `pyproject.toml` against `manifests/licenses.yaml`. Exits 1 if a declared dependency has no licensing entry, has the wrong scope, or if a license entry is stale. |
+
+`evals validate` now runs schema validation **and** deterministic ground-truth
+verification. `manifests-validate` now includes the dependency/license
+cross-check. Both were previously schema-only — see
+`reports/OPUS5_PHASE0_REVIEW.md` (F-02, F-05).

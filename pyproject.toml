@@ -7,7 +7,12 @@ name = "juniper-math-1"
 version = "0.1.0"
 description = "A purpose-built ~5M-parameter mathematical language model: understanding, decomposing, tool-using, and verifying math problems."
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
+# Narrowed from ">=3.10,<3.13" during Opus 5 Phase 0 remediation. 3.10 and 3.11
+# were declared but never tested (review NOTE-A), and the validated dependency
+# set does not support them: numpy 2.5.2 requires >=3.12, so an install on 3.10
+# or 3.11 silently resolves a materially different environment. Declared support
+# now equals tested support. Widening requires adding the interpreter to CI first.
+requires-python = ">=3.12,<3.13"
 license = { file = "LICENSE" }
 authors = [{ name = "Cinqic" }]
 dependencies = [

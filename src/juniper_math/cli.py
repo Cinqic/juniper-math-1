@@ -6,7 +6,8 @@ style and use it consistently; both resolve here).
 
 Commands are split into two honest categories:
   - Fully functional now (Phase 0): status, validate-env, validate-config,
-    seed-test, evals validate, hash verify.
+    seed-test, evals validate, evals verify, hash verify,
+    manifests-validate, deps-check.
   - Not yet implemented (later phases): tokenizer, dataset, model, train,
     evaluate, infer, tool-test, checkpoint. These print an explicit
     "not implemented until Phase N" message and exit non-zero — they never
@@ -16,6 +17,7 @@ Commands are split into two honest categories:
 from __future__ import annotations
 
 import argparse
+import subprocess
 import sys
 from pathlib import Path
 
@@ -23,10 +25,11 @@ from juniper_math import __version__
 from juniper_math.architecture import load_architecture_config
 from juniper_math.environment import CheckStatus, run_environment_validation
 from juniper_math.errors import JuniperConfigError, JuniperManifestError
-from juniper_math.evals import load_eval_suite
+from juniper_math.evals import load_eval_suite, verify_suite_ground_truth
 from juniper_math.hashing import sha256_file
 from juniper_math.logging_utils import get_logger
 from juniper_math.manifests import (
+    check_dependency_licenses,
     load_licenses_manifest,
     load_sources_manifest,
     verify_artifacts_manifest,
@@ -48,6 +51,39 @@ _NOT_IMPLEMENTED = {
 }
 
 
+GIT_UNKNOWN = "unknown"
+GIT_UNAVAILABLE = "unavailable (git not found or not a repository)"
+
+
+def describe_git_state(cwd: Path | None = None) -> tuple[str, str]:
+    """Return ``(commit, tree_state)``, never converting a failure into success.
+
+    An earlier version reported ``clean`` whenever ``git status --porcelain``
+    produced no stdout — which is exactly what happens when the command
+    *fails* (not a repository, git missing, timeout). A failed interrogation
+    was therefore indistinguishable from a genuinely clean tree. Tree state is
+    now one of ``clean`` / ``dirty`` / ``unknown``, and ``unknown`` is
+    reported whenever git could not actually answer.
+    See reports/OPUS5_PHASE0_REVIEW.md (F-07).
+    """
+
+    def _run(args: list[str]) -> subprocess.CompletedProcess[str] | None:
+        try:
+            return subprocess.run(args, capture_output=True, text=True, timeout=5, check=False, cwd=cwd)
+        except (OSError, subprocess.SubprocessError):
+            return None
+
+    head = _run(["git", "rev-parse", "HEAD"])
+    if head is None:
+        return GIT_UNAVAILABLE, GIT_UNKNOWN
+    commit = head.stdout.strip() if head.returncode == 0 and head.stdout.strip() else GIT_UNKNOWN
+
+    status = _run(["git", "status", "--porcelain"])
+    if status is None or status.returncode != 0:
+        return commit, GIT_UNKNOWN
+    return commit, "dirty" if status.stdout.strip() else "clean"
+
+
 def _cmd_status(_args: argparse.Namespace) -> int:
     try:
         meta = load_project_metadata()
@@ -60,19 +96,9 @@ def _cmd_status(_args: argparse.Namespace) -> int:
     print(f"Phase status:   {meta.phase_status}")
     print(f"Architecture:   v{meta.architecture_version} (parameter target {meta.parameter_target:,})")
 
-    import subprocess
-
-    try:
-        commit = subprocess.run(
-            ["git", "rev-parse", "HEAD"], capture_output=True, text=True, timeout=5, check=False
-        ).stdout.strip()
-        dirty = subprocess.run(
-            ["git", "status", "--porcelain"], capture_output=True, text=True, timeout=5, check=False
-        ).stdout.strip()
-        print(f"Git commit:     {commit or 'unknown'}")
-        print(f"Git tree state: {'dirty' if dirty else 'clean'}")
-    except (OSError, FileNotFoundError):
-        print("Git commit:     unavailable (git not found)")
+    commit, tree_state = describe_git_state()
+    print(f"Git commit:     {commit}")
+    print(f"Git tree state: {tree_state}")
 
     return 0
 
@@ -123,10 +149,47 @@ def _cmd_evals_validate(_args: argparse.Namespace) -> int:
     except JuniperConfigError as exc:
         print(f"FAIL: {exc}", file=sys.stderr)
         return 1
-    print(f"PASS: suite {suite.suite_id} v{suite.suite_version} — {len(suite.cases)} cases")
+    print(f"PASS: schema valid — suite {suite.suite_id} v{suite.suite_version}, {len(suite.cases)} cases")
     for category, count in sorted(suite.category_counts().items()):
         print(f"  {category}: {count}")
+
+    # Schema validity says nothing about arithmetic correctness. Recompute.
+    return _report_ground_truth(suite)
+
+
+def _report_ground_truth(suite) -> int:  # noqa: ANN001
+    try:
+        results = verify_suite_ground_truth(suite)
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+
+    failures = [r for r in results if not r.verified]
+    deterministic = [r for r in results if r.mode == "deterministic"]
+    semantic = [r for r in results if r.mode == "semantic"]
+    for result in failures:
+        print(f"[FAIL] {result.case_id}: {result.detail}", file=sys.stderr)
+    if failures:
+        print(
+            f"FAIL: ground-truth verification — {len(failures)} of {len(deterministic)} "
+            f"deterministic case(s) do not match their recorded answer.",
+            file=sys.stderr,
+        )
+        return 1
+    print(
+        f"PASS: ground truth verified — {len(deterministic)} deterministic case(s) recomputed, "
+        f"{len(semantic)} semantic case(s) checked for classification consistency"
+    )
     return 0
+
+
+def _cmd_evals_verify(_args: argparse.Namespace) -> int:
+    try:
+        suite = load_eval_suite()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    return _report_ground_truth(suite)
 
 
 def _cmd_hash_file(args: argparse.Namespace) -> int:
@@ -163,6 +226,28 @@ def _cmd_manifests_validate(_args: argparse.Namespace) -> int:
         return 1
     print(f"PASS: sources manifest valid — {len(sources)} entries")
     print(f"PASS: licenses manifest valid — {len(licenses)} entries")
+    return _cmd_deps_check(_args)
+
+
+def _cmd_deps_check(_args: argparse.Namespace) -> int:
+    """Fail if a declared direct dependency has no license manifest entry."""
+    try:
+        results = check_dependency_licenses()
+    except JuniperManifestError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    failures = [r for r in results if not r[1]]
+    for package, ok, detail in results:
+        if not ok:
+            print(f"[FAIL] {package}: {detail}", file=sys.stderr)
+    if failures:
+        print(
+            f"FAIL: dependency/license cross-check — {len(failures)} of {len(results)} "
+            f"declared dependencies lack correct licensing metadata.",
+            file=sys.stderr,
+        )
+        return 1
+    print(f"PASS: dependency/license cross-check — {len(results)} direct dependencies all licensed")
     return 0
 
 
@@ -199,9 +284,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     evals_parser = subparsers.add_parser("evals", help="Evaluation suite operations")
     evals_sub = evals_parser.add_subparsers(dest="evals_command", required=True)
-    evals_sub.add_parser("validate", help="Validate the frozen evaluation suite").set_defaults(
-        func=_cmd_evals_validate
-    )
+    evals_sub.add_parser(
+        "validate", help="Validate the frozen evaluation suite (schema + deterministic ground truth)"
+    ).set_defaults(func=_cmd_evals_validate)
+    evals_sub.add_parser(
+        "verify", help="Recompute deterministic evaluation answers only (ground-truth check)"
+    ).set_defaults(func=_cmd_evals_verify)
 
     hash_parser = subparsers.add_parser("hash", help="Artifact hashing operations")
     hash_sub = hash_parser.add_subparsers(dest="hash_command", required=True)
@@ -212,9 +300,15 @@ def build_parser() -> argparse.ArgumentParser:
         func=_cmd_hash_verify
     )
 
-    subparsers.add_parser("manifests-validate", help="Validate source and license manifests").set_defaults(
-        func=_cmd_manifests_validate
-    )
+    subparsers.add_parser(
+        "manifests-validate",
+        help="Validate source and license manifests (includes the dependency/license cross-check)",
+    ).set_defaults(func=_cmd_manifests_validate)
+
+    subparsers.add_parser(
+        "deps-check",
+        help="Cross-check pyproject direct dependencies against manifests/licenses.yaml",
+    ).set_defaults(func=_cmd_deps_check)
 
     for command, phase in _NOT_IMPLEMENTED.items():
         sub = subparsers.add_parser(command, help=f"(Phase {phase}) not yet implemented")

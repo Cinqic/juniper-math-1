@@ -1,7 +1,7 @@
 {
-  "suite_version": "0.1.0",
+  "suite_version": "0.1.1",
   "suite_id": "phase0_baseline",
-  "description": "Frozen Phase 0 baseline mathematical evaluation suite, authored before any model exists. Purpose: freeze schema/category/ID integrity ahead of training, not to score a nonexistent model. Not exhaustive.",
+  "description": "Frozen Phase 0 baseline mathematical evaluation suite, authored before any model exists. Purpose: freeze schema/category/ID integrity ahead of training, not to score a nonexistent model. Not exhaustive. Version 0.1.1 corrects invalid mathematical ground truth in 'tool-001' found during the Opus 5 independent Phase 0 review, reclassifies 'undef-001' as 'flag_undefined', and adds structured 'verification' metadata so every deterministic answer is recomputed by repository-controlled code rather than trusted.",
   "cases": [
     {
       "id": "arith-001",
@@ -12,6 +12,16 @@
       "expected_answer": 19,
       "tolerance": 0,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            12,
+            7
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Basic addition; deterministically verifiable."
     },
@@ -24,6 +34,22 @@
       "expected_answer": 11,
       "tolerance": 0,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            3,
+            {
+              "op": "mul",
+              "args": [
+                4,
+                2
+              ]
+            }
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Tests standard operator precedence (multiplication before addition)."
     },
@@ -36,6 +62,16 @@
       "expected_answer": 7,
       "tolerance": 0,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            -8,
+            15
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Negative operand handling."
     },
@@ -46,8 +82,18 @@
       "prompt": "What is 2.5 + 3.75?",
       "expected_behavior": "answer",
       "expected_answer": 6.25,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            2.5,
+            3.75
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Decimal addition, exact in binary-safe range."
     },
@@ -60,6 +106,28 @@
       "expected_answer": "5/6",
       "tolerance": null,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "div",
+              "args": [
+                1,
+                2
+              ]
+            },
+            {
+              "op": "div",
+              "args": [
+                1,
+                3
+              ]
+            }
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Exact fraction result; string form avoids float rounding ambiguity."
     },
@@ -70,8 +138,18 @@
       "prompt": "What is 15% of 240?",
       "expected_behavior": "answer",
       "expected_answer": 36,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "percent_of",
+          "args": [
+            15,
+            240
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Percentage-of-quantity computation."
     },
@@ -82,8 +160,24 @@
       "prompt": "A recipe uses flour and sugar in a 3:2 ratio. If you use 9 cups of flour, how many cups of sugar are needed?",
       "expected_behavior": "answer",
       "expected_answer": 6,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "mul",
+          "args": [
+            {
+              "op": "div",
+              "args": [
+                9,
+                3
+              ]
+            },
+            2
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Ratio scaling word problem."
     },
@@ -94,8 +188,24 @@
       "prompt": "If 4 workers can build a wall in 12 days, how many days would 6 workers take, assuming constant individual rate?",
       "expected_behavior": "answer",
       "expected_answer": 8,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "div",
+          "args": [
+            {
+              "op": "mul",
+              "args": [
+                4,
+                12
+              ]
+            },
+            6
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Inverse proportionality word problem."
     },
@@ -106,8 +216,24 @@
       "prompt": "Solve for x: 2x + 5 = 17",
       "expected_behavior": "answer",
       "expected_answer": 6,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "div",
+          "args": [
+            {
+              "op": "sub",
+              "args": [
+                17,
+                5
+              ]
+            },
+            2
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Single-variable linear equation."
     },
@@ -118,8 +244,18 @@
       "prompt": "Convert 3.5 kilometers to meters.",
       "expected_behavior": "answer",
       "expected_answer": 3500,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "mul",
+          "args": [
+            3.5,
+            1000
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Standard SI unit conversion."
     },
@@ -130,8 +266,18 @@
       "prompt": "You buy 3 items priced at $4.25 each. What is the total cost?",
       "expected_behavior": "answer",
       "expected_answer": 12.75,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "mul",
+          "args": [
+            3,
+            4.25
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Currency arithmetic, no tax/discount to keep it unambiguous."
     },
@@ -142,8 +288,42 @@
       "prompt": "What is 3.2 x 10^4 multiplied by 2 x 10^3?",
       "expected_behavior": "answer",
       "expected_answer": 64000000,
-      "tolerance": 1e-3,
+      "tolerance": 0.001,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "mul",
+          "args": [
+            {
+              "op": "mul",
+              "args": [
+                3.2,
+                {
+                  "op": "pow",
+                  "args": [
+                    10,
+                    4
+                  ]
+                }
+              ]
+            },
+            {
+              "op": "mul",
+              "args": [
+                2,
+                {
+                  "op": "pow",
+                  "args": [
+                    10,
+                    3
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Scientific notation multiplication, i.e. 6.4 x 10^7."
     },
@@ -154,8 +334,36 @@
       "prompt": "Maria has 24 apples. She gives 1/3 of them to her neighbor and then buys 5 more. How many apples does she have now?",
       "expected_behavior": "answer",
       "expected_answer": 21,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            {
+              "op": "sub",
+              "args": [
+                24,
+                {
+                  "op": "mul",
+                  "args": [
+                    {
+                      "op": "div",
+                      "args": [
+                        1,
+                        3
+                      ]
+                    },
+                    24
+                  ]
+                }
+              ]
+            },
+            5
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Multi-step word problem requiring decomposition."
     },
@@ -168,6 +376,16 @@
       "expected_answer": 4000,
       "tolerance": 200,
       "tool_required": false,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "mul",
+          "args": [
+            998,
+            4
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Estimation category allows a wide tolerance band; exact answer is 3992."
     },
@@ -180,6 +398,10 @@
       "expected_answer": null,
       "tolerance": null,
       "tool_required": false,
+      "verification": {
+        "mode": "semantic",
+        "expression": null
+      },
       "provenance": "authored_phase0",
       "notes": "No operands given; model must request clarification rather than guess."
     },
@@ -192,6 +414,10 @@
       "expected_answer": null,
       "tolerance": null,
       "tool_required": false,
+      "verification": {
+        "mode": "semantic",
+        "expression": null
+      },
       "provenance": "authored_phase0",
       "notes": "Speed is not given; distance cannot be computed."
     },
@@ -200,12 +426,16 @@
       "category": "undefined_operation",
       "difficulty": "medium",
       "prompt": "What is 5 divided by 0?",
-      "expected_behavior": "flag_missing_information",
+      "expected_behavior": "flag_undefined",
       "expected_answer": null,
       "tolerance": null,
       "tool_required": false,
+      "verification": {
+        "mode": "semantic",
+        "expression": null
+      },
       "provenance": "authored_phase0",
-      "notes": "Division by zero is undefined; model must flag rather than fabricate a number."
+      "notes": "Division by zero is undefined; the model must flag it as undefined rather than fabricate a number. Distinct from missing_information, where operands are absent but the operation is well-defined."
     },
     {
       "id": "unsup-001",
@@ -216,6 +446,10 @@
       "expected_answer": null,
       "tolerance": null,
       "tool_required": false,
+      "verification": {
+        "mode": "semantic",
+        "expression": null
+      },
       "provenance": "authored_phase0",
       "notes": "Image generation/plotting is outside a text-only math SLM's supported capability set."
     },
@@ -225,11 +459,21 @@
       "difficulty": "medium",
       "prompt": "What is 84317 * 9926?",
       "expected_behavior": "invoke_tool",
-      "expected_answer": 837042742,
+      "expected_answer": 836930542,
       "tolerance": 0,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "mul",
+          "args": [
+            84317,
+            9926
+          ]
+        }
+      },
       "provenance": "authored_phase0",
-      "notes": "Large multiplication expected to require deterministic tool execution rather than mental math."
+      "notes": "Large multiplication expected to require deterministic tool execution rather than mental math. Ground truth corrected from 837042742 to 836930542 in suite version 0.1.1 after the Opus 5 independent Phase 0 review (finding F-01); the original value was wrong by 112,200."
     },
     {
       "id": "direct-001",
@@ -240,6 +484,16 @@
       "expected_answer": 19,
       "tolerance": 0,
       "tool_required": false,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "add",
+          "args": [
+            9,
+            10
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Small enough to answer directly without a tool call."
     },
@@ -252,6 +506,22 @@
       "expected_answer": false,
       "tolerance": null,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "equals",
+          "args": [
+            {
+              "op": "mul",
+              "args": [
+                7,
+                8
+              ]
+            },
+            54
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "7*8=56, not 54; model must recognize and correct the false claim."
     },
@@ -262,8 +532,18 @@
       "prompt": "A student calculated 10% of 50 as 500. Is this correct? If not, what is the correct value?",
       "expected_behavior": "flag_incorrect_answer",
       "expected_answer": 5,
-      "tolerance": 1e-6,
+      "tolerance": 1e-06,
       "tool_required": true,
+      "verification": {
+        "mode": "deterministic",
+        "expression": {
+          "op": "percent_of",
+          "args": [
+            10,
+            50
+          ]
+        }
+      },
       "provenance": "authored_phase0",
       "notes": "Common decimal-point/percent error recognition case."
     }

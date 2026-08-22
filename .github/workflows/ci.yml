@@ -16,10 +16,16 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          # Must match pyproject.toml's requires-python. The project declares
+          # exactly the interpreter it tests — see reports/OPUS5_PHASE0_REVIEW.md
+          # NOTE-A (3.10/3.11 were previously declared but never exercised).
+          python-version: "3.12"
 
-      - name: Install project (with dev extras)
-        run: pip install -e ".[dev]"
+      - name: Install exact validated environment (lock)
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-lock.txt
+          pip install -e . --no-deps
 
       - name: Lint
         run: ruff check .
@@ -41,6 +47,12 @@ jobs:
 
       - name: Validate manifests
         run: python -m juniper_math manifests-validate
+
+      - name: Dependency/license cross-check
+        run: python -m juniper_math deps-check
+
+      - name: Verify evaluation ground truth
+        run: python -m juniper_math evals verify
 
       - name: Verify artifact hashes
         run: python -m juniper_math hash verify

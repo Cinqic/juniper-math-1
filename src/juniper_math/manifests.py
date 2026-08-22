@@ -1,7 +1,15 @@
-"""Provenance manifest loading and validation: sources, licenses, artifacts."""
+"""Provenance manifest loading and validation: sources, licenses, artifacts.
+
+Also provides the dependency/license cross-check (:func:`check_dependency_licenses`).
+The Phase 0 review candidate declared NumPy as a runtime dependency but had no
+license entry for it, and `manifests-validate` passed anyway because nothing
+compared the two files. See reports/OPUS5_PHASE0_REVIEW.md (F-05).
+"""
 
 from __future__ import annotations
 
+import re
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +37,10 @@ _SOURCE_FIELDS = {
     "checksum",
     "notes",
 }
+
+# `package` is required for dependency-scoped entries (it is the key the
+# dependency/license cross-check joins on) and meaningless for project code.
+_DEPENDENCY_SCOPES = {"dependency", "dev_dependency"}
 
 _LICENSE_FIELDS = {
     "license_id",
@@ -91,7 +103,91 @@ def load_licenses_manifest(path: Path | None = None) -> list[dict[str, Any]]:
             raise JuniperManifestError(
                 f"{source}: license {entry['license_id']!r} 'attribution_required' must be bool"
             )
+        if entry["redistribution_status"] not in _VALID_REDISTRIBUTION:
+            raise JuniperManifestError(
+                f"{source}: license {entry['license_id']!r} has invalid redistribution_status "
+                f"{entry['redistribution_status']!r}"
+            )
+        if entry["scope"] in _DEPENDENCY_SCOPES and not entry.get("package"):
+            raise JuniperManifestError(
+                f"{source}: license {entry['license_id']!r} has scope {entry['scope']!r} and must "
+                f"declare a 'package' field naming its pyproject distribution"
+            )
     return entries
+
+
+def normalize_package_name(name: str) -> str:
+    """PEP 503 normalization, so `types-PyYAML` and `types_pyyaml` compare equal."""
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+
+def _requirement_name(requirement: str) -> str:
+    """Extract the distribution name from a PEP 508 requirement string."""
+    head = re.split(r"[\s\[<>=!~;(]", requirement.strip(), maxsplit=1)[0]
+    return normalize_package_name(head)
+
+
+def declared_dependencies(pyproject_path: Path | None = None) -> dict[str, set[str]]:
+    """Return {"runtime": {...}, "dev": {...}} of normalized direct dependency names."""
+    source = pyproject_path or (REPO_ROOT / "pyproject.toml")
+    if not source.is_file():
+        raise JuniperManifestError(f"pyproject.toml not found at {source}.")
+    data = tomllib.loads(source.read_text(encoding="utf-8"))
+    project = data.get("project", {})
+    runtime = {_requirement_name(r) for r in project.get("dependencies", [])}
+    dev: set[str] = set()
+    for extra in project.get("optional-dependencies", {}).values():
+        dev |= {_requirement_name(r) for r in extra}
+    return {"runtime": runtime, "dev": dev}
+
+
+def check_dependency_licenses(
+    licenses_path: Path | None = None, pyproject_path: Path | None = None
+) -> list[tuple[str, bool, str]]:
+    """Cross-check declared direct dependencies against the license manifest.
+
+    Returns (package, ok, detail) per declared direct dependency, plus one
+    entry per orphaned license record that names a package nothing declares.
+    """
+    entries = load_licenses_manifest(licenses_path)
+    declared = declared_dependencies(pyproject_path)
+    licensed = {
+        normalize_package_name(str(e["package"])): e
+        for e in entries
+        if e["scope"] in _DEPENDENCY_SCOPES and e.get("package")
+    }
+
+    results: list[tuple[str, bool, str]] = []
+    for kind, packages in (("runtime", declared["runtime"]), ("dev", declared["dev"])):
+        expected_scope = "dependency" if kind == "runtime" else "dev_dependency"
+        for package in sorted(packages):
+            entry = licensed.get(package)
+            if entry is None:
+                results.append(
+                    (
+                        package,
+                        False,
+                        f"declared as a {kind} dependency in pyproject.toml but has no entry in "
+                        f"manifests/licenses.yaml",
+                    )
+                )
+            elif entry["scope"] != expected_scope:
+                results.append(
+                    (
+                        package,
+                        False,
+                        f"license entry scope is {entry['scope']!r} but pyproject declares it as a "
+                        f"{kind} dependency (expected scope {expected_scope!r})",
+                    )
+                )
+            else:
+                results.append((package, True, f"{expected_scope}: {entry['spdx_identifier']}"))
+
+    for package in sorted(set(licensed) - declared["runtime"] - declared["dev"]):
+        results.append(
+            (package, False, "has a license entry but is not a declared direct dependency (stale entry)")
+        )
+    return results
 
 
 def load_artifacts_manifest(path: Path | None = None) -> list[dict[str, Any]]:

@@ -11,7 +11,7 @@ def test_loads_current_status():
     meta = load_project_metadata()
     assert meta.project_name == "Juniper Math 1"
     assert meta.current_phase == 0
-    assert meta.phase_status == "AWAITING_OPUS_5_REVIEW"
+    assert meta.phase_status == "COMPLETE"
     assert "five-million-parameter" in meta.research_question
     assert meta.parameter_target == 5004032
 
@@ -30,3 +30,20 @@ def test_invalid_phase_status_rejected(tmp_path):
 def test_missing_file_raises(tmp_path):
     with pytest.raises(JuniperConfigError, match="not found"):
         load_project_metadata(tmp_path / "missing.yaml")
+
+
+def test_phase_approval_record_present():
+    """Phase 0 records the full approval chain, not just a status string."""
+    meta = load_project_metadata()
+    assert meta.phase_status == "COMPLETE"
+    approval = meta.phase_approval
+    assert approval["cinqic_final_review"] == "approved"
+    assert approval["opus_5_final_verification"] == "approved"
+    assert approval["original_review_candidate"] == "b39e60031e85822a293ca60b5676ce5b7286a66f"
+
+
+def test_phase_1_authorized_but_not_started():
+    meta = load_project_metadata()
+    assert meta.next_phase["number"] == 1
+    assert meta.next_phase["status"] == "AUTHORIZED"
+    assert meta.next_phase["started"] is False
