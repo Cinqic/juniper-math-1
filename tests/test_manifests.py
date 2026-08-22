@@ -109,3 +109,48 @@ def test_duplicate_source_id_rejected(tmp_path):
 def test_missing_manifest_raises(tmp_path):
     with pytest.raises(JuniperManifestError, match="not found"):
         load_sources_manifest(tmp_path / "missing.yaml")
+
+
+def test_source_entry_missing_field_rejected(tmp_path):
+    bad = tmp_path / "sources.yaml"
+    incomplete = {"source_id": "x", "source_name": "x"}  # most required fields absent
+    bad.write_text(yaml.safe_dump({"sources": [incomplete]}), encoding="utf-8")
+    with pytest.raises(JuniperManifestError, match="missing field"):
+        load_sources_manifest(bad)
+
+
+def test_license_entry_missing_field_rejected(tmp_path):
+    bad = tmp_path / "licenses.yaml"
+    incomplete = {"license_id": "x"}
+    bad.write_text(yaml.safe_dump({"licenses": [incomplete]}), encoding="utf-8")
+    with pytest.raises(JuniperManifestError, match="missing field"):
+        load_licenses_manifest(bad)
+
+
+def test_artifact_entry_missing_field_rejected(tmp_path):
+    bad = tmp_path / "artifacts.yaml"
+    incomplete = {"artifact_id": "x"}
+    bad.write_text(yaml.safe_dump({"artifacts": [incomplete]}), encoding="utf-8")
+    with pytest.raises(JuniperManifestError, match="missing field"):
+        load_artifacts_manifest(bad)
+
+
+def test_invalid_redistribution_status_rejected(tmp_path):
+    bad = tmp_path / "sources.yaml"
+    entry = {
+        "source_id": "x",
+        "source_name": "x",
+        "publisher": "x",
+        "source_url": "https://example.invalid",
+        "source_version": "1",
+        "acquisition_date": "2026-01-01",
+        "intended_use": "test",
+        "license_id": "UNKNOWN",
+        "redistribution_status": "MAYBE_OK",  # not a valid enum value
+        "transformation_status": "none",
+        "checksum": "UNKNOWN",
+        "notes": "",
+    }
+    bad.write_text(yaml.safe_dump({"sources": [entry]}), encoding="utf-8")
+    with pytest.raises(JuniperManifestError, match="invalid redistribution_status"):
+        load_sources_manifest(bad)
