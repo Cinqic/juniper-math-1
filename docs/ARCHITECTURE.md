@@ -1,9 +1,14 @@
-# Architecture — Phase 0 Frozen Specification
+# Architecture — Frozen Specification (Phase 0 design, Phase 1 implementation)
 
-This document describes the frozen Phase 0 architecture *design intent* for
-Juniper Math 1. **No model code exists yet.** Implementation (embeddings,
-RMSNorm, RoPE, attention, SwiGLU, blocks, LM head, loss, and authoritative
-programmatic parameter-count verification) is Phase 1 work.
+This document describes the frozen architecture for Juniper Math 1, design-frozen
+in Phase 0 and implemented in Phase 1. Implementation (embeddings, RMSNorm,
+RoPE, attention, SwiGLU, blocks, LM head, loss, and authoritative programmatic
+parameter-count verification) lives in
+[`src/juniper_math/model.py`](../src/juniper_math/model.py) — see
+[`reports/PHASE1_ARCHITECTURE_VALIDATION.md`](../reports/PHASE1_ARCHITECTURE_VALIDATION.md)
+for validation evidence. **No model has been trained.** Phase 1 proves the
+architecture mechanics are correct, not that the model has any mathematical
+capability.
 
 The canonical, machine-readable copy of this specification lives at
 [`config/architecture.yaml`](../config/architecture.yaml) and is loaded/validated
@@ -44,9 +49,11 @@ gives:
 - Final RMSNorm: `256`
 - **Total: `1,048,576 + 3,955,200 + 256 = 5,004,032`** — matches the declared target exactly.
 
-This is a documented estimate, not authoritative verification. Phase 1 must
-verify the real `nn.Module` parameter count programmatically (e.g.
-`sum(p.numel() for p in model.parameters())`) against this target.
+This estimate is superseded by authoritative verification: Phase 1's
+`juniper_math.model.count_trainable_parameters` counts actual instantiated
+`nn.Parameter` objects (deduplicated by storage identity, so weight tying is
+counted once) and confirms exactly 5,004,032 — run `python -m juniper_math model`
+to reproduce.
 
 ## Change policy
 

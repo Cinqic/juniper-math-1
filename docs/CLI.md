@@ -23,6 +23,13 @@ same code path, not two separate implementations.)
 | `hash verify` | Verify every artifact in `manifests/artifacts.yaml` against its recorded hash |
 | `manifests-validate` | Validate the source and license manifests |
 
+## Functional in Phase 1
+
+| Command | Purpose |
+|---|---|
+| `model [--device cpu\|cuda] [--no-forward-check]` | Construct the frozen architecture, verify the exact trainable parameter count (5,004,032), run a synthetic forward pass |
+| `checkpoint inspect <path>` | Safely report checkpoint metadata (step, tokens seen, architecture identity, schema version, size) without restoring model/optimizer/RNG state |
+
 ## Not yet implemented (later phases)
 
 These commands exist as honest placeholders — they print an explicit
@@ -31,14 +38,12 @@ silently succeed or fabricate output.
 
 | Command | Owning phase |
 |---|---|
-| `model` | Phase 1 |
-| `train` | Phase 1 |
-| `evaluate` | Phase 1 |
-| `infer` | Phase 1 |
+| `train` | Phase 6/7 (real training) |
+| `evaluate` | later |
+| `infer` | later |
 | `tokenizer` | Phase 2 |
 | `tool-test` | Phase 3 |
 | `dataset` | Phase 4 |
-| `checkpoint` | Phase 1 |
 
 ## Examples
 
@@ -49,6 +54,8 @@ python -m juniper_math validate-config
 python -m juniper_math seed-test --seed 5004032
 python -m juniper_math evals validate
 python -m juniper_math hash verify
+python -m juniper_math model
+python -m juniper_math checkpoint inspect path/to/checkpoint.pt
 python -m juniper_math --version
 ```
 
