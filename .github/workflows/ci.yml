@@ -1,0 +1,49 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  foundation-checks:
+    runs-on: ubuntu-latest
+    # CPU-only. CUDA-specific checks are not part of CI and remain local to
+    # the RTX 2060 target hardware (see docs/ENVIRONMENT.md).
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install project (with dev extras)
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Type check
+        run: mypy
+
+      - name: Unit tests
+        run: pytest -v
+
+      - name: Validate configuration
+        run: python -m juniper_math validate-config
+
+      - name: Validate evaluation suite
+        run: python -m juniper_math evals validate
+
+      - name: Validate manifests
+        run: python -m juniper_math manifests-validate
+
+      - name: Verify artifact hashes
+        run: python -m juniper_math hash verify
+
+      - name: Environment report (informational; CUDA WARNING expected on CI)
+        run: python -m juniper_math validate-env || true

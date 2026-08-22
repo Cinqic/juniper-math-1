@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "juniper-math-1"
+version = "0.1.0"
+description = "A purpose-built ~5M-parameter mathematical language model: understanding, decomposing, tool-using, and verifying math problems."
+readme = "README.md"
+requires-python = ">=3.10,<3.13"
+license = { file = "LICENSE" }
+authors = [{ name = "Cinqic" }]
+dependencies = [
+    "torch>=2.2,<3.0",
+    "pyyaml>=6.0,<7.0",
+    "numpy>=1.26,<3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0,<9.0",
+    "ruff>=0.6,<1.0",
+    "mypy>=1.10,<2.0",
+    "types-PyYAML>=6.0,<7.0",
+]
+
+[project.scripts]
+juniper-math = "juniper_math.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "gpu: requires a CUDA-capable GPU (skipped automatically when unavailable)",
+]
+
+[tool.ruff]
+line-length = 110
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+files = ["src"]

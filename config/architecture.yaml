@@ -1,0 +1,35 @@
+# Juniper Math 1 — Phase 0 frozen architecture specification.
+#
+# This is design intent only. It is NOT implemented in Phase 1 sense yet —
+# no model code exists. Programmatic parameter-count verification and the
+# actual Transformer implementation belong to Phase 1. Do not modify these
+# values without a documented ADR and a version bump.
+
+architecture_version: "0.1.0"
+architecture_class: decoder_only_causal_transformer
+
+parameter_target: 5004032
+parameter_class_approx: "5.00M"
+
+d_model: 256
+n_layers: 5
+n_query_heads: 4
+n_kv_heads: 4
+head_dim: 64
+
+attention_type: standard_mha_causal
+
+ffn_type: swiglu
+d_ff: 688
+
+normalization: rmsnorm
+normalization_layout: pre_norm
+
+position_encoding: rope
+rope_theta: 10000
+
+biases: false
+vocab_size: 4096
+weight_tying: true
+max_context_length: 1024
+dropout: 0.0

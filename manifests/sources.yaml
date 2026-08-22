@@ -1,0 +1,6 @@
+# Source provenance manifest.
+# Phase 0 does not acquire the training corpus; this establishes the schema
+# and provenance-tracking infrastructure before data accumulates (Phase 4).
+# Add an entry here whenever an external source is acquired.
+
+sources: []

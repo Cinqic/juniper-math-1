@@ -1,0 +1,31 @@
+# Artifact manifest.
+# SHA-256 hashes generated from actual file bytes via:
+#   python -m juniper_math hash file <path>
+# Never hand-typed. Regenerate and update after any intentional change to a
+# frozen artifact (with an accompanying version bump / ADR where relevant).
+
+artifacts:
+  - artifact_id: "architecture_config"
+    path: "config/architecture.yaml"
+    sha256: "ec763ed8e135f3697b2e4a1fec79df11694c5e2245f9c209160a40d12bc4f55b"
+    description: "Frozen Phase 0 architecture specification."
+
+  - artifact_id: "project_metadata"
+    path: "config/project.yaml"
+    sha256: "96a554297b2a565698020fd56f0feb61b1cfea35a85a957f6137b871e9973090"
+    description: "Canonical project metadata and phase status."
+
+  - artifact_id: "phase0_eval_suite"
+    path: "evals/phase0_v1.json"
+    sha256: "9f181afb16b0730e4c7432cd287f5ebc12556ee003be8c0f2ec8df9fb30b66ac"
+    description: "Frozen Phase 0 baseline mathematical evaluation suite."
+
+  - artifact_id: "sources_manifest"
+    path: "manifests/sources.yaml"
+    sha256: "3f2cbc883776f347a29a652cf52d1874ab3de0aa9a6d6f89feec99565d12d29d"
+    description: "Source provenance manifest."
+
+  - artifact_id: "licenses_manifest"
+    path: "manifests/licenses.yaml"
+    sha256: "92a8a63a31dc18b91b113a5ee5b44e7da106a229858bdba3aae79355afd157c4"
+    description: "License manifest."

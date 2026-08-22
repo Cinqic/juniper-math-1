@@ -1,0 +1,32 @@
+# License manifest.
+# Tracks licensing for project code, dependencies, and (later) datasets/assets.
+# Never guess a license: use "UNKNOWN" or "REQUIRES_REVIEW" when uncertain.
+# Unknown licensing is not permission to use or redistribute.
+
+licenses:
+  - license_id: "juniper-math-1-code"
+    scope: "project_code"
+    spdx_identifier: "MIT"
+    reference: "LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Juniper Math 1 source code license, as declared in the repository LICENSE file."
+
+  - license_id: "pytorch"
+    scope: "dependency"
+    spdx_identifier: "BSD-3-Clause"
+    reference: "https://github.com/pytorch/pytorch/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard BSD notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Core training/inference framework dependency."
+
+  - license_id: "pyyaml"
+    scope: "dependency"
+    spdx_identifier: "MIT"
+    reference: "https://github.com/yaml/pyyaml/blob/main/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: "Configuration file parsing dependency (used with yaml.safe_load only)."

@@ -1,0 +1,83 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Testing / quality tooling ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+
+# --- Editors / IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS metadata ---
+.DS_Store
+Thumbs.db
+
+# --- Secrets ---
+.env
+*.pem
+*.key
+!config/**/*.key.example
+
+# --- Logs (not meant for preservation) ---
+*.log
+logs/
+
+# --- Data workspace: raw/interim/processed/cache are disposable by default.
+# Small documented fixtures belong in evals/ or tests/, not data/.
+data/raw/*
+data/interim/*
+data/processed/*
+data/external/*
+data/cache/*
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/external/.gitkeep
+!data/cache/.gitkeep
+!data/**/README.md
+
+# --- Checkpoints: large binaries never enter Git history directly ---
+checkpoints/**/*.pt
+checkpoints/**/*.pth
+checkpoints/**/*.safetensors
+checkpoints/**/*.ckpt
+!checkpoints/**/README.md
+!checkpoints/**/*.json
+!checkpoints/**/*.yaml
+
+# --- Experiments: raw run output is disposable; metadata is not ---
+experiments/**/wandb/
+experiments/**/tensorboard/
+experiments/**/*.log
+
+# --- Profiling / temporary artifacts ---
+*.prof
+*.tmp
+tmp/
+.tmp/
+
+# --- Jupyter ---
+.ipynb_checkpoints/

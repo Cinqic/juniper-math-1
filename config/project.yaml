@@ -1,0 +1,44 @@
+# Juniper Math 1 — canonical project metadata.
+# This file is the machine-readable source of truth for project phase/status.
+# Human-facing docs (README.md, docs/) must stay consistent with this file.
+
+project_name: "Juniper Math 1"
+project_family: "Juniper"
+schema_version: "0.1.0"
+config_version: "0.1.0"
+
+research_question: >
+  How capable, reliable, efficient, and truthfully calibrated can an
+  approximately five-million-parameter purpose-built mathematical language
+  model become at understanding natural-language math problems, decomposing
+  them into verifiable operations, selecting and operating deterministic
+  mathematical tools, detecting ambiguity and unsupported requests, verifying
+  computational results, and producing accurate mathematical answers?
+
+repository_principle: >
+  Local storage is disposable. GitHub is the source of truth.
+
+parameter_target: 5004032
+architecture_version: "0.1.0"
+architecture_config: "config/architecture.yaml"
+
+current_phase: 0
+phase_name: "Foundation and Recovery"
+phase_status: "AWAITING_OPUS_5_REVIEW"
+
+primary_hardware:
+  cpu: "AMD Ryzen 7 5700G"
+  gpu: "NVIDIA GeForce RTX 2060 6GB"
+  system_ram_gb: 16
+  storage_gb: 256
+
+review_chain:
+  - role: "Primary Phase 0 Engineer"
+    actor: "Claude Sonnet 5"
+    stage: "implementation, testing, recovery validation, documentation, self-review"
+  - role: "Independent Reviewer"
+    actor: "Claude Opus 5"
+    stage: "independent technical review"
+  - role: "Final Human Reviewer"
+    actor: "Cinqic"
+    stage: "final inspection and phase authorization"
