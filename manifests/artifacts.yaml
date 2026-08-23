@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "bd4cf2929a9307a242524a353a6eb637308779903aa3b61bab8b7f62fdd30ece"
+    sha256: "74dfce022d2f3c79e53ff7ce4603023d04423cc253aeaa5db42cf4cb1dffcb2b"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"

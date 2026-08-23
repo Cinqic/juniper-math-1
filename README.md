@@ -30,7 +30,7 @@ Phase 1 — Architecture:                     COMPLETE
 Phase 2 — Math Tokenizer:                   COMPLETE
 Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
 Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
-Phase 5 — Smoke Pretraining:                IMPLEMENTATION COMPLETE — PENDING INDEPENDENT REVIEW
+Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -321,7 +321,8 @@ actually exercised — see
 | 2 | Math Tokenizer | **COMPLETE** |
 | 3 | Deterministic tool integration ("Cinqic Calculator") | **COMPLETE** |
 | 4 | Dataset and Evaluation Freeze | **COMPLETE** |
-| 5 | Smoke Pretraining | **IMPLEMENTATION COMPLETE — PENDING INDEPENDENT REVIEW** |
+| 5 | Smoke Pretraining | **COMPLETE — INDEPENDENTLY APPROVED** |
+| 6 | Pilot Pretraining | **AUTHORIZED — NOT STARTED** |
 
 ## License
 

@@ -4,7 +4,9 @@
 experiment_id: "p5-20260823-smoke-pretraining"
 phase: 5
 phase_name: "Smoke Pretraining"
-git_commit: "1f5bc9088c4517ca0972f68c11bb7897de51c22c"  # starting commit; see reports/PHASE5_COMPLETION.md for the final commit
+git_commit: "a7a290b0edcb220c5a8d3edcdc5a572e9fd722c3"
+source_tree_state: "clean"
+candidate_commit: "0203433b3031fdfe4224085cfe01d86b9c233afc"
 
 intent: >
   Prove the complete Juniper Math 1 training pipeline works end to end on
@@ -19,6 +21,7 @@ frozen_artifact_identities:
   architecture_version: "0.1.0"
   parameter_count: 5004032
   tokenizer_identity: "juniper-math-tokenizer-v1"
+  tokenizer_model_sha256: "a855b35bffbbd4b934c25f82afc7cad733f83a66f614e4fea40c112f3072fd97"
   dataset_identity: "juniper-math-dataset-v1"
   dataset_whole_identity_sha256: "bf9933f032a58b4eb618b32156783b8563097a5fc1c0ef26be4f76445128d25a"
   tool_protocol_identity: "juniper-tool-protocol-v1"
@@ -46,8 +49,9 @@ environment:
   os: "Linux 7.0.0-30-generic"
 
 outcome: >
-  PASS. 200 optimizer steps, effective batch size 16, seq_len 256, fp32.
-  Validation loss fell from 8.38 (before any training) to 2.23 (final).
+  PASS. Clean-source independent acceptance run: 200 optimizer steps,
+  effective batch size 16, seq_len 256, fp32. Validation loss fell from
+  8.38 (before any training) to 2.1274 (final).
   Gradients and parameters stayed finite at every step. Fixed-prompt
   generation changed structurally after training (the model learned to
   emit the `<final>` answer-tag format, though not correct answers — this
@@ -62,7 +66,7 @@ outcome: >
 
 outputs:
   final_checkpoint: "checkpoints/phase5-smoke/step_000200_final.pt (not committed; disposable/reproducible)"
-  final_checkpoint_sha256: "d662ce1dfb9ced6699ec65de22d4cea144e2a38edaccbd68e4af87f973bd08a9"
+  final_checkpoint_sha256: "3880f82abc88bcdb338c74453206d44d5cb2cd30489fcde4921e92d7735be982"
   final_checkpoint_size_bytes: 60122115
   train_log: "experiments/phase5-smoke/train_log.jsonl"
   resume_test_log: "experiments/phase5-smoke/resume_test_log.jsonl"
