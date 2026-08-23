@@ -1,5 +1,10 @@
 # Phase 4 Dataset Validation Report
 
+> **Historical record.** This report documents the original Sonnet candidate
+> rebuild. It is not the final approved Phase 4 dataset state; see
+> `reports/PHASE4_FINAL_APPROVAL.md` for the Terra-remediated dataset identity
+> and statistics.
+
 ## Deterministic rebuild test (Sec. 27)
 
 Performed an actual independent rebuild, not merely claimed one:

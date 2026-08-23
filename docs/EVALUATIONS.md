@@ -124,13 +124,17 @@ Phase 4 suites, which are separate, additional artifacts, not a replacement.
 
 ## Phase 4 evaluation suites
 
+The v1 Phase 4 suite files are historical artifacts from the original Sonnet
+candidate. The active Phase 4 evaluation surface is the v2 suite set below;
+v1 must not be used as the current evaluation surface.
+
 Four new frozen suites, built by `python -m juniper_math dataset
 eval-suites-build` (`src/juniper_math/dataset/eval_suites.py`) and far
 deeper than the 22-case Phase 0 baseline:
 
 | Suite | File | Cases | Covers |
 |---|---|---|---|
-| Core mathematics | `evals/phase4_math_v2.json` | 215 | evaluation-only arithmetic through multi-step mathematics; no training generator/template is used |
+| Core mathematics | `evals/phase4_math_v2.json` | 215 | evaluation-only arithmetic through multi-step mathematics; no training generator registry or template is used |
 | Tool use | `evals/phase4_tool_use_v2.json` | 185 | evaluation-only unit, finance, calculator, incorrect-call, and real-error cases |
 | Calibration / truthfulness | `evals/phase4_calibration_v2.json` | 130 | evaluation-only premise checks plus independently worded direct mathematics |
 | Adversarial / error handling | `evals/phase4_adversarial_v2.json` | 195 | evaluation-only ambiguity, missing information, undefined operations, unsupported requests, and tool failures |
@@ -165,3 +169,7 @@ these suites are built from.
 `python -m juniper_math dataset build` — see "Order matters" in
 [`docs/DATASET.md`](DATASET.md). `dataset contamination-check` verifies no
 eval-suite prompt is exactly or near-duplicated in the training corpus.
+
+The v2 constructors do not reuse the training generator registry or training
+generator implementations. They may reuse non-generative shared formatting
+helpers; that reuse does not share generation templates or instances.

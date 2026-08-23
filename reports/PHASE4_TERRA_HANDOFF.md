@@ -1,5 +1,10 @@
 # Phase 4 Terra Handoff Package
 
+> **Historical handoff record.** This document preceded Terra remediation and
+> approval. Its proposed Phase 5 authorization state is superseded by
+> `reports/PHASE4_FINAL_APPROVAL.md`: Smoke Pretraining is authorized and
+> has not started.
+
 This package is self-contained: GPT-5.6 Terra should be able to clone the
 repository with zero knowledge of this conversation and independently audit
 Phase 4 end to end using only this document and the repository itself.

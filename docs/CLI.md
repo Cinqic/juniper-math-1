@@ -69,7 +69,7 @@ See [`docs/TOOLS.md`](TOOLS.md) for the full protocol, trust boundary, and secur
 See [`docs/DATASET.md`](DATASET.md) for the full pipeline, category schema,
 and rebuild procedure.
 
-## Not yet implemented (later phases)
+## Not yet implemented (Phase 5 and later)
 
 These commands exist as honest placeholders — they print an explicit
 `not implemented until Phase N` message and exit with status 2. They never
@@ -77,7 +77,7 @@ silently succeed or fabricate output.
 
 | Command | Owning phase |
 |---|---|
-| `train` | Phase 6/7 (real training) |
+| `train` | Phase 5 Smoke Pretraining; authorized but not started |
 | `evaluate` | later |
 | `infer` | later |
 

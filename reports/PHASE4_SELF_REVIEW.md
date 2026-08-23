@@ -1,5 +1,9 @@
 # Phase 4 Self-Review
 
+> **Historical record.** This self-review documents the original Sonnet
+> candidate. Its candidate statistics are not the final approved Phase 4
+> state; see `reports/PHASE4_FINAL_APPROVAL.md`.
+
 Written from an adversarial stance after implementation appeared complete —
 assume Phase 4 is wrong until demonstrated otherwise (Sec. 29). This
 documents both defects found and fixed during this engineering session and

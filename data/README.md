@@ -15,4 +15,6 @@ directory itself.
 - `external/` — third-party reference data not part of the training corpus.
 - `cache/` — disposable computation caches.
 
-No training corpus exists yet — full dataset construction is Phase 4 work.
+The approved Phase 4 corpus is `juniper-math-dataset-v1`. Its shards remain
+disposable and are deterministically reconstructible; the approved identity
+and metadata are tracked under `data/processed/juniper-math-dataset-v1/`.

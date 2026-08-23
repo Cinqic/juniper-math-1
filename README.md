@@ -55,7 +55,7 @@ audit, required control tokens (`<tool_call>`, `<tool_result>`, `<final>`,
 `<unsupported>`, `<error>`) are frozen at stable IDs, byte fallback and
 Unicode math notation are validated, and the artifact is reproducible
 byte-for-byte from the committed corpus generator and config. Real
-dataset construction remain later-phase work. Phase 2 was independently
+dataset construction remained later-phase work. Phase 2 was independently
 audited, remediated, and approved by GPT-5.6 Terra.
 
 Phase 3 implements a versioned, strictly validated, deterministic tool
@@ -140,6 +140,10 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 4 provenance/license review: [`reports/PHASE4_PROVENANCE_LICENSE_REVIEW.md`](reports/PHASE4_PROVENANCE_LICENSE_REVIEW.md)
 - Phase 4 self-review: [`reports/PHASE4_SELF_REVIEW.md`](reports/PHASE4_SELF_REVIEW.md)
 - Phase 4 Terra handoff package: [`reports/PHASE4_TERRA_HANDOFF.md`](reports/PHASE4_TERRA_HANDOFF.md)
+- Phase 4 independent review: [`reports/TERRA_PHASE4_REVIEW.md`](reports/TERRA_PHASE4_REVIEW.md)
+- Phase 4 remediation: [`reports/PHASE4_REMEDIATION.md`](reports/PHASE4_REMEDIATION.md)
+- Phase 4 final approval: [`reports/PHASE4_FINAL_APPROVAL.md`](reports/PHASE4_FINAL_APPROVAL.md)
+- Pre-Phase-5 consistency audit: [`reports/PRE_PHASE5_REPOSITORY_AUDIT.md`](reports/PRE_PHASE5_REPOSITORY_AUDIT.md)
 
 ## Principles
 
@@ -183,7 +187,7 @@ scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
 tests/        Automated test suite
 tools/        Phase 3 deterministic tool protocol schemas (tools/schemas/)
-training/     (reserved) real training entry points — Phase 6/7
+training/     Reserved real training entry points — Smoke Pretraining is Phase 5 and has not started
 experiments/  Experiment metadata
 checkpoints/  Checkpoint metadata (binaries stored externally — see policy)
 releases/     Release metadata; releases/tokenizer/ holds the frozen Phase 2

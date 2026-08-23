@@ -87,12 +87,15 @@ python -m juniper_math evals validate   # schema + deterministic ground truth
 python -m juniper_math manifests-validate
 python -m juniper_math deps-check
 
-# 11. Run harmless dry-run/status commands
+# 11. Run harmless status and architecture commands
 python -m juniper_math status
-python -m juniper_math model      # expected: "not implemented until Phase 1", exit code 2
+python -m juniper_math model --device cpu
+python -m juniper_math tokenizer validate
+python -m juniper_math tools self-test
+python -m juniper_math evals verify
 
-# 12. Confirm project status
-python -m juniper_math status | grep "Phase status"
+# 12. Confirm the approved project status
+python -m juniper_math status
 
 # 13. (Phase 4+) Reconstruct the dataset and re-freeze the evaluation suites.
 #     data/processed/ is gitignored and disposable — everything needed to
@@ -113,8 +116,8 @@ A successful recovery satisfies all of the following:
   hardware — see the recovery test report for what was and was not
   exercised).
 - `pytest` reports 0 failures.
-- `status` reports `Phase status: AWAITING_OPUS_5_REVIEW` (or whatever the
-  current authoritative status in `config/project.yaml` is).
+- `status` reports Phase 4 as `COMPLETE`; `config/project.yaml` identifies
+  Phase 5, Smoke Pretraining, as authorized and not started.
 
 ## What this repository does not depend on
 

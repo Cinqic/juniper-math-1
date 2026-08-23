@@ -1,5 +1,9 @@
 # Phase 4 Provenance and License Review
 
+> **Historical candidate record.** This review is preserved as provenance
+> evidence. For the final approved Phase 4 state, see
+> `reports/PHASE4_FINAL_APPROVAL.md`.
+
 ## Scope decision: no external sources in v1
 
 `juniper-math-dataset-v1` acquires **zero** third-party data. Every training

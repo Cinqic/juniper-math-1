@@ -68,7 +68,7 @@ review_chain:
     stage: "dataset/evaluation pipeline design, synthetic generation, verification, deduplication, splitting, contamination checks, documentation, self-review"
   - role: "Independent Reviewer / Auditor / Remediator / Approval Authority (Phase 4)"
     actor: "GPT-5.6 Terra"
-    stage: "independent review, audit, remediation if necessary, final approval and tagging (not yet performed)"
+    stage: "independent review, audit, remediation, final approval, and tagging"
 
 # Phase 0 final approval record — frozen, not re-litigated by Phase 1.
 # See reports/OPUS5_PHASE0_REVIEW.md, reports/PHASE0_REMEDIATION.md,
@@ -129,16 +129,10 @@ phase_3_approval:
   cinqic_calculator_upstream_repository: "https://github.com/Cinqic/Cinqic-Calculator"
   cinqic_calculator_upstream_commit: "8024cf107d6240386fa42b6c5193dd8b34848032"
 
-# Phase 4 approval record (the CURRENT phase — this is the bare
-# "phase_approval" key, matching the convention Phase 3 used while it was
-# current: phase_N_approval keys are frozen/historical once superseded, the
-# bare phase_approval key always describes whichever phase is in progress).
-# IN PROGRESS, not yet final. See reports/PHASE4_REPORT.md,
-# reports/PHASE4_DATASET_VALIDATION.md, reports/PHASE4_EVALUATION_FREEZE.md,
-# reports/PHASE4_PROVENANCE_LICENSE_REVIEW.md, reports/PHASE4_SELF_REVIEW.md,
-# and reports/PHASE4_TERRA_HANDOFF.md. Do not set terra_independent_review or
-# terra_final_approval to "approved" except as an actual outcome of that
-# review — this record must never claim an approval that did not happen.
+# Phase 4 final approval record. `phase_approval` remains the canonical
+# machine-readable approval record for the completed current phase. See
+# reports/TERRA_PHASE4_REVIEW.md, reports/PHASE4_REMEDIATION.md, and
+# reports/PHASE4_FINAL_APPROVAL.md for the authoritative review sequence.
 phase_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"

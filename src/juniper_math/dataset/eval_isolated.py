@@ -1,8 +1,9 @@
 """Evaluation-only Phase 4 case constructors.
 
-This module deliberately has no dependency on ``dataset.generators``.  Its
-identities, natural-language templates, and compositions are held out from
-the training corpus rather than being a different random seed for it.
+This module does not depend on the training generator registry or training
+generator implementations. It may reuse non-generative shared formatting
+helpers. Its identities, natural-language templates, and compositions are
+held out from the training corpus rather than being a different random seed.
 """
 
 from __future__ import annotations

@@ -1,5 +1,11 @@
 # Phase 4 Engineering Report — Dataset and Evaluation Freeze
 
+> **Historical record.** This report records the original Sonnet Phase 4
+> engineering candidate. It is preserved as review evidence and is not the
+> final approved Phase 4 state. See `reports/TERRA_PHASE4_REVIEW.md`,
+> `reports/PHASE4_REMEDIATION.md`, and `reports/PHASE4_FINAL_APPROVAL.md`
+> for the approved state.
+
 **Engineer:** Claude Sonnet 5 (primary Phase 4 implementation, self-review)
 **Starting foundation:** `phase-3-tools` (commit `1cb070945dd1f968f0dd10e6ceb915e0d24fac0a`)
 **Status at handoff:** Phase 4 engineering complete; independent Phase 4

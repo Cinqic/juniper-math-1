@@ -1,5 +1,9 @@
 # Terra Phase 4 Independent Review
 
+> **Historical review record.** This report records the pre-remediation
+> findings. The final approved state is documented in
+> `reports/PHASE4_FINAL_APPROVAL.md`.
+
 ## Initial verdict
 
 **CHANGES REQUIRED.** The Phase 4 candidate at `84ce076` and its subsequent

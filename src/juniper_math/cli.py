@@ -5,12 +5,14 @@ Usage: `python -m juniper_math <command> ...` or the installed
 style and use it consistently; both resolve here).
 
 Commands are split into two honest categories:
-  - Fully functional now (Phase 0/1/2/3): status, validate-env,
+  - Fully functional now (Phases 0–4): status, validate-env,
     validate-config, seed-test, evals validate, evals verify, hash verify,
     manifests-validate, deps-check, model, checkpoint inspect,
     tokenizer train/inspect/encode/decode/validate/benchmark,
     tools list/schemas/validate/call/self-test.
-  - Not yet implemented (later phases): dataset, train, evaluate, infer.
+    dataset acquire/build/validate/verify/stats/contamination-check and
+    dataset eval-suites-build are also functional.
+  - Not yet implemented (Phase 5 and later): train, evaluate, infer.
     These print an explicit "not implemented until Phase N" message and
     exit non-zero — they never silently pretend to succeed.
 """
@@ -57,9 +59,9 @@ except ImportError as exc:  # pragma: no cover - exercised only without torch in
 logger = get_logger(__name__)
 
 _NOT_IMPLEMENTED = {
-    "train": 1,
-    "evaluate": 1,
-    "infer": 1,
+    "train": 5,
+    "evaluate": 5,
+    "infer": 5,
 }
 
 _DATASET_IMPORT_ERROR: Exception | None
@@ -750,7 +752,7 @@ def _make_not_implemented(command: str, phase: int):
     def _handler(_args: argparse.Namespace) -> int:
         print(
             f"'{command}' is not implemented until Phase {phase}. "
-            f"Phase 0 establishes configuration structure only.",
+            "No training, checkpoint, metric, or model output was created.",
             file=sys.stderr,
         )
         return 2
