@@ -31,7 +31,6 @@ from juniper_math.trainer import (
     load_state,
     run_training,
     save_state,
-    train_one_optimizer_step,
     validate,
 )
 from juniper_math.training_config import TrainingConfig, load_training_config
@@ -61,6 +60,10 @@ def _load_common(config_path: Path | None) -> tuple[TrainingConfig, Architecture
         raise JuniperConfigError(
             f"training config architecture_identity {training_config.architecture_identity!r} does not "
             f"match config/architecture.yaml architecture_version {architecture.architecture_version!r}."
+        )
+    if training_config.smoke_subset.max_sequence_length > architecture.max_context_length:
+        raise JuniperConfigError(
+            "smoke_subset.max_sequence_length exceeds frozen architecture context length."
         )
     tokenizer = JuniperTokenizer.load()
     return training_config, architecture, tokenizer
@@ -135,6 +138,7 @@ def run_smoke_train(
     checkpoint_dir = training_config.output.checkpoint_path
     checkpoint_dir.mkdir(parents=True, exist_ok=True)
     log_path = experiment_dir / "train_log.jsonl"
+    log_path.unlink(missing_ok=True)
 
     state = init_state(architecture, training_config, device)
     parameter_count = count_trainable_parameters(state.model)
@@ -147,6 +151,9 @@ def run_smoke_train(
             "event": "run_start",
             "run_id": training_config.run_id,
             "git_commit": _git_commit(),
+            "source_tree_state": __import__(
+                "juniper_math.cli", fromlist=["describe_git_state"]
+            ).describe_git_state()[1],
             "parameter_count": parameter_count,
             "device": str(device),
             "smoke_manifest": manifest.as_dict(),
@@ -164,9 +171,6 @@ def run_smoke_train(
             "generations": [{"prompt": g.prompt, "text": g.text} for g in initial_generations],
         },
     )
-    initial_step_metrics = train_one_optimizer_step(state, train_ds, training_config)
-    initial_train_loss = initial_step_metrics["loss"]
-    # That first optimizer step already advanced state by one step; the loop below continues from there.
     end_step = max_steps if max_steps is not None else training_config.schedule.total_steps
 
     start = time.perf_counter()
@@ -221,7 +225,7 @@ def run_smoke_train(
         final_generations=final_generations,
         initial_validation=initial_validation,
         final_validation=final_validation,
-        initial_train_loss=initial_train_loss,
+        initial_train_loss=train_result["loss_history"][0]["loss"],
         train_result=train_result,
         final_checkpoint_path=str(final_checkpoint_path),
         log_path=str(log_path),
@@ -281,6 +285,7 @@ def run_resume_test(config_path: Path | None = None) -> ResumeComparisonReport:
     init_ckpt = scratch_dir / "init.pt"
     interrupt_ckpt = scratch_dir / "interrupt.pt"
     log_path = training_config.output.experiment_path / "resume_test_log.jsonl"
+    log_path.unlink(missing_ok=True)
 
     # Build the shared initial state once and freeze it to disk.
     state_a = init_state(architecture, training_config, device)
@@ -315,6 +320,7 @@ def run_resume_test(config_path: Path | None = None) -> ResumeComparisonReport:
         _git_commit(),
     )
     save_state(state_b1, architecture, training_config, interrupt_ckpt, _git_commit())
+    b1_loss_history = list(state_b1.loss_history)
     del state_b1
 
     # Run B stage 2: brand-new objects simulating a new process, resume, finish.
@@ -334,7 +340,7 @@ def run_resume_test(config_path: Path | None = None) -> ResumeComparisonReport:
     gen_b = _generate_fixed_prompts(state_b2, tokenizer, training_config)
 
     loss_a = {m["step"]: m["loss"] for m in state_a.loss_history}
-    loss_b1_and_b2 = {m["step"]: m["loss"] for m in state_b2.loss_history}
+    loss_b1_and_b2 = {m["step"]: m["loss"] for m in b1_loss_history + state_b2.loss_history}
     common_steps = sorted(set(loss_a) & set(loss_b1_and_b2))
     max_loss_diff = max((abs(loss_a[s] - loss_b1_and_b2[s]) for s in common_steps), default=float("nan"))
 
@@ -397,7 +403,7 @@ def run_infer(
 
 
 def evaluate_tool_use_suite(
-    checkpoint_path: Path, config_path: Path | None = None, sample_size: int | None = 20
+    checkpoint_path: Path, config_path: Path | None = None, sample_size: int | None = None
 ) -> ToolFormatReport:
     training_config, architecture, tokenizer = _load_common(config_path)
     device = _resolve_device(training_config.device)

@@ -53,6 +53,7 @@ class TrainState:
     epoch: int = 0
     position_in_epoch: int = 0
     loss_history: list[dict[str, float]] = field(default_factory=list)
+    training_config_raw: dict[str, Any] = field(default_factory=dict)
 
 
 def build_lr_lambda(warmup_steps: int, total_steps: int, min_lr_ratio: float):
@@ -87,7 +88,13 @@ def init_state(
         training_config.scheduler.min_lr_ratio,
     )
     scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
-    return TrainState(model=model, optimizer=optimizer, scheduler=scheduler, device=device)
+    return TrainState(
+        model=model,
+        optimizer=optimizer,
+        scheduler=scheduler,
+        device=device,
+        training_config_raw=training_config.raw,
+    )
 
 
 def _assert_finite(tensor: torch.Tensor, label: str) -> None:
@@ -166,6 +173,7 @@ def train_one_optimizer_step(
     grad_norm = torch.nn.utils.clip_grad_norm_(
         state.model.parameters(), training_config.optimizer.grad_clip_norm
     )
+    _assert_finite(grad_norm.detach(), "gradient norm after clipping")
     state.optimizer.step()
     state.scheduler.step()
     assert_model_finite(state.model)
@@ -233,6 +241,12 @@ def save_state(
 
 def load_state(state: TrainState, architecture: ArchitectureConfig, path: Path) -> None:
     """Restore step/tokens_seen/epoch/position/model/optimizer/scheduler/RNG in place."""
+    from juniper_math.checkpoint import load_checkpoint_raw
+
+    if load_checkpoint_raw(path).get("training_config") != state.training_config_raw:
+        raise CheckpointError(
+            "Checkpoint training configuration does not match requested full-resume configuration."
+        )
     try:
         loaded = load_checkpoint(
             path,

@@ -109,6 +109,70 @@ class TrainingConfig:
     raw: dict[str, Any]
 
 
+def _positive_int(value: Any, name: str, allow_zero: bool = False) -> None:
+    if isinstance(value, bool) or not isinstance(value, int) or value < (0 if allow_zero else 1):
+        raise JuniperConfigError(f"{name} must be {'non-negative' if allow_zero else 'positive'} integer.")
+
+
+def validate_training_config(config: TrainingConfig) -> None:
+    """Reject syntactically valid configurations that cannot be run truthfully."""
+    import math
+
+    for name in ("run_id", "architecture_identity", "tokenizer_identity", "dataset_identity"):
+        if not isinstance(getattr(config, name), str) or not getattr(config, name).strip():
+            raise JuniperConfigError(f"{name} must be a non-empty string.")
+    _positive_int(config.seed, "seed", allow_zero=True)
+    for name, value in (
+        ("smoke_subset.train_examples", config.smoke_subset.train_examples),
+        ("smoke_subset.validation_examples", config.smoke_subset.validation_examples),
+        ("smoke_subset.max_sequence_length", config.smoke_subset.max_sequence_length),
+        ("data.micro_batch_size", config.data.micro_batch_size),
+        ("data.gradient_accumulation_steps", config.data.gradient_accumulation_steps),
+        ("schedule.total_steps", config.schedule.total_steps),
+        ("generation_max_new_tokens", config.generation_max_new_tokens),
+    ):
+        _positive_int(value, name)
+    for name, value in (
+        ("schedule.validation_interval", config.schedule.validation_interval),
+        ("schedule.checkpoint_interval", config.schedule.checkpoint_interval),
+        ("schedule.generation_interval", config.schedule.generation_interval),
+        ("scheduler.warmup_steps", config.scheduler.warmup_steps),
+    ):
+        _positive_int(value, name, allow_zero=True)
+    _positive_int(config.schedule.logging_interval, "schedule.logging_interval")
+    if config.optimizer.name != "adamw" or config.scheduler.name != "cosine_with_warmup":
+        raise JuniperConfigError("Unsupported optimizer or scheduler.")
+    if config.device not in {"cpu", "cuda"} or config.precision != "fp32":
+        raise JuniperConfigError("Unsupported device or precision.")
+    values = (
+        ("optimizer.learning_rate", config.optimizer.learning_rate, True),
+        ("optimizer.weight_decay", config.optimizer.weight_decay, False),
+        ("optimizer.eps", config.optimizer.eps, True),
+        ("optimizer.grad_clip_norm", config.optimizer.grad_clip_norm, True),
+    )
+    for number_name, number_value, positive in values:
+        if (
+            isinstance(number_value, bool)
+            or not isinstance(number_value, (int, float))
+            or not math.isfinite(number_value)
+            or (positive and number_value <= 0)
+            or (not positive and number_value < 0)
+        ):
+            raise JuniperConfigError(f"{number_name} has an invalid value.")
+    if not 0 <= config.optimizer.beta1 < 1 or not 0 <= config.optimizer.beta2 < 1:
+        raise JuniperConfigError("optimizer betas must be in [0, 1).")
+    if not 0 <= config.scheduler.min_lr_ratio <= 1:
+        raise JuniperConfigError("scheduler.min_lr_ratio must be in [0, 1].")
+    if config.scheduler.warmup_steps > config.schedule.total_steps:
+        raise JuniperConfigError("scheduler.warmup_steps cannot exceed schedule.total_steps.")
+    if not 0 < config.resume_test.interrupt_step < config.schedule.total_steps:
+        raise JuniperConfigError("resume_test.interrupt_step must be strictly between zero and total_steps.")
+    if not config.fixed_generation_prompts or not all(
+        isinstance(p, str) and p.strip() for p in config.fixed_generation_prompts
+    ):
+        raise JuniperConfigError("fixed_generation_prompts must contain non-empty strings.")
+
+
 def load_training_config(path: Path | None = None) -> TrainingConfig:
     source = path or TRAINING_CONFIG_PATH
     if not source.is_file():
@@ -119,7 +183,7 @@ def load_training_config(path: Path | None = None) -> TrainingConfig:
         raise JuniperConfigError(f"{source}: invalid YAML ({exc}).") from exc
 
     try:
-        return TrainingConfig(
+        config = TrainingConfig(
             run_id=raw["run_id"],
             architecture_identity=raw["architecture_identity"],
             tokenizer_identity=raw["tokenizer_identity"],
@@ -138,6 +202,8 @@ def load_training_config(path: Path | None = None) -> TrainingConfig:
             generation_max_new_tokens=raw["generation_max_new_tokens"],
             raw=raw,
         )
+        validate_training_config(config)
+        return config
     except (KeyError, TypeError) as exc:
         raise JuniperConfigError(f"{source}: missing or malformed field ({exc}).") from exc
 
@@ -153,4 +219,5 @@ __all__ = [
     "SmokeSubsetConfig",
     "TrainingConfig",
     "load_training_config",
+    "validate_training_config",
 ]
