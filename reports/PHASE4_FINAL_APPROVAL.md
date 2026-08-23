@@ -59,8 +59,11 @@ evaluation surface.
 - Artifact hash verification, configuration, manifests, dependency check,
   CPU model smoke, tokenizer validation, tool self-test, eval validation,
   pytest, Ruff, formatting, and mypy: pass.
-- The fresh-clone recovery test is recorded after tag creation in the final
-  commit's verification log.
+- Fresh-clone recovery: clone of pushed `0d0dae8`, clean dependency install,
+  honest zero-shard validation/verification failures, rebuild, validation,
+  verification, contamination check, artifact hashes, pytest, Ruff, and mypy
+  all passed. The rebuilt identity exactly matched
+  `bf9933f032a58b4eb618b32156783b8563097a5fc1c0ef26be4f76445128d25a`.
 
 ## Review history
 
