@@ -1,0 +1,84 @@
+# Juniper Math 1 — Phase 5 Smoke Pretraining configuration.
+#
+# This is a deliberately inexpensive smoke-training configuration. Its
+# purpose is to prove the complete training pipeline (data -> tokenize ->
+# batch -> forward -> backward -> optimize -> validate -> checkpoint ->
+# resume -> generate -> evaluate) works end to end on the target hardware
+# (RTX 2060 6GB). It is NOT a capability run — see docs/TRAINING.md and
+# reports/PHASE5_RESULTS.md. Nothing here overrides the frozen architecture
+# (config/architecture.yaml), tokenizer (config/tokenizer.yaml), or dataset
+# (config/dataset.yaml) identities; this file only adds smoke-training-time
+# parameters layered on top of them.
+
+run_id: "phase5-smoke-v1"
+architecture_identity: "0.1.0"          # must match config/architecture.yaml architecture_version
+tokenizer_identity: "juniper-math-tokenizer-v1"
+dataset_identity: "juniper-math-dataset-v1"
+
+seed: 5004032                            # matches DEFAULT_PROJECT_SEED (src/juniper_math/seed.py)
+
+# Deterministic tiny smoke subset selection (Sec. 8 of the Phase 5
+# instructions). Selection is a fixed stride sample over each split's
+# shard files in their committed on-disk order: stride = floor(split
+# record_count / target_examples), start offset = seed % stride. This is
+# fully reproducible from (dataset_identity, split record_count, seed,
+# target_examples) without re-deriving anything from the generator
+# internals, and is recorded in the written smoke manifest
+# (data/processed/phase5-smoke/smoke_manifest.json) for audit.
+smoke_subset:
+  train_examples: 2048
+  validation_examples: 256
+  max_sequence_length: 256               # << architecture max_context_length=1024; smoke-only
+
+# Data loading / batching
+data:
+  micro_batch_size: 8
+  gradient_accumulation_steps: 2         # effective batch size = 16
+  shuffle: true
+
+# Optimization
+optimizer:
+  name: "adamw"
+  learning_rate: 3.0e-4
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip_norm: 1.0
+
+scheduler:
+  name: "cosine_with_warmup"
+  warmup_steps: 20
+  min_lr_ratio: 0.1
+
+# Run length and cadence. total_steps is the number of *optimizer* steps
+# (post grad-accumulation), matched by the interrupted/uninterrupted resume
+# comparison (Sec. 22).
+schedule:
+  total_steps: 200
+  validation_interval: 50
+  checkpoint_interval: 100
+  generation_interval: 100
+  logging_interval: 10
+
+# Resume-comparison gate (Sec. 22): Run B interrupts at this step, saves a
+# checkpoint, and resumes to reach the same total_steps as Run A.
+resume_test:
+  interrupt_step: 100
+
+device: "cuda"                            # falls back to cpu with an explicit WARNING, never silent
+precision: "fp32"                         # smoke run: correctness over speed, no GradScaler complexity
+
+output:
+  checkpoint_dir: "checkpoints/phase5-smoke"
+  experiment_dir: "experiments/phase5-smoke"
+  smoke_dataset_dir: "data/processed/phase5-smoke"
+
+# Fixed prompts used for the initialization-vs-trained generation comparison
+# (Sec. 14, 18). Deterministic, small, and drawn from real dataset styles —
+# not claims of capability, just a fixed observation point.
+fixed_generation_prompts:
+  - "12 + 7 ="
+  - "What is 5 times 6?"
+  - "Convert 3 miles to meters."
+generation_max_new_tokens: 32

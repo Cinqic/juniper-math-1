@@ -43,9 +43,21 @@ def test_phase_approval_record_present():
     assert approval["starting_foundation_tag"] == "phase-3-tools"
 
 
-def test_phase_5_is_authorized_but_not_started():
+def test_phase_5_implementation_complete_pending_independent_review():
+    """Phase 5's pipeline is implemented and self-reviewed but not yet
+    independently reviewed — current_phase correctly stays 4 (the last
+    independently-approved phase) until that review completes, matching
+    every prior phase's own approval sequence. See
+    config/project.yaml:phase_5_engineering and reports/PHASE5_RESULTS.md.
+    """
     meta = load_project_metadata()
     assert meta.next_phase["number"] == 5
     assert meta.next_phase["name"] == "Smoke Pretraining"
-    assert meta.next_phase["status"] == "AUTHORIZED"
-    assert meta.next_phase["started"] is False
+    assert meta.next_phase["started"] is True
+    assert "PENDING INDEPENDENT REVIEW" in meta.next_phase["status"]
+
+    from juniper_math.metadata import PROJECT_CONFIG_PATH
+
+    raw = yaml.safe_load(PROJECT_CONFIG_PATH.read_text(encoding="utf-8"))
+    assert raw["phase_5_engineering"]["sonnet_5_implementation"] == "complete"
+    assert raw["phase_5_engineering"]["terra_independent_review"] == "not_yet_performed"

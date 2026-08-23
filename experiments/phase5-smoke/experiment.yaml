@@ -1,0 +1,68 @@
+# Phase 5 smoke-pretraining experiment record.
+# Naming convention: docs/EXPERIMENT_NAMING.md
+
+experiment_id: "p5-20260823-smoke-pretraining"
+phase: 5
+phase_name: "Smoke Pretraining"
+git_commit: "1f5bc9088c4517ca0972f68c11bb7897de51c22c"  # starting commit; see reports/PHASE5_COMPLETION.md for the final commit
+
+intent: >
+  Prove the complete Juniper Math 1 training pipeline works end to end on
+  the target RTX 2060 hardware: deterministic smoke-subset selection from
+  the frozen dataset, tokenization, batching, forward/backward, AdamW
+  optimization, validation, checkpointing, checkpoint restoration, resumed
+  training (compared against an uninterrupted control), generation, and
+  evaluation (including tool-format evaluation). Not a capability run —
+  the smoke model is not expected to be mathematically useful.
+
+frozen_artifact_identities:
+  architecture_version: "0.1.0"
+  parameter_count: 5004032
+  tokenizer_identity: "juniper-math-tokenizer-v1"
+  dataset_identity: "juniper-math-dataset-v1"
+  dataset_whole_identity_sha256: "bf9933f032a58b4eb618b32156783b8563097a5fc1c0ef26be4f76445128d25a"
+  tool_protocol_identity: "juniper-tool-protocol-v1"
+  tool_protocol_version: "1.0.0"
+
+training_config: "config/training.yaml"
+training_config_sha256: "ceec5c1c4ed2efe7a17fee0290c878ac00b656bf50189612e0ab39434ea0ce60"
+seed: 5004032
+
+smoke_subset:
+  train_examples: 2048
+  validation_examples: 256
+  selection_method: "fixed-stride sampling over each split's shard files in on-disk order (see docs/TRAINING.md)"
+  train_stride: 716
+  train_offset: 624
+  validation_stride: 316
+  validation_offset: 172
+
+environment:
+  python: "3.12.3"
+  torch: "2.13.0+cu130"
+  cuda: "13.0"
+  gpu: "NVIDIA GeForce RTX 2060 6GB"
+  driver: "595.84"
+  os: "Linux 7.0.0-30-generic"
+
+outcome: >
+  PASS. 200 optimizer steps, effective batch size 16, seq_len 256, fp32.
+  Validation loss fell from 8.38 (before any training) to 2.23 (final).
+  Gradients and parameters stayed finite at every step. Fixed-prompt
+  generation changed structurally after training (the model learned to
+  emit the `<final>` answer-tag format, though not correct answers — this
+  is expected and is not a capability claim). Checkpoint save/restore and
+  the interrupted-vs-uninterrupted resume comparison (train resume-test)
+  were bitwise-identical (max parameter abs diff 0.0, max loss-history abs
+  diff 0.0) across three independent repeated runs on this GPU. The
+  tool-format evaluator ran the frozen `evals/phase4_tool_use_v2.json`
+  suite without crashing (0% valid-call rate at this smoke scale, as
+  expected — evaluated infrastructure correctness, not capability). Full
+  numbers: reports/PHASE5_RESULTS.md.
+
+outputs:
+  final_checkpoint: "checkpoints/phase5-smoke/step_000200_final.pt (not committed; disposable/reproducible)"
+  final_checkpoint_sha256: "d662ce1dfb9ced6699ec65de22d4cea144e2a38edaccbd68e4af87f973bd08a9"
+  final_checkpoint_size_bytes: 60122115
+  train_log: "experiments/phase5-smoke/train_log.jsonl"
+  resume_test_log: "experiments/phase5-smoke/resume_test_log.jsonl"

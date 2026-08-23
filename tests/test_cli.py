@@ -52,15 +52,23 @@ def test_hash_file_missing_returns_nonzero(capsys, tmp_path):
     assert main(["hash", "file", str(tmp_path / "missing.bin")]) == 1
 
 
-def test_unimplemented_commands_are_honest(capsys):
-    # `dataset` moved out of this list in Phase 4 (config/project.yaml
-    # current_phase 4) — it is a real command group now, not a placeholder;
-    # see test_dataset_cli.py.
-    for command in ["train", "evaluate", "infer"]:
-        exit_code = main([command])
-        assert exit_code == 2, f"{command} should exit 2"
-        err = capsys.readouterr().err
-        assert "not implemented until Phase" in err
+def test_no_placeholder_commands_remain():
+    # `dataset` (Phase 4) and `train`/`evaluate`/`infer` (Phase 5) have all
+    # moved out of the "not yet implemented" placeholder set — every command
+    # in build_parser() is now a real implementation. See test_train_cli.py.
+    from juniper_math.cli import _NOT_IMPLEMENTED
+
+    assert _NOT_IMPLEMENTED == {}
+
+
+def test_train_evaluate_infer_are_real_subcommands():
+    # These now require real arguments (a config subcommand or a
+    # --checkpoint path) rather than accepting no arguments and printing a
+    # placeholder message — argparse itself rejects the bare invocation.
+    for argv in (["train"], ["evaluate"], ["infer"]):
+        with pytest.raises(SystemExit) as exc_info:
+            main(argv)
+        assert exc_info.value.code == 2
 
 
 def test_model_command_exits_zero_and_verifies_param_count(capsys):

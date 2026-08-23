@@ -69,17 +69,19 @@ See [`docs/TOOLS.md`](TOOLS.md) for the full protocol, trust boundary, and secur
 See [`docs/DATASET.md`](DATASET.md) for the full pipeline, category schema,
 and rebuild procedure.
 
-## Not yet implemented (Phase 5 and later)
+## Functional in Phase 5
 
-These commands exist as honest placeholders — they print an explicit
-`not implemented until Phase N` message and exit with status 2. They never
-silently succeed or fabricate output.
-
-| Command | Owning phase |
+| Command | Purpose |
 |---|---|
-| `train` | Phase 5 Smoke Pretraining; authorized but not started |
-| `evaluate` | later |
-| `infer` | later |
+| `train run [--config PATH] [--max-steps N] [--evaluate]` | Run smoke pretraining: deterministic subset selection, training, validation, checkpointing, fixed-prompt generation before/after |
+| `train resume-test [--config PATH]` | Sec. 22 gate: compare an uninterrupted run against an interrupted-and-resumed run for step/token/loss/parameter equivalence |
+| `evaluate --checkpoint PATH [--config PATH] [--sample-size N]` | Run the frozen tool-use evaluation suite against a checkpoint (smoke pipeline validation, not a capability measurement) |
+| `infer --checkpoint PATH --prompt TEXT [--max-new-tokens N]` | Generate text from a checkpoint for a single prompt |
+
+See [`docs/TRAINING.md`](TRAINING.md) for the full smoke-training pipeline,
+configuration, and scope boundary. No later-phase placeholder commands
+remain — every command in `python -m juniper_math --help` is a real
+implementation.
 
 ## Examples
 
@@ -105,6 +107,11 @@ python -m juniper_math dataset validate
 python -m juniper_math dataset verify
 python -m juniper_math dataset stats
 python -m juniper_math dataset contamination-check
+python -m juniper_math train run
+python -m juniper_math train run --max-steps 3 --evaluate
+python -m juniper_math train resume-test
+python -m juniper_math evaluate --checkpoint checkpoints/phase5-smoke/step_000200_final.pt
+python -m juniper_math infer --checkpoint checkpoints/phase5-smoke/step_000200_final.pt --prompt "2 + 2 ="
 python -m juniper_math --version
 ```
 

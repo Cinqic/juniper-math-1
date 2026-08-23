@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "723c471ab5332ee054b09684e2b8dd8b22e7d0b679e7d74fa70f864a04909b82"
+    sha256: "bd4cf2929a9307a242524a353a6eb637308779903aa3b61bab8b7f62fdd30ece"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -161,3 +161,8 @@ artifacts:
     description: >
       Whole-dataset identity for juniper-math-dataset-v1: SHA-256 of the ordered concatenation of
       every shard's own SHA-256 (recorded inside this file as bf9933f032a58b4eb618b32156783b8563097a5fc1c0ef26be4f76445128d25a).
+
+  - artifact_id: "training_config"
+    path: "config/training.yaml"
+    sha256: "ceec5c1c4ed2efe7a17fee0290c878ac00b656bf50189612e0ab39434ea0ce60"
+    description: "Frozen Phase 5 smoke-pretraining configuration (smoke subset, optimizer, schedule, resume-test parameters)."

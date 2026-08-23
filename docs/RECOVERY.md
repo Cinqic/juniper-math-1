@@ -107,6 +107,16 @@ python -m juniper_math dataset build
 python -m juniper_math dataset validate
 python -m juniper_math dataset verify
 python -m juniper_math dataset contamination-check
+
+# 14. (Phase 5+) Reconstruct the smoke-training pipeline. The smoke subset
+#     manifest, checkpoints, and JSONL step logs (other than the small
+#     committed ones under experiments/phase5-smoke/) are gitignored and
+#     disposable — re-running against the same frozen dataset build and
+#     config/training.yaml reproduces an equivalent run (the resume-test
+#     gate demonstrates this reproducibility directly). See
+#     docs/TRAINING.md and reports/PHASE5_RESULTS.md.
+python -m juniper_math train run --evaluate
+python -m juniper_math train resume-test
 ```
 
 A successful recovery satisfies all of the following:
@@ -117,7 +127,11 @@ A successful recovery satisfies all of the following:
   exercised).
 - `pytest` reports 0 failures.
 - `status` reports Phase 4 as `COMPLETE`; `config/project.yaml` identifies
-  Phase 5, Smoke Pretraining, as authorized and not started.
+  Phase 5, Smoke Pretraining, as implementation-complete and pending
+  independent review (`config/project.yaml:phase_5_engineering`).
+- Step 14's `train run`/`train resume-test` both report PASS on the actual
+  target GPU hardware (they run on CPU with an explicit WARNING otherwise,
+  which does not validate the intended hardware fit).
 
 ## What this repository does not depend on
 

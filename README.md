@@ -1,13 +1,17 @@
 # Juniper Math 1
 
 A purpose-built, approximately five-million-parameter mathematical language
-model. **No model is trained yet.** This repository has an implemented,
-mechanically-validated architecture (Phase 1), a trained, validated
-math-specific tokenizer (Phase 2, complete), and a deterministic calculator
-tool runtime (Phase 3, complete) — not a
-trained model, and not yet mathematical capability of any kind. The runtime
-proves the tool surface a future trained model will call into is correct
-and secure; it does not itself demonstrate learned tool-use behavior.
+model. **No model with mathematical capability exists yet.** This
+repository has an implemented, mechanically-validated architecture
+(Phase 1), a trained, validated math-specific tokenizer (Phase 2), a
+deterministic calculator tool runtime (Phase 3), a frozen dataset and
+evaluation suite (Phase 4), and a validated smoke-pretraining pipeline
+(Phase 5) that trains a tiny checkpoint end to end purely to prove the
+training mechanics work — that checkpoint is not a claim of mathematical
+capability of any kind. The Phase 3 runtime proves the tool surface a
+future trained model will call into is correct and secure; it does not
+itself demonstrate learned tool-use behavior. Real capability training is
+Phase 6 (Pilot Pretraining), not yet started.
 
 ## Research question
 
@@ -26,7 +30,7 @@ Phase 1 — Architecture:                     COMPLETE
 Phase 2 — Math Tokenizer:                   COMPLETE
 Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
 Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
-Phase 5 — Smoke Pretraining:                AUTHORIZED — NOT STARTED
+Phase 5 — Smoke Pretraining:                IMPLEMENTATION COMPLETE — PENDING INDEPENDENT REVIEW
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -92,6 +96,22 @@ contamination-free against the training corpus. See
 implemented and self-reviewed by Claude Sonnet 5, then independently
 remediated and approved by GPT-5.6 Terra.
 
+Phase 5 (Smoke Pretraining) proves the complete training pipeline works end
+to end on the target hardware — not that the model is capable. A
+deterministic tiny subset (2,048 train / 256 validation examples) is
+selected from the frozen dataset by fixed-stride sampling, tokenized with
+the frozen tokenizer, and trained for 200 optimizer steps on the RTX 2060:
+validation loss fell from 8.38 to 2.23, gradients and parameters stayed
+finite throughout, and generation demonstrably changed from initialization
+(the model learned the `<final>` answer-tag format, though not correct
+answers). Checkpoint save/restore, an interrupted-vs-uninterrupted resume
+comparison (bitwise-identical on this run), and the tool-format evaluation
+infrastructure against the frozen `evals/phase4_tool_use_v2.json` suite all
+executed successfully. See [`docs/TRAINING.md`](docs/TRAINING.md) and
+[`reports/PHASE5_RESULTS.md`](reports/PHASE5_RESULTS.md) for full results.
+Phase 5 was implemented and self-reviewed by Claude Sonnet 5; independent
+review is pending.
+
 ### Phase 2 release verification
 
 The approved tokenizer is frozen at [`phase-2-tokenizer`](https://github.com/Cinqic/juniper-math-1/tree/phase-2-tokenizer),
@@ -144,6 +164,10 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 4 remediation: [`reports/PHASE4_REMEDIATION.md`](reports/PHASE4_REMEDIATION.md)
 - Phase 4 final approval: [`reports/PHASE4_FINAL_APPROVAL.md`](reports/PHASE4_FINAL_APPROVAL.md)
 - Pre-Phase-5 consistency audit: [`reports/PRE_PHASE5_REPOSITORY_AUDIT.md`](reports/PRE_PHASE5_REPOSITORY_AUDIT.md)
+- Phase 5 training pipeline documentation: [`docs/TRAINING.md`](docs/TRAINING.md)
+- Phase 5 engineering report: [`reports/PHASE5_REPORT.md`](reports/PHASE5_REPORT.md)
+- Phase 5 smoke-run results: [`reports/PHASE5_RESULTS.md`](reports/PHASE5_RESULTS.md)
+- Phase 5 completion report: [`reports/PHASE5_COMPLETION.md`](reports/PHASE5_COMPLETION.md)
 
 ## Principles
 
@@ -187,9 +211,9 @@ scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
 tests/        Automated test suite
 tools/        Phase 3 deterministic tool protocol schemas (tools/schemas/)
-training/     Reserved real training entry points — Smoke Pretraining is Phase 5 and has not started
-experiments/  Experiment metadata
-checkpoints/  Checkpoint metadata (binaries stored externally — see policy)
+training/     Training-run artifacts; the Phase 5 pipeline itself lives in src/ (see docs/TRAINING.md)
+experiments/  Experiment metadata (experiments/phase5-smoke/ is the first real experiment)
+checkpoints/  Checkpoint metadata (binaries are disposable/reproducible — see docs/CHECKPOINT_POLICY.md)
 releases/     Release metadata; releases/tokenizer/ holds the frozen Phase 2
               tokenizer artifacts (small enough for ordinary Git)
 ```
@@ -246,12 +270,15 @@ python -m juniper_math tools list           # Phase 3 canonical tools + availabi
 python -m juniper_math tools schemas        # print generated JSON Schemas
 python -m juniper_math tools call '{"protocol_version":"1.0.0","tool":"calculator.evaluate","arguments":{"expression":"2+2"}}'
 python -m juniper_math tools self-test      # fast happy-path + security battery
+python -m juniper_math train run            # Phase 5 smoke pretraining
+python -m juniper_math train resume-test    # interrupted-vs-uninterrupted resume equivalence gate
+python -m juniper_math evaluate --checkpoint <path>   # smoke tool-format evaluation
+python -m juniper_math infer --checkpoint <path> --prompt "2 + 2 ="
 ```
 
-Full command reference: [`docs/CLI.md`](docs/CLI.md). Commands for later
-phases (`train`, `dataset`, `evaluate`, `infer`) exist as honest
-placeholders that report "not implemented until Phase N" — they never fake
-success.
+Full command reference: [`docs/CLI.md`](docs/CLI.md). No placeholder
+commands remain — see [`docs/TRAINING.md`](docs/TRAINING.md) for the Phase 5
+smoke-pretraining pipeline.
 
 ## Testing
 
@@ -294,7 +321,7 @@ actually exercised — see
 | 2 | Math Tokenizer | **COMPLETE** |
 | 3 | Deterministic tool integration ("Cinqic Calculator") | **COMPLETE** |
 | 4 | Dataset and Evaluation Freeze | **COMPLETE** |
-| 5 | Smoke Pretraining | **AUTHORIZED — NOT STARTED** |
+| 5 | Smoke Pretraining | **IMPLEMENTATION COMPLETE — PENDING INDEPENDENT REVIEW** |
 
 ## License
 

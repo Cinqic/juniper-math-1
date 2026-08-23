@@ -56,13 +56,18 @@ try:
 except ImportError as exc:  # pragma: no cover - exercised only without torch installed
     _MODEL_IMPORT_ERROR = exc
 
+_TRAIN_IMPORT_ERROR: Exception | None
+try:
+    from juniper_math import train_pipeline
+    from juniper_math.trainer import TrainingNumericalError
+
+    _TRAIN_IMPORT_ERROR = None
+except ImportError as exc:  # pragma: no cover - exercised only in a stripped-down environment
+    _TRAIN_IMPORT_ERROR = exc
+
 logger = get_logger(__name__)
 
-_NOT_IMPLEMENTED = {
-    "train": 5,
-    "evaluate": 5,
-    "infer": 5,
-}
+_NOT_IMPLEMENTED: dict[str, int] = {}
 
 _DATASET_IMPORT_ERROR: Exception | None
 try:
@@ -368,6 +373,101 @@ def _cmd_checkpoint_inspect(args: argparse.Namespace) -> int:
         return 1
     for key, value in meta.items():
         print(f"{key}: {value}")
+    return 0
+
+
+def _require_train_module() -> int | None:
+    if _MODEL_IMPORT_ERROR is not None:
+        print(f"FAIL: training requires PyTorch: {_MODEL_IMPORT_ERROR}", file=sys.stderr)
+        return 1
+    if _TRAIN_IMPORT_ERROR is not None:
+        print(f"FAIL: training pipeline import failed: {_TRAIN_IMPORT_ERROR}", file=sys.stderr)
+        return 1
+    return None
+
+
+def _cmd_train_run(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        report = train_pipeline.run_smoke_train(
+            config_path=config_path, max_steps=args.max_steps, run_evaluate=args.evaluate
+        )
+    except (JuniperConfigError, TrainingNumericalError) as exc:
+        print(f"FAIL: smoke training aborted: {exc}", file=sys.stderr)
+        return 1
+    print(f"PASS: smoke training run {report.training_config.run_id} complete")
+    print(f"  device:               {report.device}")
+    print(f"  parameters:           {report.parameter_count:,}")
+    print(f"  final step:           {report.train_result['final_step']}")
+    print(f"  tokens_seen:          {report.train_result['tokens_seen']:,}")
+    print(f"  initial train loss:   {report.initial_train_loss:.4f}")
+    print(f"  final validation:     {report.final_validation}")
+    print(f"  checkpoint:           {report.final_checkpoint_path}")
+    print(f"  log:                  {report.log_path}")
+    print(f"  elapsed:              {report.elapsed_seconds:.1f}s")
+    if report.peak_cuda_memory_bytes is not None:
+        print(f"  peak CUDA memory:     {report.peak_cuda_memory_bytes / (1024**2):.1f} MiB")
+    print("\nGeneration before training (fixed prompts):")
+    for gen in report.initial_generations:
+        print(f"  {gen.prompt!r} -> {gen.text!r}")
+    print("\nGeneration after training (fixed prompts):")
+    for gen in report.final_generations:
+        print(f"  {gen.prompt!r} -> {gen.text!r}")
+    return 0
+
+
+def _cmd_train_resume_test(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        report = train_pipeline.run_resume_test(config_path=config_path)
+    except JuniperConfigError as exc:
+        print(f"FAIL: resume comparison aborted: {exc}", file=sys.stderr)
+        return 1
+    for key, value in report.as_dict().items():
+        print(f"{key}: {value}")
+    print(
+        "\nPASS: resume comparison equivalent" if report.equivalent else "\nFAIL: resume comparison diverged"
+    )
+    return 0 if report.equivalent else 1
+
+
+def _cmd_evaluate(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        report = train_pipeline.evaluate_tool_use_suite(
+            Path(args.checkpoint), config_path=config_path, sample_size=args.sample_size
+        )
+    except (JuniperConfigError, FileNotFoundError) as exc:
+        print(f"FAIL: evaluation aborted: {exc}", file=sys.stderr)
+        return 1
+    summary = report.as_dict()
+    for key, value in summary.items():
+        print(f"{key}: {value}")
+    print(
+        "\nSMOKE PIPELINE VALIDATION ONLY — these numbers are evidence the evaluation "
+        "infrastructure works end to end, not a capability claim about the model."
+    )
+    return 0
+
+
+def _cmd_infer(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        result = train_pipeline.run_infer(
+            Path(args.checkpoint), args.prompt, args.max_new_tokens, config_path=config_path
+        )
+    except (JuniperConfigError, CheckpointError, FileNotFoundError) as exc:
+        print(f"FAIL: inference aborted: {exc}", file=sys.stderr)
+        return 1
+    print(result.text)
     return 0
 
 
@@ -928,6 +1028,48 @@ def build_parser() -> argparse.ArgumentParser:
     dataset_sub.add_parser(
         "eval-suites-build", help="Generate and write the four frozen Phase 4 evaluation suites"
     ).set_defaults(func=_cmd_dataset_eval_suites_build)
+
+    train_parser = subparsers.add_parser("train", help="Phase 5 smoke-pretraining pipeline")
+    train_sub = train_parser.add_subparsers(dest="train_command", required=True)
+
+    train_run_parser = train_sub.add_parser("run", help="Run smoke pretraining from config/training.yaml")
+    train_run_parser.add_argument(
+        "--config", default=None, help="training config path (default: config/training.yaml)"
+    )
+    train_run_parser.add_argument(
+        "--max-steps", type=int, default=None, help="override schedule.total_steps (for fast smoke checks)"
+    )
+    train_run_parser.add_argument(
+        "--evaluate", action="store_true", help="run the tool-format evaluation against the final checkpoint"
+    )
+    train_run_parser.set_defaults(func=_cmd_train_run)
+
+    train_resume_parser = train_sub.add_parser(
+        "resume-test",
+        help="Sec. 22 gate: compare an uninterrupted run against an interrupted-and-resumed run",
+    )
+    train_resume_parser.add_argument("--config", default=None, help="training config path")
+    train_resume_parser.set_defaults(func=_cmd_train_resume_test)
+
+    evaluate_parser = subparsers.add_parser(
+        "evaluate", help="Phase 5 smoke evaluation: run the frozen tool-use suite against a checkpoint"
+    )
+    evaluate_parser.add_argument("--checkpoint", required=True, help="path to a training checkpoint (.pt)")
+    evaluate_parser.add_argument("--config", default=None, help="training config path")
+    evaluate_parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=20,
+        help="number of suite cases to evaluate (default: 20, smoke-sized)",
+    )
+    evaluate_parser.set_defaults(func=_cmd_evaluate)
+
+    infer_parser = subparsers.add_parser("infer", help="Generate text from a checkpoint for a single prompt")
+    infer_parser.add_argument("--checkpoint", required=True, help="path to a training checkpoint (.pt)")
+    infer_parser.add_argument("--prompt", required=True)
+    infer_parser.add_argument("--max-new-tokens", type=int, default=32)
+    infer_parser.add_argument("--config", default=None, help="training config path")
+    infer_parser.set_defaults(func=_cmd_infer)
 
     for command, phase in _NOT_IMPLEMENTED.items():
         sub = subparsers.add_parser(command, help=f"(Phase {phase}) not yet implemented")

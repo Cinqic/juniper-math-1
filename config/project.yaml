@@ -144,11 +144,29 @@ phase_approval:
   starting_foundation_tag: "phase-3-tools"
   dataset_id: "juniper-math-dataset-v1"
 
+# Phase 5 engineering record. current_phase remains 4 until an independent
+# reviewer (per the project's established Terra review chain) approves
+# Phase 5 and tags a final artifact, exactly as Phase 4 stayed "phase 3"
+# machine-readable status until its own Terra approval. See
+# reports/PHASE5_REPORT.md and reports/PHASE5_RESULTS.md.
+phase_5_engineering:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "not_yet_performed"
+  candidate_tag: "phase-5-smoke-candidate"
+  starting_foundation_commit: "1f5bc9088c4517ca0972f68c11bb7897de51c22c"
+  starting_foundation_tag: "phase-4-dataset"
+
 next_phase:
   number: 5
   name: "Smoke Pretraining"
-  status: "AUTHORIZED"
-  started: false
+  status: "IMPLEMENTATION_COMPLETE — PENDING INDEPENDENT REVIEW"
+  started: true
   note: >
-    Phase 5 is authorized by the completed Phase 4 approval but has not
-    started. Authorization is not execution.
+    Phase 5's training pipeline (data selection, tokenization, training
+    loop, validation, checkpointing, resume, generation, evaluation,
+    tool-format evaluation) is implemented, self-reviewed, and exercised
+    end to end on the target hardware — see reports/PHASE5_RESULTS.md. It
+    is not yet independently reviewed/approved, so current_phase stays 4
+    until that review completes, per the project's established phase
+    discipline (docs/adr/). Phase 6 has not started.
