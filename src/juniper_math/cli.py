@@ -1059,8 +1059,8 @@ def build_parser() -> argparse.ArgumentParser:
     evaluate_parser.add_argument(
         "--sample-size",
         type=int,
-        default=20,
-        help="number of suite cases to evaluate (default: 20, smoke-sized)",
+        default=None,
+        help="number of suite cases to evaluate (default: the complete frozen suite)",
     )
     evaluate_parser.set_defaults(func=_cmd_evaluate)
 

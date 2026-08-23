@@ -38,6 +38,8 @@ def tmp_training_config(tmp_path):
     raw["schedule"]["checkpoint_interval"] = 2
     raw["schedule"]["validation_interval"] = 2
     raw["schedule"]["logging_interval"] = 1
+    raw["scheduler"]["warmup_steps"] = 0
+    raw["resume_test"]["interrupt_step"] = 1
     raw["device"] = "cpu"
     raw["smoke_subset"]["train_examples"] = 16
     raw["smoke_subset"]["validation_examples"] = 8
