@@ -18,7 +18,8 @@ self-reviewed by Claude Sonnet 5.
 |---|---|
 | Repository | `https://github.com/Cinqic/juniper-math-1` |
 | Branch | `main` |
-| Final commit SHA | `<FILLED IN AFTER COMMIT — see below>` |
+| Implementation commit SHA | `b70abb97f3588678ef2dc2b2f050a4dfb6f5183c` |
+| Final tagged commit SHA | Not hardcoded here deliberately — a commit cannot correctly self-reference its own resulting SHA (recording it here would change the SHA). Resolve via `git rev-parse phase-5-smoke-candidate^{commit}`, matching the same resolution used in `reports/PHASE3_TERRA_HANDOFF.md`. |
 | Candidate tag | `phase-5-smoke-candidate` |
 | Architecture identity | v0.1.0, 5,004,032 trainable parameters (verified) |
 | Tokenizer identity/hash | `juniper-math-tokenizer-v1` (unchanged; `hash verify` PASS) |
@@ -38,7 +39,7 @@ self-reviewed by Claude Sonnet 5.
 | Tool-format evaluation | PASS (infrastructure); 0% valid-call rate (expected at smoke scale) |
 | Test-suite result | 586 passed, `ruff`/`mypy` clean |
 | Artifact hashes | `manifests/artifacts.yaml` updated and `hash verify` PASS (incl. new `training_config` entry) |
-| Remote push verified | `<FILLED IN AFTER PUSH>` |
+| Remote push verified | Yes — `git push origin main` fast-forwarded `1f5bc90..b70abb9`; `git ls-remote origin main` confirms the remote HEAD matches |
 | Repository cleanliness | Working tree clean after final commit (verified via `git status`) |
 | Recovery assessment | `docs/RECOVERY.md` step 14 added and exercised (see below) |
 | Frozen artifacts unmodified | Architecture, tokenizer, dataset, tool protocol byte-identical (`hash verify` PASS) |
