@@ -2,9 +2,12 @@
 
 A purpose-built, approximately five-million-parameter mathematical language
 model. **No model is trained yet.** This repository has an implemented,
-mechanically-validated architecture (Phase 1) and a trained, validated
-math-specific tokenizer (Phase 2, complete) — not a trained model, and not
-yet mathematical capability of any kind.
+mechanically-validated architecture (Phase 1), a trained, validated
+math-specific tokenizer (Phase 2, complete), and a deterministic calculator
+tool runtime (Phase 3, implemented, awaiting independent review) — not a
+trained model, and not yet mathematical capability of any kind. The runtime
+proves the tool surface a future trained model will call into is correct
+and secure; it does not itself demonstrate learned tool-use behavior.
 
 ## Research question
 
@@ -21,7 +24,8 @@ yet mathematical capability of any kind.
 Phase 0 — Foundation and Recovery:          COMPLETE
 Phase 1 — Architecture:                     COMPLETE
 Phase 2 — Math Tokenizer:                   COMPLETE
-Phase 3 — Cinqic Calculator Tool Runtime:   AUTHORIZED — NOT STARTED
+Phase 3 — Cinqic Calculator Tool Runtime:   IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW
+Phase 4 — Dataset and Evaluation Freeze:    NOT AUTHORIZED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -50,9 +54,25 @@ audit, required control tokens (`<tool_call>`, `<tool_result>`, `<final>`,
 `<unsupported>`, `<error>`) are frozen at stable IDs, byte fallback and
 Unicode math notation are validated, and the artifact is reproducible
 byte-for-byte from the committed corpus generator and config. Real
-dataset construction and Cinqic Calculator integration remain later-phase
-work. Phase 2 was independently audited, remediated, and approved by GPT-5.6
-Terra. Phase 3 is authorized but has not started.
+dataset construction remain later-phase work. Phase 2 was independently
+audited, remediated, and approved by GPT-5.6 Terra.
+
+Phase 3 implements a versioned, strictly validated, deterministic tool
+runtime (`juniper-tool-protocol-v1` v1.0.0) providing `calculator.evaluate`,
+`calculator.convert`, and `calculator.finance` through a security-hardened,
+narrowly-adapted integration with the pinned platform-independent core of
+[Cinqic Calculator](https://github.com/Cinqic/Cinqic-Calculator) (commit
+`8024cf107d6240386fa42b6c5193dd8b34848032`, MIT licensed) — no GUI or
+platform-specific code. Model-generated tool calls are treated as untrusted:
+strict JSON parsing (duplicate-key/NaN/trailing-content rejection), a
+Python-`ast`-sandboxed expression evaluator with no `eval`/`exec` and
+explicit resource limits, Decimal-based conversion/finance math, and a
+closed tool registry with no dynamic dispatch. Fabricated
+`<tool_result>...`-shaped model text is never trusted as a real execution
+outcome. See [`docs/TOOLS.md`](docs/TOOLS.md) for the full protocol and
+security model. Phase 3 was implemented and self-reviewed by Claude Sonnet
+5 and is awaiting GPT-5.6 Terra's independent review, remediation if
+necessary, and final approval; Phase 4 remains not authorized.
 
 ### Phase 2 release verification
 
@@ -86,6 +106,12 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 2 independent review: [`reports/TERRA_PHASE2_REVIEW.md`](reports/TERRA_PHASE2_REVIEW.md)
 - Phase 2 remediation: [`reports/PHASE2_REMEDIATION.md`](reports/PHASE2_REMEDIATION.md)
 - Phase 2 final approval: [`reports/PHASE2_FINAL_APPROVAL.md`](reports/PHASE2_FINAL_APPROVAL.md)
+- Phase 3 tool protocol documentation: [`docs/TOOLS.md`](docs/TOOLS.md)
+- Phase 3 engineering report: [`reports/PHASE3_REPORT.md`](reports/PHASE3_REPORT.md)
+- Phase 3 self-review: [`reports/PHASE3_SELF_REVIEW.md`](reports/PHASE3_SELF_REVIEW.md)
+- Phase 3 security review: [`reports/PHASE3_SECURITY.md`](reports/PHASE3_SECURITY.md)
+- Phase 3 tool validation: [`reports/PHASE3_TOOL_VALIDATION.md`](reports/PHASE3_TOOL_VALIDATION.md)
+- Phase 3 Terra handoff package: [`reports/PHASE3_TERRA_HANDOFF.md`](reports/PHASE3_TERRA_HANDOFF.md)
 
 ## Principles
 
@@ -128,7 +154,7 @@ manifests/    Source, license, and artifact provenance/integrity metadata
 scripts/      Project setup and orchestration scripts
 src/          Importable juniper_math Python package
 tests/        Automated test suite
-tools/        (reserved) deterministic math tool contracts — Phase 3
+tools/        Phase 3 deterministic tool protocol schemas (tools/schemas/)
 training/     (reserved) real training entry points — Phase 6/7
 experiments/  Experiment metadata
 checkpoints/  Checkpoint metadata (binaries stored externally — see policy)
@@ -184,12 +210,16 @@ python -m juniper_math tokenizer encode "2x + 5 = 11"
 python -m juniper_math tokenizer decode --ids 12,10,...
 python -m juniper_math tokenizer validate   # full Phase 2 validation battery
 python -m juniper_math tokenizer benchmark  # per-category token efficiency + baseline comparison
+python -m juniper_math tools list           # Phase 3 canonical tools + availability
+python -m juniper_math tools schemas        # print generated JSON Schemas
+python -m juniper_math tools call '{"protocol_version":"1.0.0","tool":"calculator.evaluate","arguments":{"expression":"2+2"}}'
+python -m juniper_math tools self-test      # fast happy-path + security battery
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). Commands for later
-phases (`train`, `dataset`, `evaluate`, `infer`, `tool-test`) exist as
-honest placeholders that report "not implemented until Phase N" — they
-never fake success.
+phases (`train`, `dataset`, `evaluate`, `infer`) exist as honest
+placeholders that report "not implemented until Phase N" — they never fake
+success.
 
 ## Testing
 
@@ -230,8 +260,8 @@ actually exercised — see
 | 0 | Foundation and Recovery | **COMPLETE** |
 | 1 | Architecture — Transformer implementation, validation, benchmarking | **COMPLETE** |
 | 2 | Math Tokenizer | **COMPLETE** |
-| 3 | Deterministic tool integration ("Cinqic Calculator") | **AUTHORIZED — NOT STARTED** |
-| 4 | Dataset construction | Not started |
+| 3 | Deterministic tool integration ("Cinqic Calculator") | **IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW** |
+| 4 | Dataset and Evaluation Freeze | **NOT AUTHORIZED** |
 
 ## License
 

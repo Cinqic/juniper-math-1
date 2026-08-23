@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "annual_rate_percent": {
+          "type": "number"
+        },
+        "compounds_per_year": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "compound_interest"
+        },
+        "principal": {
+          "type": "number"
+        },
+        "years": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "principal",
+        "annual_rate_percent",
+        "years"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "discount"
+        },
+        "percent": {
+          "type": "number"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "price",
+        "percent"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "discount_percent": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "final_price"
+        },
+        "price": {
+          "type": "number"
+        },
+        "tax_rate_percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "price"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "percentage_decrease"
+        },
+        "percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "number",
+        "percent"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "new_value": {
+          "type": "number"
+        },
+        "old_value": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "percentage_difference"
+        }
+      },
+      "required": [
+        "operation",
+        "old_value",
+        "new_value"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "percentage_increase"
+        },
+        "percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "number",
+        "percent"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "number": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "percentage_of"
+        },
+        "percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "number",
+        "percent"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "operation": {
+          "const": "sales_tax"
+        },
+        "price": {
+          "type": "number"
+        },
+        "tax_rate_percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "price",
+        "tax_rate_percent"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "annual_rate_percent": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "simple_interest"
+        },
+        "principal": {
+          "type": "number"
+        },
+        "years": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "principal",
+        "annual_rate_percent",
+        "years"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "bill_total": {
+          "type": "number"
+        },
+        "num_people": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "split_bill"
+        },
+        "tip_percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "bill_total",
+        "num_people"
+      ],
+      "type": "object"
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "bill_total": {
+          "type": "number"
+        },
+        "operation": {
+          "const": "tip"
+        },
+        "tip_percent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "operation",
+        "bill_total",
+        "tip_percent"
+      ],
+      "type": "object"
+    }
+  ],
+  "title": "calculator.finance arguments"
+}

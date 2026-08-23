@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "error": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "MALFORMED_CALL",
+            "DUPLICATE_JSON_KEY",
+            "UNSUPPORTED_PROTOCOL_VERSION",
+            "UNKNOWN_TOOL",
+            "TOOL_UNAVAILABLE",
+            "MISSING_ARGUMENT",
+            "UNKNOWN_ARGUMENT",
+            "INVALID_ARGUMENT_TYPE",
+            "INVALID_ARGUMENT_VALUE",
+            "UNSUPPORTED_OPERATION",
+            "UNSUPPORTED_UNIT",
+            "DIVISION_BY_ZERO",
+            "DOMAIN_ERROR",
+            "OVERFLOW",
+            "RESOURCE_LIMIT",
+            "NON_FINITE_RESULT",
+            "INTERNAL_ERROR"
+          ],
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "protocol_version": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "result": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "success",
+        "error",
+        "unavailable",
+        "unsupported"
+      ],
+      "type": "string"
+    },
+    "tool": {
+      "description": "May be empty or unrecognized for malformed/unknown-tool calls.",
+      "type": "string"
+    }
+  },
+  "required": [
+    "protocol_version",
+    "tool",
+    "status",
+    "result",
+    "error"
+  ],
+  "title": "Juniper Math 1 tool result",
+  "type": "object"
+}

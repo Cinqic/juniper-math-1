@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "arguments": {
+      "type": "object"
+    },
+    "protocol_version": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "tool": {
+      "enum": [
+        "calculator.evaluate",
+        "calculator.convert",
+        "calculator.finance"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "protocol_version",
+    "tool",
+    "arguments"
+  ],
+  "title": "Juniper Math 1 tool call",
+  "type": "object"
+}

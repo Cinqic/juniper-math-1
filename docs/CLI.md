@@ -41,6 +41,18 @@ same code path, not two separate implementations.)
 | `tokenizer validate` | Run the full Phase 2 validation battery (vocab size, ID range, digit atomicity, byte fallback, round trips, etc.) |
 | `tokenizer benchmark` | Report per-category token efficiency and an informational general-purpose baseline comparison |
 
+## Functional in Phase 3
+
+| Command | Purpose |
+|---|---|
+| `tools list` | List the canonical tools (`calculator.evaluate`, `calculator.convert`, `calculator.finance`) and their availability |
+| `tools schemas` | Print the generated JSON Schemas for the protocol envelopes and each tool's arguments |
+| `tools validate <call json> \| --file <path> \| -` | Parse and schema-check a tool call without executing it |
+| `tools call <call json> \| --file <path> \| -` | Execute a tool call and print the canonical `ToolResult` JSON; exits 0 on `success`, 1 otherwise |
+| `tools self-test` | Fast in-process battery covering happy paths and core security invariants |
+
+See [`docs/TOOLS.md`](TOOLS.md) for the full protocol, trust boundary, and security model.
+
 ## Not yet implemented (later phases)
 
 These commands exist as honest placeholders — they print an explicit
@@ -52,7 +64,6 @@ silently succeed or fabricate output.
 | `train` | Phase 6/7 (real training) |
 | `evaluate` | later |
 | `infer` | later |
-| `tool-test` | Phase 3 |
 | `dataset` | Phase 4 |
 
 ## Examples
@@ -69,6 +80,9 @@ python -m juniper_math checkpoint inspect path/to/checkpoint.pt
 python -m juniper_math tokenizer train
 python -m juniper_math tokenizer validate
 python -m juniper_math tokenizer benchmark
+python -m juniper_math tools list
+python -m juniper_math tools call '{"protocol_version":"1.0.0","tool":"calculator.evaluate","arguments":{"expression":"2+2"}}'
+python -m juniper_math tools self-test
 python -m juniper_math --version
 ```
 

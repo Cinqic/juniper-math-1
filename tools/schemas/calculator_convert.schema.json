@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "enum": [
+        "area",
+        "data_storage",
+        "length",
+        "mass",
+        "speed",
+        "temperature",
+        "time",
+        "volume"
+      ],
+      "type": "string"
+    },
+    "from_unit": {
+      "type": "string"
+    },
+    "to_unit": {
+      "type": "string"
+    },
+    "value": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "category",
+    "from_unit",
+    "to_unit",
+    "value"
+  ],
+  "title": "calculator.convert arguments",
+  "type": "object"
+}

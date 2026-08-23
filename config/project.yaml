@@ -22,9 +22,9 @@ parameter_target: 5004032
 architecture_version: "0.1.0"
 architecture_config: "config/architecture.yaml"
 
-current_phase: 2
-phase_name: "Math Tokenizer"
-phase_status: "COMPLETE"
+current_phase: 3
+phase_name: "Cinqic Calculator Tool Runtime"
+phase_status: "AWAITING_GPT_5_6_TERRA_REVIEW"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -57,6 +57,12 @@ review_chain:
   - role: "Independent Reviewer / Auditor / Remediator / Approval Authority (Phase 2)"
     actor: "GPT-5.6 Terra"
     stage: "independent review, audit, remediation if necessary, final approval and tagging"
+  - role: "Primary Phase 3 Engineer"
+    actor: "Claude Sonnet 5"
+    stage: "tool protocol design, calculator integration, security hardening, testing, documentation, self-review"
+  - role: "Independent Reviewer / Auditor / Remediator / Approval Authority (Phase 3)"
+    actor: "GPT-5.6 Terra"
+    stage: "independent review, audit, remediation if necessary, final approval and tagging"
 
 # Phase 0 final approval record — frozen, not re-litigated by Phase 1.
 # See reports/OPUS5_PHASE0_REVIEW.md, reports/PHASE0_REMEDIATION.md,
@@ -84,10 +90,10 @@ phase_1_approval:
   starting_foundation_commit: "f9e3659efe37183bae60ffafc2762b3d342cd047"
   starting_foundation_tag: "phase-0-foundation"
 
-# Phase 2 approval record — independent review and remediation complete.
+# Phase 2 approval record — frozen, not re-litigated by Phase 3.
 # See reports/TERRA_PHASE2_REVIEW.md, reports/PHASE2_REMEDIATION.md, and
 # reports/PHASE2_FINAL_APPROVAL.md.
-phase_approval:
+phase_2_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
   terra_independent_review: "approved"
@@ -97,11 +103,33 @@ phase_approval:
   starting_foundation_commit: "83d6106bae2a465a1c166c3137b10b87eda22f91"
   starting_foundation_tag: "phase-1-architecture"
 
+# Phase 3 approval record — implementation and self-review complete;
+# awaiting GPT-5.6 Terra independent review. See
+# reports/PHASE3_REPORT.md, reports/PHASE3_SELF_REVIEW.md,
+# reports/PHASE3_SECURITY.md, reports/PHASE3_TOOL_VALIDATION.md, and
+# reports/PHASE3_TERRA_HANDOFF.md.
+phase_approval:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "pending"
+  terra_final_approval: "pending"
+  # Not hardcoded here deliberately: a commit cannot correctly self-reference
+  # its own resulting SHA (amending it changes the SHA). Resolve via
+  # `git rev-parse phase-3-review-candidate^{commit}` instead — see
+  # reports/PHASE3_TERRA_HANDOFF.md, which hit the same issue during Phase 1.
+  original_review_candidate: null
+  review_candidate_tag: "phase-3-review-candidate"
+  final_tag: null
+  starting_foundation_commit: "8f81a3b967b3fd58f3ab0b71c115e85e5af36611"
+  starting_foundation_tag: "phase-2-tokenizer"
+  cinqic_calculator_upstream_repository: "https://github.com/Cinqic/Cinqic-Calculator"
+  cinqic_calculator_upstream_commit: "8024cf107d6240386fa42b6c5193dd8b34848032"
+
 next_phase:
-  number: 3
-  name: "Cinqic Calculator Tool Runtime"
-  status: "AUTHORIZED"
+  number: 4
+  name: "Dataset and Evaluation Freeze"
+  status: "NOT_AUTHORIZED"
   started: false
   note: >
-    Authorized after GPT-5.6 Terra's independent review and final approval
-    of Phase 2. It has not started.
+    Not authorized. Awaiting GPT-5.6 Terra's independent review, remediation
+    if necessary, and final approval of Phase 3.

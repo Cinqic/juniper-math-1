@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "8de598715a17ff9154cd77dfaff762de12743a84aa0059903fe77f81043b0839"
+    sha256: "cb61d1c64018e9b6c73ca5ffa51556199a8d98c4dd8c736ee0b978215ad8b281"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -22,7 +22,7 @@ artifacts:
 
   - artifact_id: "sources_manifest"
     path: "manifests/sources.yaml"
-    sha256: "c22db3c8b097a7ad82374408eaef8330650a5e19141a42773952aa91de2005d0"
+    sha256: "2d5b06b36d76011e790f50036fa378e59760d4c8ca88b0fce820f260e2f1f7d9"
     description: "Source provenance manifest."
 
   - artifact_id: "dependency_lock"
@@ -32,7 +32,7 @@ artifacts:
 
   - artifact_id: "licenses_manifest"
     path: "manifests/licenses.yaml"
-    sha256: "422fcc3f245f7cabb718812c217c5488a596240f64e971b377e76c68b1b776e2"
+    sha256: "9fa41cd6262106be96a715a2cb8c01340e26bfa9942cdd5c300e4b83b2e39a9b"
     description: "License manifest."
 
   - artifact_id: "tokenizer_config"
@@ -64,3 +64,38 @@ artifacts:
     path: "releases/tokenizer/juniper-math-tokenizer-v1.corpus.sha256"
     sha256: "86c3afa92b2cc109b9d3ba340ce59e920e84092fd88347154b006529db7fd13f"
     description: "SHA-256 identity of the deterministic synthetic corpus used for tokenizer training."
+
+  - artifact_id: "tools_config"
+    path: "config/tools.yaml"
+    sha256: "0f41577398dda611dc6a6e37281c803f3354bd6877a02dcb15232bc3c231cdb7"
+    description: "Frozen Phase 3 tool protocol configuration (juniper-tool-protocol-v1 v1.0.0)."
+
+  - artifact_id: "tool_call_schema"
+    path: "tools/schemas/tool_call.schema.json"
+    sha256: "db9de20dadacb9419f9a4f395eb9454979278119876ec36c98610772cf06aa41"
+    description: "Generated JSON Schema for the canonical tool-call envelope."
+
+  - artifact_id: "tool_result_schema"
+    path: "tools/schemas/tool_result.schema.json"
+    sha256: "5da4eb098b0cfc0eb14f83bf5b11ebf859dbb72f41383e12a94b3ad966c647c4"
+    description: "Generated JSON Schema for the canonical tool-result envelope."
+
+  - artifact_id: "calculator_evaluate_schema"
+    path: "tools/schemas/calculator_evaluate.schema.json"
+    sha256: "53d143d33b728b7df8ee9e86eb02645f04d44c1ed4a1699d420589c15ba2b22f"
+    description: "Generated JSON Schema for calculator.evaluate arguments."
+
+  - artifact_id: "calculator_convert_schema"
+    path: "tools/schemas/calculator_convert.schema.json"
+    sha256: "db32d68a16edfb2d3a10cc185287d1c350425b6721ee094418586c61c68c9fb1"
+    description: "Generated JSON Schema for calculator.convert arguments."
+
+  - artifact_id: "calculator_finance_schema"
+    path: "tools/schemas/calculator_finance.schema.json"
+    sha256: "a15bbf0fae868bacfbf6c343b7a7dff672eb3906591ecf8e2d5aeb4845587073"
+    description: "Generated JSON Schema for calculator.finance arguments (per-operation oneOf)."
+
+  - artifact_id: "phase3_tools_eval_suite"
+    path: "evals/phase3_tools_v1.json"
+    sha256: "0342752eccba0276e20b33b341da8fec55fdb08daff2693ee84b9455a221ca6d"
+    description: "Frozen Phase 3 tool-runtime conformance/security suite (suite_version 1.0.0)."

@@ -1,0 +1,129 @@
+# Juniper Math 1 — canonical Phase 3 tool protocol configuration.
+# Frozen after Phase 3 approval. Any intentional change to a value here is a
+# breaking protocol change and requires a new protocol_version plus manifest
+# re-hashing (see manifests/artifacts.yaml).
+
+protocol:
+  protocol_id: "juniper-tool-protocol-v1"
+  protocol_version: "1.0.0"
+
+# Canonical tools exposed by this runtime. No other tool name is recognized —
+# unknown tool names always resolve to status "unsupported" (never a dynamic
+# import, never a reflective dispatch).
+tools:
+  - "calculator.evaluate"
+  - "calculator.convert"
+  - "calculator.finance"
+
+# Result statuses. "requested" is a transient/logical state (a valid call
+# exists and is awaiting execution) — it is never itself a serialized
+# ToolResult.status value; serialized results only ever use success/error/
+# unavailable/unsupported.
+result_statuses:
+  - "success"
+  - "error"
+  - "unavailable"
+  - "unsupported"
+
+error_codes:
+  - "MALFORMED_CALL"
+  - "DUPLICATE_JSON_KEY"
+  - "UNSUPPORTED_PROTOCOL_VERSION"
+  - "UNKNOWN_TOOL"
+  - "TOOL_UNAVAILABLE"
+  - "MISSING_ARGUMENT"
+  - "UNKNOWN_ARGUMENT"
+  - "INVALID_ARGUMENT_TYPE"
+  - "INVALID_ARGUMENT_VALUE"
+  - "UNSUPPORTED_OPERATION"
+  - "UNSUPPORTED_UNIT"
+  - "DIVISION_BY_ZERO"
+  - "DOMAIN_ERROR"
+  - "OVERFLOW"
+  - "RESOURCE_LIMIT"
+  - "NON_FINITE_RESULT"
+  - "INTERNAL_ERROR"
+
+# Untrusted-input size/complexity limits. Model-generated tool calls are
+# never trusted; every limit below is enforced before any computation.
+limits:
+  max_call_bytes: 8192            # complete serialized tool-call JSON
+  max_expression_length: 512      # calculator.evaluate "expression" string
+  max_string_argument_length: 256 # any other string argument (unit names, category, operation)
+  max_json_depth: 16              # JSON nesting depth of the call payload
+  max_json_members: 64            # object member count at any single JSON level
+  max_ast_nodes: 200              # calculator.evaluate parsed AST node count
+  max_ast_depth: 40               # calculator.evaluate parsed AST depth
+  max_numeric_literal_digits: 40  # digits in any single numeric literal in an expression
+  max_exponent_magnitude: 10000   # |exponent| allowed in "**" when base magnitude > 1
+  max_pow_result_bits: 4096       # estimated bit length of an integer "**" result
+  max_factorial_n: 5000           # largest accepted factorial() argument
+
+# calculator.evaluate semantics.
+evaluate:
+  angle_mode: "radians"           # sin/cos/tan take radians; no degree mode in Phase 3
+  log_base: "10"                  # log() is base-10; ln() is natural log
+  operators: ["+", "-", "*", "/", "%", "//", "**"]
+  unary_operators: ["+", "-"]
+  functions: ["sqrt", "cbrt", "abs", "log", "ln", "sin", "cos", "tan", "factorial", "reciprocal"]
+  constants: ["pi", "e"]
+  modulo_semantics: >
+    "%" uses Python's modulo operator (result takes the sign of the divisor)
+    for both integer and float operands. This is an intentional divergence
+    from upstream Cinqic Calculator, which uses math.fmod (result takes the
+    sign of the dividend, and always returns a float even for exact integer
+    inputs). Juniper uses a single consistent semantic across operand types
+    and preserves integer exactness; see docs/TOOLS.md.
+  exactness_policy: >
+    A result is "exact" (exact: true) only when every operand is an exact
+    Python int and the operation chain used only +, -, *, //, %, **
+    (non-negative or unity-base exponent), abs, unary +/-, or factorial.
+    True division ("/") and every transcendental/rational function (sqrt,
+    cbrt, log, ln, sin, cos, tan, reciprocal) always produce exact: false.
+
+# calculator.convert semantics.
+convert:
+  categories: ["length", "mass", "temperature", "area", "volume", "speed", "time", "data_storage"]
+  decimal_binary_data_units_distinct: true
+  temperature_policy: >
+    Values below absolute zero (e.g. -300 celsius) are converted numerically
+    without error. calculator.convert is a mathematical unit-conversion
+    utility, not a physical-plausibility validator; this matches upstream
+    Cinqic Calculator behavior and is documented explicitly rather than left
+    as an accidental side effect. See docs/TOOLS.md Sec. "Temperature policy".
+
+# calculator.finance semantics.
+finance:
+  operations:
+    - "percentage_of"
+    - "percentage_increase"
+    - "percentage_decrease"
+    - "percentage_difference"
+    - "discount"
+    - "sales_tax"
+    - "final_price"
+    - "tip"
+    - "split_bill"
+    - "simple_interest"
+    - "compound_interest"
+  rounding_mode: "ROUND_HALF_UP"
+  currency_decimal_places: 2
+  disclaimer: >
+    All calculator.finance results are deterministic mathematical estimates.
+    They are not tax, accounting, or investment advice, and no return or
+    outcome is guaranteed.
+
+# Upstream integration provenance (see manifests/sources.yaml for the full
+# provenance record; this is a summary pointer for quick reference).
+upstream:
+  repository: "https://github.com/Cinqic/Cinqic-Calculator"
+  commit: "8024cf107d6240386fa42b6c5193dd8b34848032"
+  license: "MIT"
+  integration_method: "vendored, narrowly adapted, deterministic-core-only (no GUI, no app dependencies)"
+
+schemas:
+  call: "tools/schemas/tool_call.schema.json"
+  result: "tools/schemas/tool_result.schema.json"
+  evaluate_arguments: "tools/schemas/calculator_evaluate.schema.json"
+  convert_arguments: "tools/schemas/calculator_convert.schema.json"
+  finance_arguments: "tools/schemas/calculator_finance.schema.json"

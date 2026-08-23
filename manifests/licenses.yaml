@@ -136,6 +136,22 @@ licenses:
       (Sec. 55-56 of the Phase 2 instructions). Not imported by any runtime project code path.
       Verified against tiktoken 0.14.0 package metadata.
 
+  - license_id: "cinqic-calculator-upstream"
+    scope: "project_code"
+    spdx_identifier: "MIT"
+    reference: "https://github.com/Cinqic/Cinqic-Calculator/blob/8024cf107d6240386fa42b6c5193dd8b34848032/LICENSE"
+    attribution_required: true
+    restrictions: "none beyond standard MIT notice retention"
+    redistribution_status: "ALLOWED"
+    notes: >
+      License covering the pinned Cinqic Calculator commit
+      (8024cf107d6240386fa42b6c5193dd8b34848032) whose deterministic mathematical core
+      (evaluator.py/conversions.py/financial.py) src/juniper_math/tools/calculator_backend.py adapts.
+      Copyright (c) 2026 BlessomYT, as declared in the upstream repository's LICENSE file. Not a Python
+      package dependency (scope: project_code, not "dependency") — this is a vendored-and-adapted source
+      integration, not an installed distribution. See manifests/sources.yaml
+      "phase3-cinqic-calculator-core-v1" for the full provenance record.
+
   - license_id: "types-pyyaml"
     scope: "dev_dependency"
     package: "types-pyyaml"

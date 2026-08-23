@@ -69,5 +69,8 @@ jobs:
       - name: Tokenizer inspection (Phase 2)
         run: python -m juniper_math tokenizer inspect
 
+      - name: Tool runtime self-test (Phase 3)
+        run: python -m juniper_math tools self-test
+
       - name: Environment report (informational; CUDA WARNING expected on CI)
         run: python -m juniper_math validate-env || true

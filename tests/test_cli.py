@@ -9,7 +9,7 @@ def test_status_exits_zero(capsys):
     assert main(["status"]) == 0
     out = capsys.readouterr().out
     assert "Juniper Math 1" in out
-    assert "COMPLETE" in out
+    assert "AWAITING_GPT_5_6_TERRA_REVIEW" in out
 
 
 def test_validate_config_exits_zero(capsys):
@@ -53,7 +53,7 @@ def test_hash_file_missing_returns_nonzero(capsys, tmp_path):
 
 
 def test_unimplemented_commands_are_honest(capsys):
-    for command in ["train", "evaluate", "infer", "tool-test", "dataset"]:
+    for command in ["train", "evaluate", "infer", "dataset"]:
         exit_code = main([command])
         assert exit_code == 2, f"{command} should exit 2"
         err = capsys.readouterr().err

@@ -28,3 +28,32 @@ sources:
       src/juniper_math/tokenizer_corpus.py. Reconstructed via
       `python -m juniper_math tokenizer train` (see reports/PHASE2_REPORT.md for full provenance and
       category counts). No third-party text was acquired.
+
+  - source_id: "phase3-cinqic-calculator-core-v1"
+    source_name: "Cinqic Calculator deterministic mathematical core"
+    publisher: "Cinqic (repository owner: Cinqic; upstream author attribution: BlessomYT per upstream LICENSE)"
+    source_url: "https://github.com/Cinqic/Cinqic-Calculator"
+    source_version: "commit 8024cf107d6240386fa42b6c5193dd8b34848032 (main, observed 2026-08-22)"
+    acquisition_date: "2026-08-22"
+    intended_use: >
+      Phase 3 deterministic tool-runtime backend for calculator.evaluate, calculator.convert, and
+      calculator.finance. Only the platform-independent mathematical core modules were used: no GUI,
+      Android/Kivy, Windows/Tkinter, history, settings, or user-storage code was integrated.
+    license_id: "cinqic-calculator-upstream"
+    redistribution_status: "ALLOWED"
+    transformation_status: >
+      Vendored and adapted (not copied verbatim): src/juniper_math/tools/calculator_backend.py is a
+      security-hardened reimplementation of the algorithms in upstream's
+      src/cinqic_calculator/evaluator.py, src/cinqic_calculator/conversions.py, and
+      src/cinqic_calculator/financial.py — same conversion tables, arithmetic operators, functions, and
+      ROUND_HALF_UP currency rounding policy, plus AST node/depth/exponent/factorial resource limits and
+      strict Decimal-based unit/finance handling that upstream does not have. See
+      reports/PHASE3_TOOL_VALIDATION.md and docs/TOOLS.md "Calculator backend relationship" for the full
+      same-behavior-vs-intentional-divergence breakdown.
+    checksum: >
+      Upstream commit 8024cf107d6240386fa42b6c5193dd8b34848032. File-level SHA-256 of the three source
+      files read at that commit is recorded in reports/PHASE3_REPORT.md "Upstream Integration".
+    notes: >
+      The upstream repository's main branch is a moving target; this project integrates against the
+      pinned commit above only, never a live clone or runtime dependency on the upstream repository.
+      Cinqic/Cinqic-Calculator itself was not modified by this project.
