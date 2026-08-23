@@ -117,3 +117,51 @@ correct. Those are checked for classification consistency, not recomputed.
 |---|---|
 | `0.1.0` | Initial frozen baseline (22 cases). Contained invalid ground truth in `tool-001`. |
 | `0.1.1` | Corrected `tool-001` (`837042742` → `836930542`); reclassified `undef-001` from `flag_missing_information` to the new `flag_undefined` behavior; removed the unused `refuse_ambiguous` behavior; added structured `verification` metadata to all 22 cases. |
+
+This suite remains frozen and continues to run unmodified in Phase 4 and
+beyond — see [`docs/DATASET.md`](DATASET.md) and below for the four new
+Phase 4 suites, which are separate, additional artifacts, not a replacement.
+
+## Phase 4 evaluation suites
+
+Four new frozen suites, built by `python -m juniper_math dataset
+eval-suites-build` (`src/juniper_math/dataset/eval_suites.py`) and far
+deeper than the 22-case Phase 0 baseline:
+
+| Suite | File | Cases | Covers |
+|---|---|---|---|
+| Core mathematics | `evals/phase4_math_v1.json` | 215 | arithmetic, operator_precedence, negative_values, decimals, fractions, percentages, ratios_proportions, scientific_notation, basic_algebra, expression_translation, word_problem, estimation, numerical_comparison, multi_step — no tool involvement |
+| Tool use | `evals/phase4_tool_use_v1.json` | 185 | unit_conversion, financial_math, tool_use, incorrect_tool_call, tool_error — every case executed against the real Phase 3 `ToolRuntime` |
+| Calibration / truthfulness | `evals/phase4_calibration_v1.json` | 130 | incorrect_supplied_answer mixed with correct direct-answer arithmetic/percentages/algebra, testing whether the model asserts confidence appropriately rather than agreeing with whatever a prompt claims |
+| Adversarial / error handling | `evals/phase4_adversarial_v1.json` | 195 | ambiguity, missing_information, undefined_operation, unsupported_capability, incorrect_tool_call, tool_error |
+
+### Why a different schema from the Phase 0 suite
+
+These suites use `juniper_math.dataset.schema.Example` — the same record
+schema as the training corpus — rather than `juniper_math.evals`'s narrower,
+math-only, 8-operation-allowlist schema. Phase 3 already established that
+different evaluation suites may use different, purpose-fit schemas
+(`evals/phase3_tools_v1.json` uses its own `call`/`expected_status` shape,
+not `juniper_math.evals`). The Phase 0 schema was never designed to
+represent a tool-required or tool-error case; reusing it would have been a
+worse fit than giving Phase 4's suites their own frozen format built on
+infrastructure (`juniper_math.dataset.schema`/`verify`) that already
+handles all three verification modes (deterministic/semantic/tool).
+
+### Validation and ground-truth re-verification
+
+Every deterministic case's answer is recomputed from its `verification`
+block via `juniper_math.dataset.verify.evaluate_expression`; every tool case
+is re-executed against the live `ToolRuntime` and compared byte-for-byte
+against its recorded result. This happens automatically both at suite-build
+time (a case that fails ground truth is never written to the suite) and as
+an ongoing regression check — `tests/test_dataset.py`'s
+`test_generators_produce_valid_ground_truth` exercises the same generators
+these suites are built from.
+
+### Contamination isolation
+
+`python -m juniper_math dataset eval-suites-build` must run **before**
+`python -m juniper_math dataset build` — see "Order matters" in
+[`docs/DATASET.md`](DATASET.md). `dataset contamination-check` verifies no
+eval-suite prompt is exactly or near-duplicated in the training corpus.

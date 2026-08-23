@@ -57,11 +57,18 @@ except ImportError as exc:  # pragma: no cover - exercised only without torch in
 logger = get_logger(__name__)
 
 _NOT_IMPLEMENTED = {
-    "dataset": 4,
     "train": 1,
     "evaluate": 1,
     "infer": 1,
 }
+
+_DATASET_IMPORT_ERROR: Exception | None
+try:
+    from juniper_math.dataset import pipeline as dataset_pipeline
+
+    _DATASET_IMPORT_ERROR = None
+except ImportError as exc:  # pragma: no cover - exercised only in a stripped-down environment
+    _DATASET_IMPORT_ERROR = exc
 
 _TOKENIZER_IMPORT_ERROR: Exception | None
 try:
@@ -627,6 +634,118 @@ def _cmd_tools_self_test(_args: argparse.Namespace) -> int:
     return 0
 
 
+def _require_dataset_module() -> int | None:
+    if _DATASET_IMPORT_ERROR is not None:
+        print(f"FAIL: dataset operations require: {_DATASET_IMPORT_ERROR}", file=sys.stderr)
+        return 1
+    return None
+
+
+def _cmd_dataset_acquire(_args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    print(dataset_pipeline.run_acquire())
+    return 0
+
+
+def _cmd_dataset_generate(args: argparse.Namespace) -> int:
+    return _cmd_dataset_build(args)
+
+
+def _cmd_dataset_build(args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    try:
+        report = dataset_pipeline.run_build(scale=args.scale, seed_override=args.seed)
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    counters = report.build.counters.as_dict()
+    print(
+        f"PASS: build complete — {counters['accepted']:,} example(s) accepted "
+        f"across {len(report.shard_infos)} shard(s)"
+    )
+    for key, value in counters.items():
+        print(f"  {key}: {value:,}")
+    print(f"dataset_identity: {report.dataset_identity}")
+    if report.build.shortfall_categories:
+        print(
+            f"NOTE: {len(report.build.shortfall_categories)} categor(y/ies) fell short of their token "
+            f"target (documented quality plateau, not an error): {report.build.shortfall_categories}"
+        )
+    if report.build.sample_errors:
+        print("Sample generator errors:", file=sys.stderr)
+        for line in report.build.sample_errors:
+            print(f"  {line}", file=sys.stderr)
+    return 0
+
+
+def _cmd_dataset_validate(_args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    try:
+        ok, lines = dataset_pipeline.run_validate()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
+def _cmd_dataset_verify(_args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    try:
+        ok, lines = dataset_pipeline.run_verify()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
+def _cmd_dataset_stats(_args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    try:
+        _ok, stats = dataset_pipeline.run_stats()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    import json
+
+    print(json.dumps(stats, indent=2, sort_keys=True))
+    return 0
+
+
+def _cmd_dataset_eval_suites_build(_args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    try:
+        ok, lines = dataset_pipeline.run_build_eval_suites()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
+def _cmd_dataset_contamination_check(_args: argparse.Namespace) -> int:
+    if (fail := _require_dataset_module()) is not None:
+        return fail
+    try:
+        ok, lines = dataset_pipeline.run_contamination_check()
+    except JuniperConfigError as exc:
+        print(f"FAIL: {exc}", file=sys.stderr)
+        return 1
+    for line in lines:
+        print(line)
+    return 0 if ok else 1
+
+
 def _make_not_implemented(command: str, phase: int):
     def _handler(_args: argparse.Namespace) -> int:
         print(
@@ -763,6 +882,50 @@ def build_parser() -> argparse.ArgumentParser:
     tools_sub.add_parser(
         "self-test", help="Run a fast in-process battery covering happy paths and core security invariants"
     ).set_defaults(func=_cmd_tools_self_test)
+
+    dataset_parser = subparsers.add_parser(
+        "dataset", help="Phase 4 dataset generation, build, and verification"
+    )
+    dataset_sub = dataset_parser.add_subparsers(dest="dataset_command", required=True)
+    dataset_sub.add_parser(
+        "acquire", help="Report external-source acquisition status (this dataset version is synthetic-only)"
+    ).set_defaults(func=_cmd_dataset_acquire)
+
+    generate_parser = dataset_sub.add_parser(
+        "generate", help="Generate the synthetic corpus (alias of `build`)"
+    )
+    generate_parser.add_argument(
+        "--scale", type=float, default=1.0, help="fraction of the configured token envelope (0,1]"
+    )
+    generate_parser.add_argument("--seed", type=int, default=None, help="override the configured master_seed")
+    generate_parser.set_defaults(func=_cmd_dataset_generate)
+
+    build_dataset_parser = dataset_sub.add_parser(
+        "build", help="Full pipeline: generate, verify, clean, dedup, split, shard, and write statistics"
+    )
+    build_dataset_parser.add_argument(
+        "--scale", type=float, default=1.0, help="fraction of the configured token envelope (0,1]"
+    )
+    build_dataset_parser.add_argument(
+        "--seed", type=int, default=None, help="override the configured master_seed"
+    )
+    build_dataset_parser.set_defaults(func=_cmd_dataset_build)
+
+    dataset_sub.add_parser("validate", help="Schema-validate every record in the built shards").set_defaults(
+        func=_cmd_dataset_validate
+    )
+    dataset_sub.add_parser(
+        "verify", help="Recompute deterministic ground truth and re-execute every recorded tool call"
+    ).set_defaults(func=_cmd_dataset_verify)
+    dataset_sub.add_parser("stats", help="Print the dataset build's recorded statistics").set_defaults(
+        func=_cmd_dataset_stats
+    )
+    dataset_sub.add_parser(
+        "contamination-check", help="Check split isolation and eval-suite/train contamination"
+    ).set_defaults(func=_cmd_dataset_contamination_check)
+    dataset_sub.add_parser(
+        "eval-suites-build", help="Generate and write the four frozen Phase 4 evaluation suites"
+    ).set_defaults(func=_cmd_dataset_eval_suites_build)
 
     for command, phase in _NOT_IMPLEMENTED.items():
         sub = subparsers.add_parser(command, help=f"(Phase {phase}) not yet implemented")

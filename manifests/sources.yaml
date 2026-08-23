@@ -57,3 +57,29 @@ sources:
       The upstream repository's main branch is a moving target; this project integrates against the
       pinned commit above only, never a live clone or runtime dependency on the upstream repository.
       Cinqic/Cinqic-Calculator itself was not modified by this project.
+
+  - source_id: "phase4-synthetic-dataset-v1"
+    source_name: "Juniper Math 1 Phase 4 synthetic training/evaluation corpus"
+    publisher: "Juniper Math 1 project (generators: src/juniper_math/dataset/generators/*.py)"
+    source_url: "src/juniper_math/dataset/generators/"
+    source_version: "juniper-math-dataset-v1 (MASTER_SEED=20260401, see config/dataset.yaml)"
+    acquisition_date: "2026-08-23"
+    intended_use: >
+      Phase 4 model training corpus (train/validation/test splits) plus the four frozen Phase 4
+      evaluation suites (evals/phase4_math_v1.json, phase4_tool_use_v1.json, phase4_calibration_v1.json,
+      phase4_adversarial_v1.json). Not used for tokenizer training (that remains the separate, already-
+      frozen Phase 2 corpus).
+    license_id: "juniper-math-1-code"
+    redistribution_status: "NOT_APPLICABLE"
+    transformation_status: "generated; not acquired or transformed from any external source"
+    checksum: >
+      recorded in data/processed/juniper-math-dataset-v1/DATASET_IDENTITY.sha256 and the per-shard
+      SHA-256 entries in data/processed/juniper-math-dataset-v1/shard_manifest.json
+    notes: >
+      100% synthetic, deterministically generated across 24 categories (see docs/DATASET.md) by
+      seeded Python generators — no third-party text was acquired. This is a documented, conservative
+      scope decision for the v1 dataset (see reports/PHASE4_PROVENANCE_LICENSE_REVIEW.md): external
+      math corpora were deliberately excluded rather than included on the assumption that "everyone
+      trains on them," since independently establishing their redistribution rights was judged outside
+      what this engineering session could responsibly verify. Reconstructed via
+      `python -m juniper_math dataset eval-suites-build` then `python -m juniper_math dataset build`.

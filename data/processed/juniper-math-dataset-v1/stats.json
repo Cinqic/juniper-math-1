@@ -1,0 +1,179 @@
+{
+  "average_tokens_per_example": 36.486732540872346,
+  "build_counters": {
+    "accepted": 1833697,
+    "generated": 3810437,
+    "rejected_diversity_cap": 78960,
+    "rejected_exact_duplicate": 1897780,
+    "rejected_exceeds_context": 0,
+    "rejected_ground_truth_mismatch": 0,
+    "rejected_near_duplicate": 0,
+    "rejected_schema_invalid": 0
+  },
+  "category_distribution": {
+    "ambiguity": 9423,
+    "arithmetic": 411649,
+    "basic_algebra": 172087,
+    "decimals": 94441,
+    "estimation": 61963,
+    "expression_translation": 55443,
+    "financial_math": 28744,
+    "fractions": 117571,
+    "incorrect_supplied_answer": 69160,
+    "incorrect_tool_call": 6568,
+    "missing_information": 1235,
+    "multi_step": 80534,
+    "negative_values": 75972,
+    "numerical_comparison": 100373,
+    "operator_precedence": 134236,
+    "percentages": 142943,
+    "ratios_proportions": 48365,
+    "scientific_notation": 14388,
+    "tool_error": 32,
+    "tool_use": 33856,
+    "undefined_operation": 9200,
+    "unit_conversion": 26272,
+    "unsupported_capability": 9650,
+    "word_problem": 129592
+  },
+  "category_token_actual": {
+    "ambiguity": 183896,
+    "arithmetic": 9240029,
+    "basic_algebra": 3500001,
+    "decimals": 2800007,
+    "estimation": 2100013,
+    "expression_translation": 2100025,
+    "financial_math": 4900008,
+    "fractions": 2800026,
+    "incorrect_supplied_answer": 2800011,
+    "incorrect_tool_call": 1400073,
+    "missing_information": 35719,
+    "multi_step": 4340007,
+    "negative_values": 2100027,
+    "numerical_comparison": 2100023,
+    "operator_precedence": 3500007,
+    "percentages": 3500001,
+    "ratios_proportions": 2800025,
+    "scientific_notation": 848912,
+    "tool_error": 4963,
+    "tool_use": 5460101,
+    "undefined_operation": 156923,
+    "unit_conversion": 4900222,
+    "unsupported_capability": 294574,
+    "word_problem": 5040019
+  },
+  "category_token_targets": {
+    "ambiguity": 560000,
+    "arithmetic": 9240000,
+    "basic_algebra": 3500000,
+    "decimals": 2800000,
+    "estimation": 2100000,
+    "expression_translation": 2100000,
+    "financial_math": 4900000,
+    "fractions": 2800000,
+    "incorrect_supplied_answer": 2800000,
+    "incorrect_tool_call": 1400000,
+    "missing_information": 560000,
+    "multi_step": 4340000,
+    "negative_values": 2100000,
+    "numerical_comparison": 2100000,
+    "operator_precedence": 3500000,
+    "percentages": 3500000,
+    "ratios_proportions": 2800000,
+    "scientific_notation": 2100000,
+    "tool_error": 280000,
+    "tool_use": 5460000,
+    "undefined_operation": 560000,
+    "unit_conversion": 4900000,
+    "unsupported_capability": 560000,
+    "word_problem": 5040000
+  },
+  "dataset_id": "juniper-math-dataset-v1",
+  "dataset_identity": "bf6a4ac1fff421deb4c810c34e8d571ea826a8d68778e5f61648d35c92c0d293",
+  "difficulty_distribution": {
+    "easy": 511741,
+    "hard": 432774,
+    "medium": 804056,
+    "trivial": 85126
+  },
+  "expected_behavior_distribution": {
+    "answer": 1639557,
+    "flag_incorrect_answer": 75728,
+    "flag_missing_information": 1235,
+    "flag_undefined": 9200,
+    "invoke_tool": 88904,
+    "refuse_unsupported": 9650,
+    "request_clarification": 9423
+  },
+  "fraction_exceeding_context": 0.0,
+  "generator_family_distribution": {
+    "arithmetic_core/arith_two_operand": 411649,
+    "arithmetic_core/compare_two_values": 100373,
+    "arithmetic_core/decimal_add_sub": 94441,
+    "arithmetic_core/estimate_round_multiply": 61963,
+    "arithmetic_core/fraction_arith": 117571,
+    "arithmetic_core/linear_equation_one_var": 172087,
+    "arithmetic_core/negative_signed_sum": 75972,
+    "arithmetic_core/precedence_three_term": 134236,
+    "arithmetic_core/sci_notation_exponent": 14388,
+    "arithmetic_core/translate_phrase": 55443,
+    "error_detection_core/wrong_claimed_answer": 69160,
+    "percent_ratio_core/percent_of_whole": 142943,
+    "percent_ratio_core/ratio_proportional_scale": 48365,
+    "semantic_classification_core/mathematically_undefined": 9200,
+    "semantic_classification_core/outside_intended_scope": 9650,
+    "semantic_classification_core/underdetermined_or_ambiguous_referent": 9423,
+    "semantic_classification_core/unsupplied_required_operand": 1235,
+    "tool_runtime_core/convert_between_units": 26272,
+    "tool_runtime_core/evaluate_large_expression": 33856,
+    "tool_runtime_core/finance_operation": 28744,
+    "tool_runtime_core/tool_runtime_error": 32,
+    "tool_runtime_core/wrong_tool_argument": 6568,
+    "word_problem_core/one_step_narrative": 129592,
+    "word_problem_core/two_step_narrative": 80534
+  },
+  "max_example_tokens": 257,
+  "median_tokens_per_example": 26,
+  "shortfall_categories": [
+    "ambiguity",
+    "missing_information",
+    "scientific_notation",
+    "tool_error",
+    "undefined_operation",
+    "unsupported_capability"
+  ],
+  "split_composition": {
+    "test": {
+      "examples": 91280,
+      "tokens": 3331352
+    },
+    "train": {
+      "examples": 1651171,
+      "tokens": 60246503
+    },
+    "validation": {
+      "examples": 91246,
+      "tokens": 3327757
+    }
+  },
+  "synthetic_vs_external": {
+    "synthetic": 1833697
+  },
+  "token_length_percentiles": {
+    "p50": 26,
+    "p90": 52,
+    "p99": 189
+  },
+  "tool_name_distribution": {
+    "calculator.convert": 29849,
+    "calculator.evaluate": 33888,
+    "calculator.finance": 31735
+  },
+  "tool_required_distribution": {
+    "no_tool": 1738225,
+    "tool_required": 95472
+  },
+  "total_bytes": 90237224,
+  "total_examples": 1833697,
+  "total_tokens": 66905612
+}

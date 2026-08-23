@@ -53,6 +53,22 @@ same code path, not two separate implementations.)
 
 See [`docs/TOOLS.md`](TOOLS.md) for the full protocol, trust boundary, and security model.
 
+## Functional in Phase 4
+
+| Command | Purpose |
+|---|---|
+| `dataset acquire` | Report external-source acquisition status (v1 is synthetic-only — see `docs/DATASET.md`) |
+| `dataset eval-suites-build` | Generate and freeze the four Phase 4 evaluation suites (run this **before** `dataset build`) |
+| `dataset generate [--scale S] [--seed N]` | Alias of `dataset build` |
+| `dataset build [--scale S] [--seed N]` | Full pipeline: generate, verify, clean, dedup, split, shard, write statistics |
+| `dataset validate` | Schema-validate every record in the built shards |
+| `dataset verify` | Recompute deterministic ground truth and re-execute every recorded tool call against the live runtime |
+| `dataset stats` | Print the dataset build's recorded statistics |
+| `dataset contamination-check` | Check derivation-id split isolation and eval-suite/train contamination |
+
+See [`docs/DATASET.md`](DATASET.md) for the full pipeline, category schema,
+and rebuild procedure.
+
 ## Not yet implemented (later phases)
 
 These commands exist as honest placeholders — they print an explicit
@@ -64,7 +80,6 @@ silently succeed or fabricate output.
 | `train` | Phase 6/7 (real training) |
 | `evaluate` | later |
 | `infer` | later |
-| `dataset` | Phase 4 |
 
 ## Examples
 
@@ -83,6 +98,13 @@ python -m juniper_math tokenizer benchmark
 python -m juniper_math tools list
 python -m juniper_math tools call '{"protocol_version":"1.0.0","tool":"calculator.evaluate","arguments":{"expression":"2+2"}}'
 python -m juniper_math tools self-test
+python -m juniper_math dataset acquire
+python -m juniper_math dataset eval-suites-build
+python -m juniper_math dataset build
+python -m juniper_math dataset validate
+python -m juniper_math dataset verify
+python -m juniper_math dataset stats
+python -m juniper_math dataset contamination-check
 python -m juniper_math --version
 ```
 

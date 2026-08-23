@@ -1,0 +1,348 @@
+{
+  "dataset_id": "juniper-math-dataset-v1",
+  "dataset_schema_version": "1.0.0",
+  "shards": [
+    {
+      "byte_size": 37646109,
+      "filename": "juniper-math-dataset-v1.test.00000.jsonl",
+      "record_count": 50000,
+      "sha256": "4c9f6b9e31d2089a4345c2ea5e2162317a1467360c29b44a1f6b0b98ce854e62",
+      "shard_index": 0,
+      "split": "test",
+      "token_count": 1820866
+    },
+    {
+      "byte_size": 31071145,
+      "filename": "juniper-math-dataset-v1.test.00001.jsonl",
+      "record_count": 41280,
+      "sha256": "f6482304240a402f0bd61aeec407fe7b8ce59a25fb61aac03e87a547bcae0bd3",
+      "shard_index": 1,
+      "split": "test",
+      "token_count": 1510486
+    },
+    {
+      "byte_size": 37717749,
+      "filename": "juniper-math-dataset-v1.train.00000.jsonl",
+      "record_count": 50000,
+      "sha256": "fd46b1704202d31bf889797f3d0056ffc688ab22552e109de83e06e89cdf3465",
+      "shard_index": 0,
+      "split": "train",
+      "token_count": 1831465
+    },
+    {
+      "byte_size": 37683902,
+      "filename": "juniper-math-dataset-v1.train.00001.jsonl",
+      "record_count": 50000,
+      "sha256": "1bb1f405a4afeb38d6413b39b371ae8504a9f6419752548a6cfd4deef09db3c9",
+      "shard_index": 1,
+      "split": "train",
+      "token_count": 1825350
+    },
+    {
+      "byte_size": 37665336,
+      "filename": "juniper-math-dataset-v1.train.00002.jsonl",
+      "record_count": 50000,
+      "sha256": "8ee25b50f66f13c487eff9786320b705edbac4bc4939b667a63d4162e297b5a0",
+      "shard_index": 2,
+      "split": "train",
+      "token_count": 1819579
+    },
+    {
+      "byte_size": 37657314,
+      "filename": "juniper-math-dataset-v1.train.00003.jsonl",
+      "record_count": 50000,
+      "sha256": "056e3f57a953fb0996293b630a1d3872a424575b8c022ba00a16d2204f0f102e",
+      "shard_index": 3,
+      "split": "train",
+      "token_count": 1817081
+    },
+    {
+      "byte_size": 37696185,
+      "filename": "juniper-math-dataset-v1.train.00004.jsonl",
+      "record_count": 50000,
+      "sha256": "6ced77257607a46b44f88a4cc057a41432f60d07eb8278c47df5efa2931119f8",
+      "shard_index": 4,
+      "split": "train",
+      "token_count": 1823734
+    },
+    {
+      "byte_size": 37687527,
+      "filename": "juniper-math-dataset-v1.train.00005.jsonl",
+      "record_count": 50000,
+      "sha256": "acaf53538099dcfc91bbae514f2991441ec772fa8d0d00ec4f738047924c3f67",
+      "shard_index": 5,
+      "split": "train",
+      "token_count": 1828121
+    },
+    {
+      "byte_size": 37707078,
+      "filename": "juniper-math-dataset-v1.train.00006.jsonl",
+      "record_count": 50000,
+      "sha256": "b3fc2b8d8ccca41bce872f98b813e0bdd0b981e9dd0b6f89e0a0bef832accc71",
+      "shard_index": 6,
+      "split": "train",
+      "token_count": 1835066
+    },
+    {
+      "byte_size": 37703931,
+      "filename": "juniper-math-dataset-v1.train.00007.jsonl",
+      "record_count": 50000,
+      "sha256": "aacd8f21497632bd6fe16c28c86fe737de9cd4e4e759cfbefa3faa2a473f021a",
+      "shard_index": 7,
+      "split": "train",
+      "token_count": 1831167
+    },
+    {
+      "byte_size": 37645782,
+      "filename": "juniper-math-dataset-v1.train.00008.jsonl",
+      "record_count": 50000,
+      "sha256": "32d37a12d7b042015b317aa375ec98d0b33977960c142e50671247cb208eb5dd",
+      "shard_index": 8,
+      "split": "train",
+      "token_count": 1820982
+    },
+    {
+      "byte_size": 37679527,
+      "filename": "juniper-math-dataset-v1.train.00009.jsonl",
+      "record_count": 50000,
+      "sha256": "529eb192accaab9c31072fb73e470f3059d6e5e067f22474644353db47dda66d",
+      "shard_index": 9,
+      "split": "train",
+      "token_count": 1822036
+    },
+    {
+      "byte_size": 37745320,
+      "filename": "juniper-math-dataset-v1.train.00010.jsonl",
+      "record_count": 50000,
+      "sha256": "acd4bd59c7b2ccd51fa9603febfe721d2a2401673415d8dad53885ca321565d6",
+      "shard_index": 10,
+      "split": "train",
+      "token_count": 1834118
+    },
+    {
+      "byte_size": 37662845,
+      "filename": "juniper-math-dataset-v1.train.00011.jsonl",
+      "record_count": 50000,
+      "sha256": "1220d436731c21bd36565f4f5e05a68c05951acde6c8fd97e833bbc21185d7a1",
+      "shard_index": 11,
+      "split": "train",
+      "token_count": 1823111
+    },
+    {
+      "byte_size": 37690896,
+      "filename": "juniper-math-dataset-v1.train.00012.jsonl",
+      "record_count": 50000,
+      "sha256": "77103899eba87b737e726d0201608f2ecda8ec963842b69be2f2f1688853d220",
+      "shard_index": 12,
+      "split": "train",
+      "token_count": 1828056
+    },
+    {
+      "byte_size": 37642140,
+      "filename": "juniper-math-dataset-v1.train.00013.jsonl",
+      "record_count": 50000,
+      "sha256": "948b769247b8c4f10fdb7d8ed6ff377c7a5a4c2fc3c1c0c42768667fccc02f49",
+      "shard_index": 13,
+      "split": "train",
+      "token_count": 1813620
+    },
+    {
+      "byte_size": 37700455,
+      "filename": "juniper-math-dataset-v1.train.00014.jsonl",
+      "record_count": 50000,
+      "sha256": "7763902f60ebaed1addb8bf052314255f8db91df2b1efb207c0b15244294f4bb",
+      "shard_index": 14,
+      "split": "train",
+      "token_count": 1834536
+    },
+    {
+      "byte_size": 37677253,
+      "filename": "juniper-math-dataset-v1.train.00015.jsonl",
+      "record_count": 50000,
+      "sha256": "1e27eb7878e225be065df32e4eaad9aaa1f199c35f3c1b693af28214d039f7f6",
+      "shard_index": 15,
+      "split": "train",
+      "token_count": 1827292
+    },
+    {
+      "byte_size": 37659872,
+      "filename": "juniper-math-dataset-v1.train.00016.jsonl",
+      "record_count": 50000,
+      "sha256": "d38ae7aaaa6ee324609eba65e76b3ef06ab8ae16121450d4d46e5ad6b9c4c796",
+      "shard_index": 16,
+      "split": "train",
+      "token_count": 1812241
+    },
+    {
+      "byte_size": 37626727,
+      "filename": "juniper-math-dataset-v1.train.00017.jsonl",
+      "record_count": 50000,
+      "sha256": "9095b4c12577a80cf23ab18324b576cdad3a775ba7e3565082928a2b2fcf73b3",
+      "shard_index": 17,
+      "split": "train",
+      "token_count": 1809356
+    },
+    {
+      "byte_size": 37670433,
+      "filename": "juniper-math-dataset-v1.train.00018.jsonl",
+      "record_count": 50000,
+      "sha256": "3a3bde893a099fa00a68c66bc9ac46f415127d48d10720d0f6ad2a35ebb5583a",
+      "shard_index": 18,
+      "split": "train",
+      "token_count": 1816787
+    },
+    {
+      "byte_size": 37718976,
+      "filename": "juniper-math-dataset-v1.train.00019.jsonl",
+      "record_count": 50000,
+      "sha256": "17b499d27dabbb8697ac4c8426ef19d15b1c43abbc8d07fb49968b653e95a7ba",
+      "shard_index": 19,
+      "split": "train",
+      "token_count": 1827532
+    },
+    {
+      "byte_size": 37653718,
+      "filename": "juniper-math-dataset-v1.train.00020.jsonl",
+      "record_count": 50000,
+      "sha256": "78b3207ae08dbe8fa4e4bf9adbe1511c5bb1cda217277e331e410211a2f30b6d",
+      "shard_index": 20,
+      "split": "train",
+      "token_count": 1807488
+    },
+    {
+      "byte_size": 37691443,
+      "filename": "juniper-math-dataset-v1.train.00021.jsonl",
+      "record_count": 50000,
+      "sha256": "ac2f1a877087abbda7b6435d31eac1ef1c4ebe848fbc27930c1dbf6a9de78a88",
+      "shard_index": 21,
+      "split": "train",
+      "token_count": 1835104
+    },
+    {
+      "byte_size": 37714509,
+      "filename": "juniper-math-dataset-v1.train.00022.jsonl",
+      "record_count": 50000,
+      "sha256": "94955e0fa9fcdda1ec2d7f1cb93070a387751a8d920495ea01cc03c7ce0fe4b8",
+      "shard_index": 22,
+      "split": "train",
+      "token_count": 1832276
+    },
+    {
+      "byte_size": 37703563,
+      "filename": "juniper-math-dataset-v1.train.00023.jsonl",
+      "record_count": 50000,
+      "sha256": "81c83e3834faad46d0ca2792fc48f150def6cf6c011c743e15d11deaf91bc700",
+      "shard_index": 23,
+      "split": "train",
+      "token_count": 1833641
+    },
+    {
+      "byte_size": 37663533,
+      "filename": "juniper-math-dataset-v1.train.00024.jsonl",
+      "record_count": 50000,
+      "sha256": "211f07218b5cecfa12b8b8eae1dc3ea9c8f833813faf2c20fbcbe39c0173088c",
+      "shard_index": 24,
+      "split": "train",
+      "token_count": 1819731
+    },
+    {
+      "byte_size": 37661248,
+      "filename": "juniper-math-dataset-v1.train.00025.jsonl",
+      "record_count": 50000,
+      "sha256": "e962f82ed3c4967121f4d079b9bdcebbba47025067af83d0c38b33a2c5cea3f8",
+      "shard_index": 25,
+      "split": "train",
+      "token_count": 1818209
+    },
+    {
+      "byte_size": 37711567,
+      "filename": "juniper-math-dataset-v1.train.00026.jsonl",
+      "record_count": 50000,
+      "sha256": "468630d34c06df6fb03e3b6a562cac2f4eb9e9b4e758684dbe5a554909987a51",
+      "shard_index": 26,
+      "split": "train",
+      "token_count": 1827837
+    },
+    {
+      "byte_size": 37653989,
+      "filename": "juniper-math-dataset-v1.train.00027.jsonl",
+      "record_count": 50000,
+      "sha256": "0ac6717302b07c4436b0b1ac0123ba08b3369569f18d35379660c43f63569e23",
+      "shard_index": 27,
+      "split": "train",
+      "token_count": 1815246
+    },
+    {
+      "byte_size": 37674940,
+      "filename": "juniper-math-dataset-v1.train.00028.jsonl",
+      "record_count": 50000,
+      "sha256": "76255f3cebe1ad42700cc833ee444ada95763557ec92f17ff5a6c27e04c75527",
+      "shard_index": 28,
+      "split": "train",
+      "token_count": 1825583
+    },
+    {
+      "byte_size": 37727554,
+      "filename": "juniper-math-dataset-v1.train.00029.jsonl",
+      "record_count": 50000,
+      "sha256": "798df65e8bbb465724d9598e891db6e9a2b348bb00c42cdfb7068b9d961dcb1b",
+      "shard_index": 29,
+      "split": "train",
+      "token_count": 1833271
+    },
+    {
+      "byte_size": 37681351,
+      "filename": "juniper-math-dataset-v1.train.00030.jsonl",
+      "record_count": 50000,
+      "sha256": "3195ebb81a1e5f3a0031ccdeb9acf5f0af6e88bb1a239623d10aad03670675d5",
+      "shard_index": 30,
+      "split": "train",
+      "token_count": 1822830
+    },
+    {
+      "byte_size": 37719933,
+      "filename": "juniper-math-dataset-v1.train.00031.jsonl",
+      "record_count": 50000,
+      "sha256": "7ea4a76bb90448f72ab85ad2e8b6ac6a0d0e9c8fdc22a98a599e3eb0586e5d2f",
+      "shard_index": 31,
+      "split": "train",
+      "token_count": 1831063
+    },
+    {
+      "byte_size": 37684304,
+      "filename": "juniper-math-dataset-v1.train.00032.jsonl",
+      "record_count": 50000,
+      "sha256": "a5bc826ca8b306bb8eee034136a17254d43ebd72289cfbd7e8583d1bce8e937b",
+      "shard_index": 32,
+      "split": "train",
+      "token_count": 1819841
+    },
+    {
+      "byte_size": 883621,
+      "filename": "juniper-math-dataset-v1.train.00033.jsonl",
+      "record_count": 1171,
+      "sha256": "cd812b5f5ab9c62d3d016ba0f5fb491f2c2bd149cff9e616bb071c711c978006",
+      "shard_index": 33,
+      "split": "train",
+      "token_count": 43153
+    },
+    {
+      "byte_size": 37940288,
+      "filename": "juniper-math-dataset-v1.validation.00000.jsonl",
+      "record_count": 50000,
+      "sha256": "88db2d79fce22cb8c812d8f66eef4203d156c6c3d26e724486adb3c4c63d65e6",
+      "shard_index": 0,
+      "split": "validation",
+      "token_count": 1826147
+    },
+    {
+      "byte_size": 31295142,
+      "filename": "juniper-math-dataset-v1.validation.00001.jsonl",
+      "record_count": 41246,
+      "sha256": "2c8b732638a4c9380b53d1049ba394fb770641bdb9d79b354aea685bc12cb224",
+      "shard_index": 1,
+      "split": "validation",
+      "token_count": 1501610
+    }
+  ]
+}

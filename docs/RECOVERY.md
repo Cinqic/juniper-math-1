@@ -93,6 +93,17 @@ python -m juniper_math model      # expected: "not implemented until Phase 1", e
 
 # 12. Confirm project status
 python -m juniper_math status | grep "Phase status"
+
+# 13. (Phase 4+) Reconstruct the dataset and re-freeze the evaluation suites.
+#     data/processed/ is gitignored and disposable — everything needed to
+#     regenerate it byte-for-byte lives in this repository's generators and
+#     config/dataset.yaml. Eval suites MUST be built before the corpus
+#     (contamination isolation — see docs/DATASET.md "Order matters").
+python -m juniper_math dataset eval-suites-build
+python -m juniper_math dataset build
+python -m juniper_math dataset validate
+python -m juniper_math dataset verify
+python -m juniper_math dataset contamination-check
 ```
 
 A successful recovery satisfies all of the following:

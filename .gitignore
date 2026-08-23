@@ -59,6 +59,17 @@ data/cache/*
 !data/cache/.gitkeep
 !data/**/README.md
 
+# Phase 4 dataset: the JSONL shards themselves are large and disposable
+# (reconstructible byte-for-byte from the committed generators + config/
+# dataset.yaml), but the small manifest/statistics/identity metadata that
+# describes them is not — track those three files even though the rest of
+# the directory is ignored.
+!data/processed/juniper-math-dataset-v1/
+data/processed/juniper-math-dataset-v1/*
+!data/processed/juniper-math-dataset-v1/shard_manifest.json
+!data/processed/juniper-math-dataset-v1/stats.json
+!data/processed/juniper-math-dataset-v1/DATASET_IDENTITY.sha256
+
 # --- Checkpoints: large binaries never enter Git history directly ---
 checkpoints/**/*.pt
 checkpoints/**/*.pth

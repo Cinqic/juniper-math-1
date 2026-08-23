@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "c281b2520b1591ee5b930c6504eb2ba7ec4f684393b64857632fe777412442d0"
+    sha256: "4eabcd8c902eaa09fbafd44286dcce06fd9682621c179fa2f824cbf94bccb3f8"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -22,7 +22,7 @@ artifacts:
 
   - artifact_id: "sources_manifest"
     path: "manifests/sources.yaml"
-    sha256: "2d5b06b36d76011e790f50036fa378e59760d4c8ca88b0fce820f260e2f1f7d9"
+    sha256: "3309f44ead6c335bac04879abc5ec2ff44939b64be4f586eb5b5d102368395f4"
     description: "Source provenance manifest."
 
   - artifact_id: "dependency_lock"
@@ -99,3 +99,45 @@ artifacts:
     path: "evals/phase3_tools_v1.json"
     sha256: "0342752eccba0276e20b33b341da8fec55fdb08daff2693ee84b9455a221ca6d"
     description: "Frozen Phase 3 tool-runtime conformance/security suite (suite_version 1.0.0)."
+
+  - artifact_id: "dataset_config"
+    path: "config/dataset.yaml"
+    sha256: "d5957f5ec5083e71d96d323222d391ed2cddd3a9a6adc7e36d44f42bf5e082c3"
+    description: "Canonical Phase 4 dataset configuration (juniper-math-dataset-v1)."
+
+  - artifact_id: "phase4_math_eval_suite"
+    path: "evals/phase4_math_v1.json"
+    sha256: "050924d1eb2f587f1fb25f967b870d311c52f943e3d235e1cf4716f845bbea03"
+    description: "Frozen Phase 4 core-mathematics evaluation suite (215 cases, suite_version 1.0.0)."
+
+  - artifact_id: "phase4_tool_use_eval_suite"
+    path: "evals/phase4_tool_use_v1.json"
+    sha256: "96b3309086c2a2a220aa926df538baca41a879b72b4defcf3bbff5d9494d27ad"
+    description: "Frozen Phase 4 tool-use evaluation suite (185 cases, suite_version 1.0.0)."
+
+  - artifact_id: "phase4_calibration_eval_suite"
+    path: "evals/phase4_calibration_v1.json"
+    sha256: "44da2b56e300d281873aaa0f3ea4b8d5feb28c9c2898ad33c6c71393f7b9c0cb"
+    description: "Frozen Phase 4 calibration/truthfulness evaluation suite (130 cases, suite_version 1.0.0)."
+
+  - artifact_id: "phase4_adversarial_eval_suite"
+    path: "evals/phase4_adversarial_v1.json"
+    sha256: "5363cf9b6323b4ac805b72bab0d00e760100ceff42a54935d4c400e63d4b09ea"
+    description: "Frozen Phase 4 adversarial/error-handling evaluation suite (195 cases, suite_version 1.0.0)."
+
+  - artifact_id: "dataset_shard_manifest"
+    path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"
+    sha256: "fb1d1b4cd7f29a77bcd04906ea3175d439b189f7d2896c9def920d7ae20f5b11"
+    description: "Per-shard record count/token count/byte size/SHA-256 manifest for juniper-math-dataset-v1."
+
+  - artifact_id: "dataset_stats"
+    path: "data/processed/juniper-math-dataset-v1/stats.json"
+    sha256: "b6f2e7938fd6ca43eba617eb30019e4b9c38f93ea8e7992a061014d17e08c906"
+    description: "Recorded build statistics for juniper-math-dataset-v1."
+
+  - artifact_id: "dataset_identity"
+    path: "data/processed/juniper-math-dataset-v1/DATASET_IDENTITY.sha256"
+    sha256: "fcde50db7ac37fd7797fb31535c5309a4e5c3d8ee2dd0386b5b5425c1c8e100b"
+    description: >
+      Whole-dataset identity for juniper-math-dataset-v1: SHA-256 of the ordered concatenation of
+      every shard's own SHA-256 (recorded inside this file as bf6a4ac1fff421deb4c810c34e8d571ea826a8d68778e5f61648d35c92c0d293).
