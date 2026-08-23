@@ -18,10 +18,10 @@ from juniper_math.tokenizer import JuniperTokenizer
 from juniper_math.tools.runtime import ToolRuntime
 
 EVAL_SUITE_FILES = [
-    "evals/phase4_math_v1.json",
-    "evals/phase4_tool_use_v1.json",
-    "evals/phase4_calibration_v1.json",
-    "evals/phase4_adversarial_v1.json",
+    "evals/phase4_math_v2.json",
+    "evals/phase4_tool_use_v2.json",
+    "evals/phase4_calibration_v2.json",
+    "evals/phase4_adversarial_v2.json",
 ]
 
 
@@ -191,23 +191,33 @@ def run_contamination_check(config: DatasetConfig | None = None) -> tuple[bool, 
     examples = list(iter_all_examples(config.output))
 
     eval_prompts: list[str] = []
+    eval_examples: list[Example] = []
     for rel_path in EVAL_SUITE_FILES:
         full = REPO_ROOT / rel_path
         if not full.is_file():
             continue
         payload = json.loads(full.read_text(encoding="utf-8"))
-        eval_prompts.extend(c["prompt"] for c in payload.get("cases", []))
+        raw_cases = payload.get("cases", [])
+        eval_prompts.extend(c["prompt"] for c in raw_cases)
+        from juniper_math.dataset.io import example_from_dict
+
+        eval_examples.extend(example_from_dict(c) for c in raw_cases)
 
     report = build_contamination_report(
         examples,
         eval_prompts,
         config.dedup.near_duplicate_shingle_size,
         config.dedup.near_duplicate_jaccard_threshold,
+        eval_examples,
     )
     lines = [
         f"derivation_id split violations: {len(report.derivation_id_split_violations)}",
         f"exact cross-split duplicates: {len(report.exact_cross_split_duplicates)}",
         f"near-duplicate eval/train pairs: {len(report.near_duplicate_eval_train_pairs)}",
+        f"shared eval/train generator IDs: {len(report.shared_eval_generator_ids)}",
+        f"shared eval/train family IDs: {len(report.shared_eval_family_ids)}",
+        f"shared eval/train template IDs: {len(report.shared_eval_template_ids)}",
+        f"exact structural eval/train pairs: {len(report.exact_structural_eval_train_pairs)}",
     ]
     for v in report.derivation_id_split_violations[:10]:
         lines.append(f"  FAIL: {v}")
@@ -215,5 +225,7 @@ def run_contamination_check(config: DatasetConfig | None = None) -> tuple[bool, 
         lines.append(f"  FAIL: {v}")
     for a, b in report.near_duplicate_eval_train_pairs[:10]:
         lines.append(f"  FAIL: eval {a!r} too similar to train {b!r}")
+    for a, b in report.exact_structural_eval_train_pairs[:10]:
+        lines.append(f"  FAIL: eval structure {a!r} matches train {b!r}")
     lines.append("PASS: no contamination detected" if report.clean else "FAIL: contamination detected")
     return report.clean, lines

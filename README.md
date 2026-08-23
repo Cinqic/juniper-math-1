@@ -25,8 +25,8 @@ Phase 0 — Foundation and Recovery:          COMPLETE
 Phase 1 — Architecture:                     COMPLETE
 Phase 2 — Math Tokenizer:                   COMPLETE
 Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
-Phase 4 — Dataset and Evaluation Freeze:    AWAITING_GPT_5_6_TERRA_REVIEW
-Phase 5 — (not yet named):                  NOT AUTHORIZED
+Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
+Phase 5 — Smoke Pretraining:                AUTHORIZED — NOT STARTED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -75,8 +75,8 @@ security model. Phase 3 was implemented and self-reviewed by Claude Sonnet
 5 and was independently audited, remediated, and approved by GPT-5.6 Terra.
 
 Phase 4 builds and freezes `juniper-math-dataset-v1`: a 100%-synthetic,
-deterministically generated, ground-truth-verified corpus of 1,833,697
-examples (66.9M frozen-tokenizer tokens) across 24 categories — arithmetic
+deterministically generated, ground-truth-verified corpus of 1,629,078
+examples (62.4M frozen-tokenizer tokens) across 24 categories — arithmetic
 through algebra, unit conversion and financial math via the real Phase 3
 tool runtime, and adversarial cases (ambiguity, missing information,
 undefined mathematics, unsupported capability, incorrect answers, incorrect
@@ -84,13 +84,13 @@ tool calls). Every deterministic answer is recomputed from a closed
 arithmetic-operation allowlist and every tool-required example's ground
 truth comes from actually executing `ToolRuntime`, never a fabricated
 result. Splits are grouped by problem derivation (never row-shuffled) so
-related variants cannot leak across train/validation/test, and four new
-frozen evaluation suites (725 cases: core mathematics, tool use,
+related variants cannot leak across train/validation/test, and four
+evaluation-only frozen v2 suites (725 cases: core mathematics, tool use,
 calibration/truthfulness, adversarial/error handling) are verified
 contamination-free against the training corpus. See
 [`docs/DATASET.md`](docs/DATASET.md) for the full pipeline. Phase 4 was
-implemented and self-reviewed by Claude Sonnet 5; independent review by
-GPT-5.6 Terra is pending.
+implemented and self-reviewed by Claude Sonnet 5, then independently
+remediated and approved by GPT-5.6 Terra.
 
 ### Phase 2 release verification
 
@@ -289,7 +289,8 @@ actually exercised — see
 | 1 | Architecture — Transformer implementation, validation, benchmarking | **COMPLETE** |
 | 2 | Math Tokenizer | **COMPLETE** |
 | 3 | Deterministic tool integration ("Cinqic Calculator") | **COMPLETE** |
-| 4 | Dataset and Evaluation Freeze | **AWAITING GPT-5.6 TERRA REVIEW** |
+| 4 | Dataset and Evaluation Freeze | **COMPLETE** |
+| 5 | Smoke Pretraining | **AUTHORIZED — NOT STARTED** |
 
 ## License
 

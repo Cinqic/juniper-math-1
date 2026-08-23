@@ -11,7 +11,7 @@ def test_loads_current_status():
     meta = load_project_metadata()
     assert meta.project_name == "Juniper Math 1"
     assert meta.current_phase == 4
-    assert meta.phase_status == "AWAITING_GPT_5_6_TERRA_REVIEW"
+    assert meta.phase_status == "COMPLETE"
     assert "five-million-parameter" in meta.research_question
     assert meta.parameter_target == 5004032
 
@@ -33,20 +33,19 @@ def test_missing_file_raises(tmp_path):
 
 
 def test_phase_approval_record_present():
-    """Phase 4 records the full approval chain (in progress), not just a
-    status string. The bare `phase_approval` key always describes whichever
-    phase is currently in progress; Phase 3's now-superseded record lives
-    at `phase_3_approval`."""
+    """Phase 4 records its completed independent approval chain."""
     meta = load_project_metadata()
-    assert meta.phase_status == "AWAITING_GPT_5_6_TERRA_REVIEW"
+    assert meta.phase_status == "COMPLETE"
     approval = meta.phase_approval
     assert approval["sonnet_5_implementation"] == "complete"
-    assert approval["terra_independent_review"] == "pending"
+    assert approval["terra_independent_review"] == "approved"
+    assert approval["terra_final_approval"] == "approved"
     assert approval["starting_foundation_tag"] == "phase-3-tools"
 
 
-def test_phase_5_is_not_authorized():
+def test_phase_5_is_authorized_but_not_started():
     meta = load_project_metadata()
     assert meta.next_phase["number"] == 5
-    assert meta.next_phase["status"] == "NOT_AUTHORIZED"
+    assert meta.next_phase["name"] == "Smoke Pretraining"
+    assert meta.next_phase["status"] == "AUTHORIZED"
     assert meta.next_phase["started"] is False

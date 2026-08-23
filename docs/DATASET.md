@@ -135,14 +135,11 @@ corpus.
 
 - **Exact**: SHA-256 of `(normalized_prompt, expected_answer)` — implemented
   in `juniper_math.dataset.dedup.ExactDeduplicator`, tracked corpus-wide.
-- **Near**: shingled Jaccard (5-word shingles, 0.92 threshold by default —
-  see `config/dataset.yaml`), implemented in `NearDeduplicator`. This is
-  deliberately a bounded, family-scoped check (each family keeps only its
-  most recent 200 examples in its comparison window) rather than full
-  corpus-wide pairwise comparison, which is quadratic and impractical at
-  multi-million-row scale. This bound is a documented trade-off (Sec. 17
-  "no silent caps"), not a hidden one — see
-  `juniper_math.dataset.dedup`'s module docstring.
+- **Structural near**: numeric literals are normalized before five-word
+  Jaccard comparison, so operand substitutions share a prompt shape. A
+  deterministic family-scoped repeat ceiling controls repeated shapes; the
+  bounded 200-record comparison window remains for close, non-identical
+  shapes. This is a documented trade-off, not a hidden cap.
 
 ## Anti-template-collapse
 
@@ -154,6 +151,10 @@ examples. 0.60, not a stricter value, because several families have only
 template counts with meaningless wording churn) — a cap below `1 /
 template_count` for any real family would make convergence mathematically
 impossible.
+
+The corpus-wide family cap is additionally enforced in token space, and
+`stats.json` records both examples and tokens by generator/family. This makes
+the policy match the training resource it is intended to protect.
 
 ## Token budget
 
@@ -185,10 +186,10 @@ filesystem-order dependent.
 
 Defense in depth, three independent layers:
 
-1. Eval-suite generation uses a seed namespace disjoint from
-   train/validation/test (`config/dataset.yaml`'s
-   `split.eval_suite_seed_offset`, folded with a per-suite-name offset in
-   `juniper_math.dataset.eval_suites`).
+1. Eval-suite generation uses a dedicated `phase4_evaluation_only`
+   constructor with held-out generator/family/template identities; it does
+   not import or call the training generator registry. A seed namespace is a
+   further collision defense, not the basis for independence.
 2. `dataset build` pre-seeds its exact/near deduplicators with every eval
    suite example currently on disk, so the corpus build itself cannot
    produce a train example that exactly or nearly matches a frozen eval

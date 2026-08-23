@@ -1,0 +1,4298 @@
+{
+  "cases": [
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "4356fe3b6685c51d",
+      "difficulty": "hard",
+      "example_id": "002035f606cdd2701e0850bf",
+      "expected_answer": "97",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 70 and 27. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            70,
+            27
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "a4050fee5f12e0bb",
+      "difficulty": "medium",
+      "example_id": "010956fe0ca2eeb233f774fd",
+      "expected_answer": "27",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 9 and 18. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            9,
+            18
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "a4050fee5f12e0bb",
+      "difficulty": "medium",
+      "example_id": "010956fe0ca2eeb233f774fd",
+      "expected_answer": "27",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 9 and 18. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 29,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            9,
+            18
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "b1a5d919106c0571",
+      "difficulty": "hard",
+      "example_id": "0623580b191fee424b2b2bed",
+      "expected_answer": "123",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 86 and 37. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            86,
+            37
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "b1a5d919106c0571",
+      "difficulty": "hard",
+      "example_id": "0623580b191fee424b2b2bed",
+      "expected_answer": "123",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 86 and 37. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            86,
+            37
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "3f42264f984d4c4d",
+      "difficulty": "hard",
+      "example_id": "095a2f52db7d6bfee8ca659c",
+      "expected_answer": "45",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 39 and 6. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            39,
+            6
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "94213af15c3e4e13",
+      "difficulty": "medium",
+      "example_id": "0a6d1bc13a53b6803b711fcd",
+      "expected_answer": "71",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 45 and 26. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            45,
+            26
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "632f6a892bcbd6f5",
+      "difficulty": "medium",
+      "example_id": "113e42017fb6aeb5f9a8e52b",
+      "expected_answer": "128",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 97 and 31. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            97,
+            31
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "ec36a50776e3ff00",
+      "difficulty": "medium",
+      "example_id": "1b3a32b518ba5338ad4a486f",
+      "expected_answer": "140",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 96 and 44. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            96,
+            44
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "ec36a50776e3ff00",
+      "difficulty": "medium",
+      "example_id": "1b3a32b518ba5338ad4a486f",
+      "expected_answer": "140",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 96 and 44. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            96,
+            44
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "f80c4a85c59c67a0",
+      "difficulty": "medium",
+      "example_id": "1c858965a7be40b5c7e39af8",
+      "expected_answer": "114",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 67 and 47. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            67,
+            47
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "6772e2b646f0e5c1",
+      "difficulty": "medium",
+      "example_id": "202301c912d92a116be00258",
+      "expected_answer": "33",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 330 responses; 10% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 35,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            10,
+            330
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "8138fce9c127b4b9",
+      "difficulty": "hard",
+      "example_id": "21bd07eb8213b9450421c165",
+      "expected_answer": "192.5",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 550 responses; 35% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            35,
+            550
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "1c5acd6505dab574",
+      "difficulty": "hard",
+      "example_id": "225bdcea58f59dc9c67ebf3b",
+      "expected_answer": "100",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 69 and 31. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            69,
+            31
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "1c5acd6505dab574",
+      "difficulty": "hard",
+      "example_id": "225bdcea58f59dc9c67ebf3b",
+      "expected_answer": "100",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 69 and 31. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            69,
+            31
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "5fde45859c11a78e",
+      "difficulty": "medium",
+      "example_id": "229e9042f306da00bd3db7fa",
+      "expected_answer": "18",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 17x + 47 = 353 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 23,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            306,
+            17
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "26221dc3c420fb48",
+      "difficulty": "medium",
+      "example_id": "27ae790db6d8e094f6e085a9",
+      "expected_answer": "96",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 13x + 45 = 1293 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 24,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            1248,
+            13
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "f4f962ab983474d7",
+      "difficulty": "medium",
+      "example_id": "2a211925546178642937f4bc",
+      "expected_answer": "20",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 2x + 25 = 65 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 21,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            40,
+            2
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "0d5c020cb7123be6",
+      "difficulty": "medium",
+      "example_id": "2b17ff91d65776c0d771ac33",
+      "expected_answer": "98",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 82 and 16. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            82,
+            16
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "0d5c020cb7123be6",
+      "difficulty": "medium",
+      "example_id": "2b17ff91d65776c0d771ac33",
+      "expected_answer": "98",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 82 and 16. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            82,
+            16
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "a622c8de37f76cf7",
+      "difficulty": "hard",
+      "example_id": "2b7070561b92814060e404d7",
+      "expected_answer": "59",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 32 and 27. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            32,
+            27
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "0fab3bc80aec1f12",
+      "difficulty": "hard",
+      "example_id": "2c5a1dd08c104373edd75a0a",
+      "expected_answer": "71",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 67 and 4. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            67,
+            4
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "0fab3bc80aec1f12",
+      "difficulty": "hard",
+      "example_id": "2c5a1dd08c104373edd75a0a",
+      "expected_answer": "71",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 67 and 4. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 29,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            67,
+            4
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "6327fb492c0fca0c",
+      "difficulty": "medium",
+      "example_id": "32b09d97b44c30e6358fa57d",
+      "expected_answer": "117.6",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 490 responses; 24% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            24,
+            490
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "6b1bb878676f62bd",
+      "difficulty": "medium",
+      "example_id": "3501ceca936ac9e78e3f11db",
+      "expected_answer": "83",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 45 and 38. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            45,
+            38
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "bac1f765ae05aa66",
+      "difficulty": "medium",
+      "example_id": "37a0d658e6b100ec09aa328c",
+      "expected_answer": "6",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 120 responses; 5% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 33,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            5,
+            120
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "7f55bca774bcc4b1",
+      "difficulty": "hard",
+      "example_id": "3cd1be0cad519566adbf297f",
+      "expected_answer": "9.6",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 120 responses; 8% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 35,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            8,
+            120
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "f8fbf75ed377c1eb",
+      "difficulty": "medium",
+      "example_id": "3d63ed3cb8aac51bcb07b0d8",
+      "expected_answer": "83",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 41 and 42. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            41,
+            42
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "f8fbf75ed377c1eb",
+      "difficulty": "medium",
+      "example_id": "3d63ed3cb8aac51bcb07b0d8",
+      "expected_answer": "83",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 41 and 42. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            41,
+            42
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "fc87e7b1a367c30e",
+      "difficulty": "medium",
+      "example_id": "40297d68848cb56a3a96d2a9",
+      "expected_answer": "133",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 90 and 43. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            90,
+            43
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "368debcb3a3cd289",
+      "difficulty": "medium",
+      "example_id": "426c516c76fa28191a127c22",
+      "expected_answer": "109",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 70 and 39. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            70,
+            39
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "5281417011e71c36",
+      "difficulty": "hard",
+      "example_id": "44cecf5da9891cd13bfb2444",
+      "expected_answer": "76",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 55 and 21. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            55,
+            21
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "5281417011e71c36",
+      "difficulty": "hard",
+      "example_id": "44cecf5da9891cd13bfb2444",
+      "expected_answer": "76",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 55 and 21. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            55,
+            21
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "7a3b60fe98060c4b",
+      "difficulty": "hard",
+      "example_id": "44f686eed17c42cb4da3216f",
+      "expected_answer": "57",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 43 and 14. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            43,
+            14
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "1ae8ae3eed106e0f",
+      "difficulty": "medium",
+      "example_id": "45091f78c6ce3d9a50826086",
+      "expected_answer": "79",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 68 and 11. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            68,
+            11
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "1ae8ae3eed106e0f",
+      "difficulty": "medium",
+      "example_id": "45091f78c6ce3d9a50826086",
+      "expected_answer": "79",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 68 and 11. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            68,
+            11
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "09a62350d2c07c2a",
+      "difficulty": "medium",
+      "example_id": "46c59611cceaf32a7bd8084a",
+      "expected_answer": "20",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 19x + 35 = 415 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 23,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            380,
+            19
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "7d3d39f68b33828e",
+      "difficulty": "medium",
+      "example_id": "477edf9f961c68ee0a66ac65",
+      "expected_answer": "64",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 640 responses; 10% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 35,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            10,
+            640
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "28022071365e2d55",
+      "difficulty": "hard",
+      "example_id": "494a4215952439b8af9cdb1a",
+      "expected_answer": "14",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 6x + 41 = 125 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            84,
+            6
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "eba011e14c7c7a00",
+      "difficulty": "medium",
+      "example_id": "4c72155d00b37bd83621601b",
+      "expected_answer": "10",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 9x + 38 = 128 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            90,
+            9
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "c5a9ff2356d47bea",
+      "difficulty": "medium",
+      "example_id": "4d09f5be8401757a70b136a8",
+      "expected_answer": "68",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 33 and 35. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            33,
+            35
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "c5a9ff2356d47bea",
+      "difficulty": "medium",
+      "example_id": "4d09f5be8401757a70b136a8",
+      "expected_answer": "68",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 33 and 35. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            33,
+            35
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "f6e90ded0a21e972",
+      "difficulty": "medium",
+      "example_id": "526961662ba6fc7c76c5aaf6",
+      "expected_answer": "54",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 20 and 34. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            20,
+            34
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "0321deabc0d12a05",
+      "difficulty": "medium",
+      "example_id": "54ab3a60261263978bdfedb9",
+      "expected_answer": "140",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 96 and 44. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            96,
+            44
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "0321deabc0d12a05",
+      "difficulty": "medium",
+      "example_id": "54ab3a60261263978bdfedb9",
+      "expected_answer": "140",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 96 and 44. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            96,
+            44
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "252479c06161f832",
+      "difficulty": "hard",
+      "example_id": "556fd68e8421529a48f2ecbd",
+      "expected_answer": "35.1",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 390 responses; 9% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 36,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            9,
+            390
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "657bf4c0245f8aeb",
+      "difficulty": "medium",
+      "example_id": "5619e06355d50858f021bcd3",
+      "expected_answer": "176.4",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 360 responses; 49% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            49,
+            360
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "c98c0b156d8196f5",
+      "difficulty": "medium",
+      "example_id": "57a1aa5699b49534f964bc3c",
+      "expected_answer": "19",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 9 and 10. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            9,
+            10
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "c98c0b156d8196f5",
+      "difficulty": "medium",
+      "example_id": "57a1aa5699b49534f964bc3c",
+      "expected_answer": "19",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 9 and 10. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 29,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            9,
+            10
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "a02ac6f7d52d35f8",
+      "difficulty": "medium",
+      "example_id": "5a9c6a72e975e0878783e761",
+      "expected_answer": "116",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 71 and 45. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            71,
+            45
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "a02ac6f7d52d35f8",
+      "difficulty": "medium",
+      "example_id": "5a9c6a72e975e0878783e761",
+      "expected_answer": "116",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 71 and 45. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            71,
+            45
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "8f0aba9056122c3b",
+      "difficulty": "medium",
+      "example_id": "5aec6694a1e3f6b796999267",
+      "expected_answer": "395.6",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 860 responses; 46% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            46,
+            860
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "d8c037bf57e52372",
+      "difficulty": "medium",
+      "example_id": "5d287f23776e4517dd151f3e",
+      "expected_answer": "68",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 45 and 23. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            45,
+            23
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "d8c037bf57e52372",
+      "difficulty": "medium",
+      "example_id": "5d287f23776e4517dd151f3e",
+      "expected_answer": "68",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 45 and 23. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            45,
+            23
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "3e4190bb47dffbe2",
+      "difficulty": "hard",
+      "example_id": "60f842921fe74978d2329a70",
+      "expected_answer": "87",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 14x + 47 = 1265 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 24,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            1218,
+            14
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "0a807e415c6f7fb5",
+      "difficulty": "medium",
+      "example_id": "63c8e30b190fdd14f656f757",
+      "expected_answer": "72",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 18x + 9 = 1305 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 23,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            1296,
+            18
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "d6e2c82b3816730c",
+      "difficulty": "hard",
+      "example_id": "662fa08fabbc537da8a83af3",
+      "expected_answer": "73",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 57 and 16. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            57,
+            16
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "c73aed80a50aba43",
+      "difficulty": "hard",
+      "example_id": "688f29c69a08158a98c74c73",
+      "expected_answer": "78.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 460 responses; 17% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 37,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            17,
+            460
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "02f8ac8a6491b882",
+      "difficulty": "medium",
+      "example_id": "698446da102a999cbe632499",
+      "expected_answer": "96",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 86 and 10. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            86,
+            10
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "5374544c6838cb49",
+      "difficulty": "hard",
+      "example_id": "6ae26dd528fa10cfae6e149f",
+      "expected_answer": "118",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 85 and 33. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            85,
+            33
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "300fbd534020da3b",
+      "difficulty": "medium",
+      "example_id": "6e8c287689cb4f297751af4e",
+      "expected_answer": "71",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 24 and 47. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            24,
+            47
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "e59014cee7e522df",
+      "difficulty": "hard",
+      "example_id": "719e0a84a42a79cd8a10f0ef",
+      "expected_answer": "32.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 460 responses; 7% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 36,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            7,
+            460
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "a337427dd4578330",
+      "difficulty": "medium",
+      "example_id": "71b8a4e8787b5d268669fabb",
+      "expected_answer": "44",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 41 and 3. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            41,
+            3
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "e588be3b7be98ea8",
+      "difficulty": "hard",
+      "example_id": "7a2012329f27bd4039f7ff02",
+      "expected_answer": "54",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 33 and 21. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            33,
+            21
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "561749c3f09210f7",
+      "difficulty": "medium",
+      "example_id": "7d7ed0d83ea84bfcf4020935",
+      "expected_answer": "247.9",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 670 responses; 37% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            37,
+            670
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "3f6278ee37c1de56",
+      "difficulty": "medium",
+      "example_id": "7f37161a0da9663e435167c2",
+      "expected_answer": "38.8",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 970 responses; 4% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 36,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            4,
+            970
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "f720787a82c2a2eb",
+      "difficulty": "hard",
+      "example_id": "823a27b4b0f121f3cfdc74d8",
+      "expected_answer": "41",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 22 and 19. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            22,
+            19
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "f720787a82c2a2eb",
+      "difficulty": "hard",
+      "example_id": "823a27b4b0f121f3cfdc74d8",
+      "expected_answer": "41",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 22 and 19. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            22,
+            19
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "470b78e326d3ac26",
+      "difficulty": "medium",
+      "example_id": "842aa09a726a75ba40ac8356",
+      "expected_answer": "98",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 71 and 27. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            71,
+            27
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "470b78e326d3ac26",
+      "difficulty": "medium",
+      "example_id": "842aa09a726a75ba40ac8356",
+      "expected_answer": "98",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 71 and 27. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            71,
+            27
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "d1a1ecb01966331a",
+      "difficulty": "medium",
+      "example_id": "86761bd59468c6dbb119f68a",
+      "expected_answer": "57",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 4x + 37 = 265 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            228,
+            4
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "db95a72069ab24cc",
+      "difficulty": "medium",
+      "example_id": "869138ab36fc0fd94abada51",
+      "expected_answer": "172.8",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 640 responses; 27% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            27,
+            640
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "1f9fe00f3314fd68",
+      "difficulty": "medium",
+      "example_id": "869f7ba79f502640706987b2",
+      "expected_answer": "97",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 50 and 47. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            50,
+            47
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "1f9fe00f3314fd68",
+      "difficulty": "medium",
+      "example_id": "869f7ba79f502640706987b2",
+      "expected_answer": "97",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 50 and 47. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            50,
+            47
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "ebcedacaf880b937",
+      "difficulty": "medium",
+      "example_id": "897879152ef9179a9fce0dcd",
+      "expected_answer": "331.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 920 responses; 36% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            36,
+            920
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "c0040e281f170809",
+      "difficulty": "medium",
+      "example_id": "8cc48b2f2c68e16d459bb516",
+      "expected_answer": "107",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 95 and 12. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            95,
+            12
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "00c9a6bb2b530af9",
+      "difficulty": "hard",
+      "example_id": "8ea598eb232f6fbcfe1dd45e",
+      "expected_answer": "21",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 5x + 21 = 126 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            105,
+            5
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "5c175c85a8715836",
+      "difficulty": "hard",
+      "example_id": "9229b02f88de0eb662a118fd",
+      "expected_answer": "117",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 71 and 46. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            71,
+            46
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "e1ed200bed2c28db",
+      "difficulty": "medium",
+      "example_id": "967df174a91c62cb1b72ae08",
+      "expected_answer": "9",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 2x + 15 = 33 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 20,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            18,
+            2
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "3ea94218d3da2727",
+      "difficulty": "medium",
+      "example_id": "968bf69ef862e4cae7af6bd5",
+      "expected_answer": "55",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 43 and 12. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            43,
+            12
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "3ea94218d3da2727",
+      "difficulty": "medium",
+      "example_id": "968bf69ef862e4cae7af6bd5",
+      "expected_answer": "55",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 43 and 12. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            43,
+            12
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "c110248ebbf50e3f",
+      "difficulty": "medium",
+      "example_id": "9dc0f4bedc80bfc75f13de67",
+      "expected_answer": "92",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 44 and 48. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            44,
+            48
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "c110248ebbf50e3f",
+      "difficulty": "medium",
+      "example_id": "9dc0f4bedc80bfc75f13de67",
+      "expected_answer": "92",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 44 and 48. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            44,
+            48
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "c995d8c74d40aaac",
+      "difficulty": "hard",
+      "example_id": "a50a7d0ecb9b3b154d6f51af",
+      "expected_answer": "33",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 7 and 26. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            7,
+            26
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "c995d8c74d40aaac",
+      "difficulty": "hard",
+      "example_id": "a50a7d0ecb9b3b154d6f51af",
+      "expected_answer": "33",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 7 and 26. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 29,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            7,
+            26
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "e3f62d59aef1d245",
+      "difficulty": "hard",
+      "example_id": "a6ea0cc771bdea16d5e2d139",
+      "expected_answer": "84",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 6x + 42 = 546 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            504,
+            6
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "5f76a94e82b04389",
+      "difficulty": "medium",
+      "example_id": "ac5fcc0758cb2fc1e4493833",
+      "expected_answer": "34",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 18x + 43 = 655 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 23,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            612,
+            18
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "c550e0f3936da900",
+      "difficulty": "medium",
+      "example_id": "af7b737c4f785f2963d97475",
+      "expected_answer": "98",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 66 and 32. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            66,
+            32
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "ca7722f40e08d2ad",
+      "difficulty": "medium",
+      "example_id": "b199bdd4ef6e0ffce9d523ec",
+      "expected_answer": "41",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 19 and 22. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            19,
+            22
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "bc2d683ae03cc6ca",
+      "difficulty": "hard",
+      "example_id": "b68be293e820a28e85306dd3",
+      "expected_answer": "88",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 65 and 23. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            65,
+            23
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "913b1898d7ff17fd",
+      "difficulty": "hard",
+      "example_id": "b756c47a08262234a2c145f5",
+      "expected_answer": "142",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 96 and 46. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            96,
+            46
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "913b1898d7ff17fd",
+      "difficulty": "hard",
+      "example_id": "b756c47a08262234a2c145f5",
+      "expected_answer": "142",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 96 and 46. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            96,
+            46
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "00b3536d77d3ede3",
+      "difficulty": "medium",
+      "example_id": "ba32ab7b8c34aaace9efed53",
+      "expected_answer": "69",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 37 and 32. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            37,
+            32
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "00b3536d77d3ede3",
+      "difficulty": "medium",
+      "example_id": "ba32ab7b8c34aaace9efed53",
+      "expected_answer": "69",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 37 and 32. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            37,
+            32
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "0578bff87adaf4a2",
+      "difficulty": "medium",
+      "example_id": "bab75530b07d515020c2cb3b",
+      "expected_answer": "56",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 19 and 37. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            19,
+            37
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "5e4165cb8e0eae1b",
+      "difficulty": "hard",
+      "example_id": "bc5d619598127e9ab57ac13e",
+      "expected_answer": "244.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 660 responses; 37% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            37,
+            660
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "02b299be68f6be66",
+      "difficulty": "medium",
+      "example_id": "bc65dac3b0b4c0e654ef3eac",
+      "expected_answer": "127",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 78 and 49. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            78,
+            49
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "2e362cdfeecbc94d",
+      "difficulty": "hard",
+      "example_id": "bd369df608c73f4aa70253b9",
+      "expected_answer": "97",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 87 and 10. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            87,
+            10
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "2b2f12d15f0c03bb",
+      "difficulty": "medium",
+      "example_id": "bfba4251bd743029f7857ec1",
+      "expected_answer": "18.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 140 responses; 13% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 37,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            13,
+            140
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "d01cefef23fe8b52",
+      "difficulty": "hard",
+      "example_id": "c32463623bdac38a1e164139",
+      "expected_answer": "112",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 95 and 17. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            95,
+            17
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "d01cefef23fe8b52",
+      "difficulty": "hard",
+      "example_id": "c32463623bdac38a1e164139",
+      "expected_answer": "112",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 95 and 17. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            95,
+            17
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "524a3980974788d6",
+      "difficulty": "hard",
+      "example_id": "c8618fd69e047dd17852a0c0",
+      "expected_answer": "90",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 4x + 15 = 375 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            360,
+            4
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "7867c4ca71c27547",
+      "difficulty": "medium",
+      "example_id": "ca7309ae42c94778b5bae6a7",
+      "expected_answer": "70",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 57 and 13. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            57,
+            13
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "86e8929b0031123e",
+      "difficulty": "hard",
+      "example_id": "cc288edf700e6e4d8e41415a",
+      "expected_answer": "34",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 20 and 14. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            20,
+            14
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "86e8929b0031123e",
+      "difficulty": "hard",
+      "example_id": "cc288edf700e6e4d8e41415a",
+      "expected_answer": "34",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 20 and 14. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            20,
+            14
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "dce57da10a5345ec",
+      "difficulty": "medium",
+      "example_id": "cef6c0fcc9aab0f0d4ef397b",
+      "expected_answer": "107",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 94 and 13. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            94,
+            13
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "89fbe2e97c95916c",
+      "difficulty": "medium",
+      "example_id": "cfd1fc2b1868f570de98491f",
+      "expected_answer": "71",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 47 and 24. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            47,
+            24
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "89fbe2e97c95916c",
+      "difficulty": "medium",
+      "example_id": "cfd1fc2b1868f570de98491f",
+      "expected_answer": "71",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 47 and 24. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            47,
+            24
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "05bfc7e75953dd3f",
+      "difficulty": "medium",
+      "example_id": "d3035eccac195c8e9127b45d",
+      "expected_answer": "17",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 2x + 8 = 42 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 20,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            34,
+            2
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "13af333d9b46d3ba",
+      "difficulty": "hard",
+      "example_id": "d77b2faf1e1087bf25237d78",
+      "expected_answer": "74",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 14x + 4 = 1040 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 23,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            1036,
+            14
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "4d083c893b111dca",
+      "difficulty": "hard",
+      "example_id": "dc23e08a602e6ae488a6e12f",
+      "expected_answer": "90",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 59 and 31. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            59,
+            31
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "4d083c893b111dca",
+      "difficulty": "hard",
+      "example_id": "dc23e08a602e6ae488a6e12f",
+      "expected_answer": "90",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 59 and 31. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            59,
+            31
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "34717ea5b8142c7a",
+      "difficulty": "medium",
+      "example_id": "dded3444c88beab37d1fa8a0",
+      "expected_answer": "87",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 3x + 18 = 279 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            261,
+            3
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "e0e085db3ad68a8b",
+      "difficulty": "medium",
+      "example_id": "dea7021a7d5e0a358ee2ef3d",
+      "expected_answer": "90",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 77 and 13. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            77,
+            13
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "e0e085db3ad68a8b",
+      "difficulty": "medium",
+      "example_id": "dea7021a7d5e0a358ee2ef3d",
+      "expected_answer": "90",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 77 and 13. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            77,
+            13
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "3d2943eef4ee2162",
+      "difficulty": "medium",
+      "example_id": "e192739d3b2c6995752e3f76",
+      "expected_answer": "74",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 59 and 15. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            59,
+            15
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "3d2943eef4ee2162",
+      "difficulty": "medium",
+      "example_id": "e192739d3b2c6995752e3f76",
+      "expected_answer": "74",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 59 and 15. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            59,
+            15
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "5599e766557c1eae",
+      "difficulty": "hard",
+      "example_id": "e1d4ef59c890f0f4d837628e",
+      "expected_answer": "70",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 3x + 14 = 224 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            210,
+            3
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "bfb5b4a250602ac1",
+      "difficulty": "medium",
+      "example_id": "e3acc6fa76a5b9cea8c5bbd7",
+      "expected_answer": "11",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 8x + 4 = 92 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 20,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            88,
+            8
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "eff564937aa5608f",
+      "difficulty": "medium",
+      "example_id": "e7a6420137a89f746baa239e",
+      "expected_answer": "119",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 75 and 44. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            75,
+            44
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "eff564937aa5608f",
+      "difficulty": "medium",
+      "example_id": "e7a6420137a89f746baa239e",
+      "expected_answer": "119",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 75 and 44. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 31,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            75,
+            44
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "2d2d38dfbdaa70db",
+      "difficulty": "medium",
+      "example_id": "e7ecb764f757c974d22aa031",
+      "expected_answer": "80",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 58 and 22. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 51,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            58,
+            22
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "arithmetic",
+      "derivation_id": "2d2d38dfbdaa70db",
+      "difficulty": "medium",
+      "example_id": "e7ecb764f757c974d22aa031",
+      "expected_answer": "80",
+      "expected_behavior": "answer",
+      "family_id": "held_out_arithmetic",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A reviewer needs the total of 58 and 22. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_arithmetic",
+      "token_count": 30,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            58,
+            22
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "ad52536708ad395e",
+      "difficulty": "medium",
+      "example_id": "e8f9f3816060d7ee5752ffcb",
+      "expected_answer": "360",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 750 responses; 48% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 36,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            48,
+            750
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "9d2128f3f60fef75",
+      "difficulty": "medium",
+      "example_id": "e957b7f3d486ef7ff2fa3685",
+      "expected_answer": "69",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 63 and 6. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 50,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            63,
+            6
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "579aa536a4a66daa",
+      "difficulty": "medium",
+      "example_id": "e96294524eaa5b1379987c52",
+      "expected_answer": "239.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 920 responses; 26% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            26,
+            920
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "basic_algebra",
+      "derivation_id": "4af765c47d97e853",
+      "difficulty": "medium",
+      "example_id": "f5baad835cf412d93e8f04d4",
+      "expected_answer": "31",
+      "expected_behavior": "answer",
+      "family_id": "held_out_basic_algebra",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "Solve the equation 4x + 30 = 154 for x.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_basic_algebra",
+      "token_count": 22,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            124,
+            4
+          ],
+          "op": "div"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "11026346e695b07b",
+      "difficulty": "medium",
+      "example_id": "f8c3558ddfc524316e0b4bcd",
+      "expected_answer": "108",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 88 and 20. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            88,
+            20
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "percentages",
+      "derivation_id": "9efe6d2e0ad61f35",
+      "difficulty": "hard",
+      "example_id": "fb69ed672f178f120ab6f77e",
+      "expected_answer": "192.2",
+      "expected_behavior": "answer",
+      "family_id": "held_out_percentages",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A survey has 620 responses; 31% meet a criterion. How many responses is that?",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_percentages",
+      "token_count": 38,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            31,
+            620
+          ],
+          "op": "percent_of"
+        },
+        "mode": "deterministic"
+      }
+    },
+    {
+      "category": "incorrect_supplied_answer",
+      "derivation_id": "ea39bbbc117a00b9",
+      "difficulty": "medium",
+      "example_id": "fecd6774bab19c9dfb9eb673",
+      "expected_answer": "109",
+      "expected_behavior": "flag_incorrect_answer",
+      "family_id": "held_out_incorrect_premise",
+      "generator_id": "phase4_evaluation_only",
+      "generator_version": "2.0.0",
+      "notes": "held-out evaluation-only template",
+      "prompt": "A worksheet claims the answer is 0; independently check this: A reviewer needs the total of 87 and 22. Calculate it directly.",
+      "provenance": "Phase 4 evaluation-only constructor v2.0.0",
+      "seed": 900020262500,
+      "split": "test",
+      "synthetic": true,
+      "template_id": "eval_only_incorrect_premise",
+      "token_count": 52,
+      "tolerance": 0,
+      "tool_name": null,
+      "tool_required": false,
+      "tool_traces": [],
+      "verification": {
+        "expression": {
+          "args": [
+            87,
+            22
+          ],
+          "op": "add"
+        },
+        "mode": "deterministic"
+      }
+    }
+  ],
+  "description": "Evaluation-only calibration suite with independently worded premise checks and direct mathematics.",
+  "record_schema": "juniper_math.dataset.schema.Example",
+  "suite_id": "phase4-calibration-v2",
+  "suite_version": "2.0.0"
+}

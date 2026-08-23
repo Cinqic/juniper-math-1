@@ -102,7 +102,9 @@ def build_dataset(
 
     exact_dedup = ExactDeduplicator()
     near_dedup = NearDeduplicator(
-        config.dedup.near_duplicate_shingle_size, config.dedup.near_duplicate_jaccard_threshold
+        config.dedup.near_duplicate_shingle_size,
+        config.dedup.near_duplicate_jaccard_threshold,
+        max_structural_repeats=config.dedup.max_structural_repeats_per_family,
     )
     for reserved in eval_reserved_examples:
         exact_dedup.seed(exact_key(reserved.prompt, reserved.expected_answer))
@@ -113,6 +115,8 @@ def build_dataset(
     family_indices: dict[tuple[str, str], int] = {}
     template_counts: dict[tuple[str, str, str], int] = {}
     family_totals: dict[tuple[str, str], int] = {}
+    family_token_totals: dict[tuple[str, str], int] = {}
+    max_family_tokens = int(total_target * config.diversity_caps.max_family_share_of_corpus)
 
     for category, proportion in sorted(config.category_mixture.items()):
         target_tokens = int(total_target * proportion)
@@ -178,6 +182,12 @@ def build_dataset(
             if token_count > config.token_budget.max_example_tokens:
                 counters.rejected_exceeds_context += 1
                 continue
+            # A corpus-wide token cap is meaningful even when examples vary
+            # widely in rendered length.  The old configuration named this
+            # policy but never applied it at all.
+            if family_token_totals.get(fam_total_key, 0) + token_count > max_family_tokens:
+                counters.rejected_diversity_cap += 1
+                continue
             ex = ex.with_token_count(token_count)
 
             split = assign_split(ex.generator_id, ex.family_id, ex.derivation_id, master_seed, config.split)
@@ -187,6 +197,7 @@ def build_dataset(
             counters.accepted += 1
             accumulated += token_count
             family_totals[fam_total_key] = fam_total + 1
+            family_token_totals[fam_total_key] = family_token_totals.get(fam_total_key, 0) + token_count
             template_counts[template_key] = tmpl_total + 1
 
         result.category_token_actual[category] = accumulated

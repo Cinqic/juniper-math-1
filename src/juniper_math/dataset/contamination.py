@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from juniper_math.dataset.dedup import jaccard, shingles
+from juniper_math.dataset.dedup import jaccard, shingles, structural_normalize
 from juniper_math.dataset.schema import Example
 
 
@@ -22,6 +22,10 @@ class ContaminationReport:
     derivation_id_split_violations: list[str]
     exact_cross_split_duplicates: list[str]
     near_duplicate_eval_train_pairs: list[tuple[str, str]]
+    shared_eval_generator_ids: list[str]
+    shared_eval_family_ids: list[str]
+    shared_eval_template_ids: list[str]
+    exact_structural_eval_train_pairs: list[tuple[str, str]]
 
     @property
     def clean(self) -> bool:
@@ -29,6 +33,10 @@ class ContaminationReport:
             self.derivation_id_split_violations
             or self.exact_cross_split_duplicates
             or self.near_duplicate_eval_train_pairs
+            or self.shared_eval_generator_ids
+            or self.shared_eval_family_ids
+            or self.shared_eval_template_ids
+            or self.exact_structural_eval_train_pairs
         )
 
 
@@ -101,12 +109,29 @@ def build_contamination_report(
     eval_prompts: list[str],
     shingle_size: int,
     threshold: float,
+    eval_examples: list[Example] | None = None,
 ) -> ContaminationReport:
     train_examples = [e for e in examples if e.split == "train"]
+    eval_examples = eval_examples or []
+    train_generator_ids = {e.generator_id for e in train_examples}
+    train_family_ids = {e.family_id for e in train_examples}
+    train_template_ids = {e.template_id for e in train_examples}
+    train_by_structure: dict[str, str] = {}
+    for ex in train_examples:
+        train_by_structure.setdefault(structural_normalize(ex.prompt), ex.prompt)
+    structural_pairs = [
+        (ex.prompt, train_by_structure[structural_normalize(ex.prompt)])
+        for ex in eval_examples
+        if structural_normalize(ex.prompt) in train_by_structure
+    ]
     return ContaminationReport(
         derivation_id_split_violations=check_derivation_id_isolation(examples),
         exact_cross_split_duplicates=check_exact_cross_split_duplicates(examples),
         near_duplicate_eval_train_pairs=check_near_duplicate_eval_vs_train(
             eval_prompts, train_examples, shingle_size, threshold
         ),
+        shared_eval_generator_ids=sorted({e.generator_id for e in eval_examples} & train_generator_ids),
+        shared_eval_family_ids=sorted({e.family_id for e in eval_examples} & train_family_ids),
+        shared_eval_template_ids=sorted({e.template_id for e in eval_examples} & train_template_ids),
+        exact_structural_eval_train_pairs=structural_pairs,
     )

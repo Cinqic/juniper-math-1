@@ -14,7 +14,14 @@ from juniper_math.dataset.contamination import (
     check_derivation_id_isolation,
     check_exact_cross_split_duplicates,
 )
-from juniper_math.dataset.dedup import ExactDeduplicator, NearDeduplicator, exact_key, jaccard, shingles
+from juniper_math.dataset.dedup import (
+    ExactDeduplicator,
+    NearDeduplicator,
+    exact_key,
+    jaccard,
+    shingles,
+    structural_normalize,
+)
 from juniper_math.dataset.generators.registry import build_registry
 from juniper_math.dataset.idgen import derive_id, derive_seed
 from juniper_math.dataset.schema import VALID_CATEGORIES, Example, ToolTrace, validate_example
@@ -61,7 +68,7 @@ def test_dataset_config_rejects_bad_mixture(tmp_path):
         "diversity_caps: {max_template_share_within_family: 0.5, max_family_share_of_corpus: 0.5}\n"
         "split: {train: 0.9, validation: 0.05, test: 0.05, eval_suite_seed_offset: 1}\n"
         "dedup: {exact_key: x, near_duplicate_method: y, near_duplicate_shingle_size: 5, "
-        "near_duplicate_jaccard_threshold: 0.9}\n"
+        "near_duplicate_jaccard_threshold: 0.9, max_structural_repeats_per_family: 2}\n"
         "normalization: {unicode_form: NFC, collapse_repeated_whitespace: true, "
         "strip_surrounding_whitespace: true, preserve_math_unicode: [], reject_control_characters: true}\n"
         "shard: {format: jsonl, records_per_shard: 10, "
@@ -240,6 +247,17 @@ def test_near_deduplicator_catches_template_variants():
     assert dedup.is_near_duplicate("fam", "What is the sum of twelve and five today")
 
 
+def test_near_deduplicator_catches_operand_substitution_structurally():
+    dedup = NearDeduplicator(shingle_size=5, threshold=0.92, max_structural_repeats=1)
+    assert not dedup.is_near_duplicate("fam", "What is 12 plus 13?")
+    assert dedup.is_near_duplicate("fam", "What is 87 plus 642?")
+
+
+def test_structural_normalization_preserves_distinct_math_structure():
+    assert structural_normalize("What is 12 plus 13?") == "what is <NUM> plus <NUM>?"
+    assert structural_normalize("Convert 12 meters to feet.") != structural_normalize("What is 12 plus 13?")
+
+
 def test_jaccard_of_disjoint_sets_is_zero():
     assert jaccard({"a", "b"}, {"c", "d"}) == 0.0
 
@@ -328,6 +346,24 @@ def test_generators_produce_valid_ground_truth(runtime):
                 ok, detail = ground_truth_ok(ex)
                 assert ok, f"{category}/{generator_id}: {detail}"
                 validate_example(ex)
+
+
+def test_tool_error_generator_covers_distinct_real_runtime_failure_modes(runtime):
+    from juniper_math.dataset.generators.tools import make_tool_error
+
+    observed = set()
+    for index in range(300):
+        ex = make_tool_error(index, 20260401, runtime)
+        result = ex.tool_traces[0].result
+        assert result["status"] == "error"
+        observed.add((ex.tool_name, result["error"]["code"]))
+    assert {
+        "DIVISION_BY_ZERO",
+        "DOMAIN_ERROR",
+        "RESOURCE_LIMIT",
+        "UNSUPPORTED_UNIT",
+        "UNSUPPORTED_OPERATION",
+    } <= {code for _tool, code in observed}
 
 
 # --------------------------------------------------------------------------
@@ -462,10 +498,10 @@ def test_list_shard_files_fails_honestly_on_existing_but_empty_directory(tmp_pat
 # --------------------------------------------------------------------------
 
 _EVAL_SUITE_NAMES = [
-    "phase4_math_v1",
-    "phase4_tool_use_v1",
-    "phase4_calibration_v1",
-    "phase4_adversarial_v1",
+    "phase4_math_v2",
+    "phase4_tool_use_v2",
+    "phase4_calibration_v2",
+    "phase4_adversarial_v2",
 ]
 
 
@@ -494,3 +530,20 @@ def test_frozen_phase4_eval_suite_reverifies(suite_name, runtime):
         else:
             ok, detail = ground_truth_ok(ex)
             assert ok, f"{ex.example_id}: {detail}"
+
+
+def test_phase4_eval_v2_never_reuses_training_generator_id_or_template_identity(runtime, tokenizer):
+    """Regression guard for Terra F-03: a seed offset is not independence."""
+    from juniper_math.dataset.eval_suites import SUITE_DEFINITIONS, build_eval_suite
+
+    config = load_dataset_config()
+    train_generator_ids = {
+        generator_id for families in build_registry().values() for generator_id, _ in families
+    }
+    for suite_name in SUITE_DEFINITIONS:
+        suite = build_eval_suite(suite_name, config, tokenizer, runtime)
+        for raw_case in suite.payload["cases"]:
+            assert raw_case["generator_id"] not in train_generator_ids
+            assert raw_case["generator_id"] == "phase4_evaluation_only"
+            assert raw_case["family_id"].startswith("held_out_")
+            assert raw_case["template_id"].startswith("eval_only_")

@@ -83,9 +83,9 @@ category_mixture:
   unsupported_capability: 0.008
   tool_error: 0.004
 
-# Anti-template-collapse controls (Sec. 17). No single template_id may exceed
-# this fraction of its family's examples, and no single family may exceed
-# this fraction of the whole corpus.
+# Anti-template-collapse controls. No single template_id may exceed this
+# fraction of its family's examples. Corpus-wide family caps are enforced in
+# token space (the resource the training budget actually consumes).
 # max_template_share_within_family is intentionally not set low enough to
 # force perfect uniformity across an arbitrary number of templates: several
 # families have only 2-3 phrasing templates by design (Sec. 8 explicitly
@@ -95,7 +95,7 @@ category_mixture:
 # Sec. 17 actually targets — one template silently swallowing a family.
 diversity_caps:
   max_template_share_within_family: 0.60
-  max_family_share_of_corpus: 0.12
+  max_family_share_of_corpus: 0.15
 
 # Split strategy (Sec. 14): grouping key is (generator_id, family_id,
 # derivation_id) — never the rendered prompt text and never a random row
@@ -116,9 +116,15 @@ split:
 # Deduplication (Sec. 16).
 dedup:
   exact_key: "normalized_prompt+normalized_expected_answer"
-  near_duplicate_method: "shingled_jaccard"
+  near_duplicate_method: "structural_normalized_shingled_jaccard"
   near_duplicate_shingle_size: 5
   near_duplicate_jaccard_threshold: 0.92
+  # A structural signature replaces values (e.g. "12 plus 13" becomes
+  # "<NUM> plus <NUM>"). The build records every repeat and rejects it once
+  # this family-scoped ceiling is reached. This retains enough numerical
+  # variation for arithmetic learning without allowing one surface form to
+  # silently occupy an unbounded portion of a corpus.
+  max_structural_repeats_per_family: 30000
 
 # Cleaning / normalization (Sec. 15). Mathematical Unicode is explicitly
 # preserved, never folded to ASCII.

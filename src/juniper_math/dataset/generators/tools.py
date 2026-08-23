@@ -325,6 +325,8 @@ def make_incorrect_tool_call(index: int, master_seed: int, runtime: ToolRuntime)
 
 _TOOL_ERROR_TEMPLATES = [
     "Use the calculator to compute {expr}.",
+    "Run this tool request and report its actual error, if any: {expr}.",
+    "A verification task needs the calculator outcome for {expr}.",
 ]
 
 
@@ -332,24 +334,60 @@ def make_tool_error(index: int, master_seed: int, runtime: ToolRuntime) -> Examp
     family_id = "tool_runtime_error"
     rng, seed = family_rng(GENERATOR_ID, family_id, index, master_seed)
     difficulty = difficulty_for(rng)
-    shape = rng.choice(["div_zero", "factorial_negative", "huge_pow"])
+    shape = rng.choice(
+        [
+            "div_zero",
+            "factorial_negative",
+            "huge_pow",
+            "sqrt_negative",
+            "huge_factorial",
+            "unsupported_unit",
+            "unsupported_finance_operation",
+        ]
+    )
+    tool: str
+    arguments: dict[str, object]
     if shape == "div_zero":
-        n = rand_int(rng, 1, 1000)
+        n = rand_int(rng, 1, 1_000_000)
         expr = f"{n} / 0"
+        tool, arguments = "calculator.evaluate", {"expression": expr}
     elif shape == "factorial_negative":
-        n = rand_int(rng, 1, 20)
+        n = rand_int(rng, 1, 1_000_000)
         expr = f"factorial(-{n})"
+        tool, arguments = "calculator.evaluate", {"expression": expr}
+    elif shape == "sqrt_negative":
+        n = rand_int(rng, 1, 1_000_000)
+        expr = f"sqrt(-{n})"
+        tool, arguments = "calculator.evaluate", {"expression": expr}
+    elif shape == "huge_factorial":
+        n = rand_int(rng, 50_001, 1_000_000)
+        expr = f"factorial({n})"
+        tool, arguments = "calculator.evaluate", {"expression": expr}
     else:
-        base = rand_int(rng, 2, 9)
-        expr = f"{base} ** 100000"
-    prompt = _TOOL_ERROR_TEMPLATES[0].format(expr=expr)
-    trace = _run(runtime, "calculator.evaluate", {"expression": expr})
+        if shape == "huge_pow":
+            base, exponent = rand_int(rng, 2, 1_000_000), rand_int(rng, 10_001, 1_000_000)
+            expr = f"{base} ** {exponent}"
+            tool, arguments = "calculator.evaluate", {"expression": expr}
+        elif shape == "unsupported_unit":
+            value = rand_int(rng, 1, 1_000_000)
+            expr = f"convert {value} meters to furlongs"
+            tool, arguments = (
+                "calculator.convert",
+                {"category": "length", "from_unit": "meter", "to_unit": "furlong", "value": value},
+            )
+        else:
+            amount = rand_int(rng, 1, 1_000_000)
+            expr = f"finance operation 'not_real' on {amount}"
+            tool, arguments = "calculator.finance", {"operation": "not_real", "principal": amount}
+    t_idx, template = choose_template(rng, _TOOL_ERROR_TEMPLATES)
+    prompt = template.format(expr=expr)
+    trace = _run(runtime, tool, arguments)
     return Example(
         example_id=derive_id("example", GENERATOR_ID, family_id, shape, expr, length=24),
         generator_id=GENERATOR_ID,
         generator_version=GENERATOR_VERSION,
         family_id=family_id,
-        template_id=shape,
+        template_id=f"{shape}_t{t_idx}",
         derivation_id=derive_id(family_id, shape, expr),
         seed=seed,
         category="tool_error",
@@ -361,7 +399,7 @@ def make_tool_error(index: int, master_seed: int, runtime: ToolRuntime) -> Examp
         expected_answer=None,
         tolerance=None,
         tool_required=True,
-        tool_name="calculator.evaluate",
+        tool_name=tool,
         tool_traces=(trace,),
         verification={"mode": "tool", "expression": None},
         provenance=f"{GENERATOR_ID}/{family_id} v{GENERATOR_VERSION}",

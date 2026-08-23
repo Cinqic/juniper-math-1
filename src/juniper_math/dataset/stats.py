@@ -6,6 +6,7 @@ import statistics
 from collections import Counter
 from typing import Any
 
+from juniper_math.dataset.dedup import structural_normalize
 from juniper_math.dataset.schema import Example
 
 
@@ -24,6 +25,12 @@ def compute_stats(
         return sorted_vals[idx]
 
     sorted_tokens = sorted(token_counts)
+    structural_counts = Counter(structural_normalize(e.prompt) for e in examples)
+    family_token_counts = Counter(
+        {key: 0 for key in Counter(f"{e.generator_id}/{e.family_id}" for e in examples)}
+    )
+    for e in examples:
+        family_token_counts[f"{e.generator_id}/{e.family_id}"] += e.token_count or 0
 
     return {
         "total_examples": len(examples),
@@ -45,6 +52,9 @@ def compute_stats(
         "generator_family_distribution": dict(
             sorted(Counter(f"{e.generator_id}/{e.family_id}" for e in examples).items())
         ),
+        "tokens_by_generator_family": dict(sorted(family_token_counts.items())),
+        "structural_template_count": len(structural_counts),
+        "top_structural_template_counts": dict(structural_counts.most_common(20)),
         "tool_name_distribution": dict(Counter(e.tool_name for e in examples if e.tool_name)),
         "expected_behavior_distribution": dict(
             sorted(Counter(e.expected_behavior for e in examples).items())

@@ -130,10 +130,10 @@ deeper than the 22-case Phase 0 baseline:
 
 | Suite | File | Cases | Covers |
 |---|---|---|---|
-| Core mathematics | `evals/phase4_math_v1.json` | 215 | arithmetic, operator_precedence, negative_values, decimals, fractions, percentages, ratios_proportions, scientific_notation, basic_algebra, expression_translation, word_problem, estimation, numerical_comparison, multi_step — no tool involvement |
-| Tool use | `evals/phase4_tool_use_v1.json` | 185 | unit_conversion, financial_math, tool_use, incorrect_tool_call, tool_error — every case executed against the real Phase 3 `ToolRuntime` |
-| Calibration / truthfulness | `evals/phase4_calibration_v1.json` | 130 | incorrect_supplied_answer mixed with correct direct-answer arithmetic/percentages/algebra, testing whether the model asserts confidence appropriately rather than agreeing with whatever a prompt claims |
-| Adversarial / error handling | `evals/phase4_adversarial_v1.json` | 195 | ambiguity, missing_information, undefined_operation, unsupported_capability, incorrect_tool_call, tool_error |
+| Core mathematics | `evals/phase4_math_v2.json` | 215 | evaluation-only arithmetic through multi-step mathematics; no training generator/template is used |
+| Tool use | `evals/phase4_tool_use_v2.json` | 185 | evaluation-only unit, finance, calculator, incorrect-call, and real-error cases |
+| Calibration / truthfulness | `evals/phase4_calibration_v2.json` | 130 | evaluation-only premise checks plus independently worded direct mathematics |
+| Adversarial / error handling | `evals/phase4_adversarial_v2.json` | 195 | evaluation-only ambiguity, missing information, undefined operations, unsupported requests, and tool failures |
 
 ### Why a different schema from the Phase 0 suite
 

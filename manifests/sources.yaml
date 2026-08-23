@@ -66,8 +66,9 @@ sources:
     acquisition_date: "2026-08-23"
     intended_use: >
       Phase 4 model training corpus (train/validation/test splits) plus the four frozen Phase 4
-      evaluation suites (evals/phase4_math_v1.json, phase4_tool_use_v1.json, phase4_calibration_v1.json,
-      phase4_adversarial_v1.json). Not used for tokenizer training (that remains the separate, already-
+      evaluation suites (evals/phase4_math_v2.json, phase4_tool_use_v2.json, phase4_calibration_v2.json,
+      phase4_adversarial_v2.json). The v2 suites use evaluation-only constructors rather than training
+      generators. Not used for tokenizer training (that remains the separate, already-
       frozen Phase 2 corpus).
     license_id: "juniper-math-1-code"
     redistribution_status: "NOT_APPLICABLE"

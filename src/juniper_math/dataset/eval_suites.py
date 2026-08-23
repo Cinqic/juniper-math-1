@@ -28,6 +28,12 @@ from dataclasses import dataclass
 from juniper_math.dataset.build import ground_truth_ok
 from juniper_math.dataset.clean import normalize_text
 from juniper_math.dataset.config import DatasetConfig
+from juniper_math.dataset.eval_isolated import (
+    SUITE_DEFINITIONS as _ACTIVE_SUITE_DEFINITIONS,
+)
+from juniper_math.dataset.eval_isolated import (
+    build_independent_eval_suite as _build_independent_eval_suite,
+)
 from juniper_math.dataset.generators.registry import build_registry
 from juniper_math.dataset.schema import Example, validate_example
 from juniper_math.dataset.shard import render_training_text
@@ -36,7 +42,7 @@ from juniper_math.hashing import sha256_bytes
 from juniper_math.tokenizer import JuniperTokenizer
 from juniper_math.tools.runtime import ToolRuntime
 
-SUITE_DEFINITIONS: dict[str, dict] = {
+_LEGACY_SUITE_DEFINITIONS: dict[str, dict] = {
     "phase4_math_v1": {
         "suite_id": "phase4-math-v1",
         "suite_version": "1.0.0",
@@ -111,15 +117,17 @@ class SuiteBuildResult:
     prompts: list[str]
 
 
-def build_eval_suite(
+def _build_legacy_eval_suite(
     name: str,
     config: DatasetConfig,
     tokenizer: JuniperTokenizer,
     runtime: ToolRuntime,
 ) -> SuiteBuildResult:
-    if name not in SUITE_DEFINITIONS:
-        raise JuniperConfigError(f"Unknown Phase 4 eval suite {name!r}. Known: {sorted(SUITE_DEFINITIONS)}")
-    spec = SUITE_DEFINITIONS[name]
+    if name not in _LEGACY_SUITE_DEFINITIONS:
+        raise JuniperConfigError(
+            f"Unknown Phase 4 eval suite {name!r}. Known: {sorted(_LEGACY_SUITE_DEFINITIONS)}"
+        )
+    spec = _LEGACY_SUITE_DEFINITIONS[name]
     registry = build_registry()
 
     # Disjoint from every train/validation/test seed: config-level
@@ -182,3 +190,9 @@ def build_eval_suite(
         example_count=len(cases),
         prompts=[c["prompt"] for c in cases],
     )
+
+
+# v1 remains in Git as historical evidence.  v2 is the only current Phase 4
+# evaluation surface and is constructed by the isolated module above.
+SUITE_DEFINITIONS = _ACTIVE_SUITE_DEFINITIONS
+build_eval_suite = _build_independent_eval_suite

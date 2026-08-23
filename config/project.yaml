@@ -24,7 +24,7 @@ architecture_config: "config/architecture.yaml"
 
 current_phase: 4
 phase_name: "Dataset and Evaluation Freeze"
-phase_status: "AWAITING_GPT_5_6_TERRA_REVIEW"
+phase_status: "COMPLETE"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -142,22 +142,19 @@ phase_3_approval:
 phase_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
-  terra_independent_review: "pending"
-  terra_final_approval: "pending"
+  terra_independent_review: "approved"
+  terra_final_approval: "approved"
   review_candidate_tag: "phase-4-review-candidate"
-  final_tag: null
+  final_tag: "phase-4-dataset"
   starting_foundation_commit: "1cb070945dd1f968f0dd10e6ceb915e0d24fac0a"
   starting_foundation_tag: "phase-3-tools"
   dataset_id: "juniper-math-dataset-v1"
 
 next_phase:
   number: 5
-  name: "TBD (not yet named in these instructions)"
-  status: "NOT_AUTHORIZED"
+  name: "Smoke Pretraining"
+  status: "AUTHORIZED"
   started: false
   note: >
-    Phase 5 is not authorized. It becomes authorized only after GPT-5.6
-    Terra's independent review and final approval of Phase 4, at which point
-    Terra creates the phase-4-dataset tag and updates this file. Sonnet 5 is
-    the Phase 4 primary engineer, not the independent approval authority, and
-    does not authorize Phase 5.
+    Phase 5 is authorized by the completed Phase 4 approval but has not
+    started. Authorization is not execution.

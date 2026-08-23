@@ -3,346 +3,310 @@
   "dataset_schema_version": "1.0.0",
   "shards": [
     {
-      "byte_size": 37646109,
+      "byte_size": 37917549,
       "filename": "juniper-math-dataset-v1.test.00000.jsonl",
       "record_count": 50000,
-      "sha256": "4c9f6b9e31d2089a4345c2ea5e2162317a1467360c29b44a1f6b0b98ce854e62",
+      "sha256": "bfd91a3224b50f251e86dfda5f2d35d561ec6552ae3b9c54fcfe00a65bb049b2",
       "shard_index": 0,
       "split": "test",
-      "token_count": 1820866
+      "token_count": 1916948
     },
     {
-      "byte_size": 31071145,
+      "byte_size": 23503164,
       "filename": "juniper-math-dataset-v1.test.00001.jsonl",
-      "record_count": 41280,
-      "sha256": "f6482304240a402f0bd61aeec407fe7b8ce59a25fb61aac03e87a547bcae0bd3",
+      "record_count": 31014,
+      "sha256": "92f9eac3bbfd335b58c7ea349ae30603a73d97e3fceaaa784e95219e09924b1c",
       "shard_index": 1,
       "split": "test",
-      "token_count": 1510486
+      "token_count": 1190738
     },
     {
-      "byte_size": 37717749,
+      "byte_size": 37987582,
       "filename": "juniper-math-dataset-v1.train.00000.jsonl",
       "record_count": 50000,
-      "sha256": "fd46b1704202d31bf889797f3d0056ffc688ab22552e109de83e06e89cdf3465",
+      "sha256": "0ed1569b64cb2f8974c84158e09e30e6d920b6d54319e47a087d88caa478db32",
       "shard_index": 0,
       "split": "train",
-      "token_count": 1831465
+      "token_count": 1926398
     },
     {
-      "byte_size": 37683902,
+      "byte_size": 37936917,
       "filename": "juniper-math-dataset-v1.train.00001.jsonl",
       "record_count": 50000,
-      "sha256": "1bb1f405a4afeb38d6413b39b371ae8504a9f6419752548a6cfd4deef09db3c9",
+      "sha256": "2eeb394638b8745fa334abfa8c6cd5aefc2fab405f9e9700bf2868eddbb276d9",
       "shard_index": 1,
       "split": "train",
-      "token_count": 1825350
+      "token_count": 1911966
     },
     {
-      "byte_size": 37665336,
+      "byte_size": 37917158,
       "filename": "juniper-math-dataset-v1.train.00002.jsonl",
       "record_count": 50000,
-      "sha256": "8ee25b50f66f13c487eff9786320b705edbac4bc4939b667a63d4162e297b5a0",
+      "sha256": "ea22fca5c9e88510b26407b9de9b5e0883fe3a904c4318e3059c4d0ff6c404ce",
       "shard_index": 2,
       "split": "train",
-      "token_count": 1819579
+      "token_count": 1912232
     },
     {
-      "byte_size": 37657314,
+      "byte_size": 37918176,
       "filename": "juniper-math-dataset-v1.train.00003.jsonl",
       "record_count": 50000,
-      "sha256": "056e3f57a953fb0996293b630a1d3872a424575b8c022ba00a16d2204f0f102e",
+      "sha256": "7be58db4492815cc4a59c6df7c8a83bc7bd85e24ddf7d734f4345de35e745be0",
       "shard_index": 3,
       "split": "train",
-      "token_count": 1817081
+      "token_count": 1906302
     },
     {
-      "byte_size": 37696185,
+      "byte_size": 37973266,
       "filename": "juniper-math-dataset-v1.train.00004.jsonl",
       "record_count": 50000,
-      "sha256": "6ced77257607a46b44f88a4cc057a41432f60d07eb8278c47df5efa2931119f8",
+      "sha256": "840ad4704da9fac3314af4e999f5689a896e89a6a54f14534949e9b8d389c39b",
       "shard_index": 4,
       "split": "train",
-      "token_count": 1823734
+      "token_count": 1922357
     },
     {
-      "byte_size": 37687527,
+      "byte_size": 37963033,
       "filename": "juniper-math-dataset-v1.train.00005.jsonl",
       "record_count": 50000,
-      "sha256": "acaf53538099dcfc91bbae514f2991441ec772fa8d0d00ec4f738047924c3f67",
+      "sha256": "ca36481e343bbf3bc24d9a1785c9a994703abf32fd4596bbae055eaa2ca535f1",
       "shard_index": 5,
       "split": "train",
-      "token_count": 1828121
+      "token_count": 1924694
     },
     {
-      "byte_size": 37707078,
+      "byte_size": 37985015,
       "filename": "juniper-math-dataset-v1.train.00006.jsonl",
       "record_count": 50000,
-      "sha256": "b3fc2b8d8ccca41bce872f98b813e0bdd0b981e9dd0b6f89e0a0bef832accc71",
+      "sha256": "de460cdd4e92565fc0bca42d2da344d9fceb1958bc63c6dc50a3aeba2003db78",
       "shard_index": 6,
       "split": "train",
-      "token_count": 1835066
+      "token_count": 1924758
     },
     {
-      "byte_size": 37703931,
+      "byte_size": 37904452,
       "filename": "juniper-math-dataset-v1.train.00007.jsonl",
       "record_count": 50000,
-      "sha256": "aacd8f21497632bd6fe16c28c86fe737de9cd4e4e759cfbefa3faa2a473f021a",
+      "sha256": "57de0a020ad8a2e84cebbf937ecfe275cbd538f95eb7aa0cbbdaad2292d52771",
       "shard_index": 7,
       "split": "train",
-      "token_count": 1831167
+      "token_count": 1913097
     },
     {
-      "byte_size": 37645782,
+      "byte_size": 37952220,
       "filename": "juniper-math-dataset-v1.train.00008.jsonl",
       "record_count": 50000,
-      "sha256": "32d37a12d7b042015b317aa375ec98d0b33977960c142e50671247cb208eb5dd",
+      "sha256": "c230c1ad4502efdaeb8c2ffb2fad90845b3b9ade58c4df42411c4c7cc1e88133",
       "shard_index": 8,
       "split": "train",
-      "token_count": 1820982
+      "token_count": 1914995
     },
     {
-      "byte_size": 37679527,
+      "byte_size": 37982065,
       "filename": "juniper-math-dataset-v1.train.00009.jsonl",
       "record_count": 50000,
-      "sha256": "529eb192accaab9c31072fb73e470f3059d6e5e067f22474644353db47dda66d",
+      "sha256": "e4cdfeae7c808dfac9ae0e96d163bdedb8f05e944ba7da440addae6484b19840",
       "shard_index": 9,
       "split": "train",
-      "token_count": 1822036
+      "token_count": 1923867
     },
     {
-      "byte_size": 37745320,
+      "byte_size": 37945379,
       "filename": "juniper-math-dataset-v1.train.00010.jsonl",
       "record_count": 50000,
-      "sha256": "acd4bd59c7b2ccd51fa9603febfe721d2a2401673415d8dad53885ca321565d6",
+      "sha256": "288fff60eab91104315e2c79a9f05d05e20bca7ecd665f8d4ec765e3f241fc2c",
       "shard_index": 10,
       "split": "train",
-      "token_count": 1834118
+      "token_count": 1918372
     },
     {
-      "byte_size": 37662845,
+      "byte_size": 37928755,
       "filename": "juniper-math-dataset-v1.train.00011.jsonl",
       "record_count": 50000,
-      "sha256": "1220d436731c21bd36565f4f5e05a68c05951acde6c8fd97e833bbc21185d7a1",
+      "sha256": "6203cb6b48a1a840398699eabfaf8a199f3c01ebae68d7d6d65d552df4bde674",
       "shard_index": 11,
       "split": "train",
-      "token_count": 1823111
+      "token_count": 1915471
     },
     {
-      "byte_size": 37690896,
+      "byte_size": 37897961,
       "filename": "juniper-math-dataset-v1.train.00012.jsonl",
       "record_count": 50000,
-      "sha256": "77103899eba87b737e726d0201608f2ecda8ec963842b69be2f2f1688853d220",
+      "sha256": "9a13f9b4ed5b159fcebafaf999a8276d223c64b077b7b7ea11ca05dfc7d386e8",
       "shard_index": 12,
       "split": "train",
-      "token_count": 1828056
+      "token_count": 1903504
     },
     {
-      "byte_size": 37642140,
+      "byte_size": 37969116,
       "filename": "juniper-math-dataset-v1.train.00013.jsonl",
       "record_count": 50000,
-      "sha256": "948b769247b8c4f10fdb7d8ed6ff377c7a5a4c2fc3c1c0c42768667fccc02f49",
+      "sha256": "1920d13aa560918139927d2463ea378b5f57c4de2f0d7335142757287386705e",
       "shard_index": 13,
       "split": "train",
-      "token_count": 1813620
+      "token_count": 1925587
     },
     {
-      "byte_size": 37700455,
+      "byte_size": 37934999,
       "filename": "juniper-math-dataset-v1.train.00014.jsonl",
       "record_count": 50000,
-      "sha256": "7763902f60ebaed1addb8bf052314255f8db91df2b1efb207c0b15244294f4bb",
+      "sha256": "7c1a7c901fff08f945d61822bbe1de092018f3783d2af2f19b380c82aec861cd",
       "shard_index": 14,
       "split": "train",
-      "token_count": 1834536
+      "token_count": 1913169
     },
     {
-      "byte_size": 37677253,
+      "byte_size": 37879157,
       "filename": "juniper-math-dataset-v1.train.00015.jsonl",
       "record_count": 50000,
-      "sha256": "1e27eb7878e225be065df32e4eaad9aaa1f199c35f3c1b693af28214d039f7f6",
+      "sha256": "7a3614d6f229f8293fb0a65ebc379f5929b4477faea841d0124ad358d1b1c3ae",
       "shard_index": 15,
       "split": "train",
-      "token_count": 1827292
+      "token_count": 1897872
     },
     {
-      "byte_size": 37659872,
+      "byte_size": 37955397,
       "filename": "juniper-math-dataset-v1.train.00016.jsonl",
       "record_count": 50000,
-      "sha256": "d38ae7aaaa6ee324609eba65e76b3ef06ab8ae16121450d4d46e5ad6b9c4c796",
+      "sha256": "1c5e07772753609d7231ff3090a7576784491eb2293148c57459eda066453f4c",
       "shard_index": 16,
       "split": "train",
-      "token_count": 1812241
+      "token_count": 1916263
     },
     {
-      "byte_size": 37626727,
+      "byte_size": 37952125,
       "filename": "juniper-math-dataset-v1.train.00017.jsonl",
       "record_count": 50000,
-      "sha256": "9095b4c12577a80cf23ab18324b576cdad3a775ba7e3565082928a2b2fcf73b3",
+      "sha256": "77b1aa52ac10464c703ac13bf9a315182d609efea8064111461bc8755fad1440",
       "shard_index": 17,
       "split": "train",
-      "token_count": 1809356
+      "token_count": 1908444
     },
     {
-      "byte_size": 37670433,
+      "byte_size": 37916307,
       "filename": "juniper-math-dataset-v1.train.00018.jsonl",
       "record_count": 50000,
-      "sha256": "3a3bde893a099fa00a68c66bc9ac46f415127d48d10720d0f6ad2a35ebb5583a",
+      "sha256": "ef4e4916b8f726be3a29b561669a9b620a14dea9054ce76686baa02492b0cd45",
       "shard_index": 18,
       "split": "train",
-      "token_count": 1816787
+      "token_count": 1905266
     },
     {
-      "byte_size": 37718976,
+      "byte_size": 37966115,
       "filename": "juniper-math-dataset-v1.train.00019.jsonl",
       "record_count": 50000,
-      "sha256": "17b499d27dabbb8697ac4c8426ef19d15b1c43abbc8d07fb49968b653e95a7ba",
+      "sha256": "6ccecbc628efcca7cfd05da9863543d549574fd0bc4b1fbd181924bd8e4ea31f",
       "shard_index": 19,
       "split": "train",
-      "token_count": 1827532
+      "token_count": 1932726
     },
     {
-      "byte_size": 37653718,
+      "byte_size": 37954060,
       "filename": "juniper-math-dataset-v1.train.00020.jsonl",
       "record_count": 50000,
-      "sha256": "78b3207ae08dbe8fa4e4bf9adbe1511c5bb1cda217277e331e410211a2f30b6d",
+      "sha256": "ed1921e3c5bdc1752912ceba50a7ade075222ff48469957f134ea4341a2fba39",
       "shard_index": 20,
       "split": "train",
-      "token_count": 1807488
+      "token_count": 1916218
     },
     {
-      "byte_size": 37691443,
+      "byte_size": 37955782,
       "filename": "juniper-math-dataset-v1.train.00021.jsonl",
       "record_count": 50000,
-      "sha256": "ac2f1a877087abbda7b6435d31eac1ef1c4ebe848fbc27930c1dbf6a9de78a88",
+      "sha256": "9144d0b044d96f52533ed31401e465fd65a75746bf379e21320f939c892acf71",
       "shard_index": 21,
       "split": "train",
-      "token_count": 1835104
+      "token_count": 1921303
     },
     {
-      "byte_size": 37714509,
+      "byte_size": 37896502,
       "filename": "juniper-math-dataset-v1.train.00022.jsonl",
       "record_count": 50000,
-      "sha256": "94955e0fa9fcdda1ec2d7f1cb93070a387751a8d920495ea01cc03c7ce0fe4b8",
+      "sha256": "5c1909f6e94b3ba031435b667c880e9a023525caf1837ab5dd02ea6eabf915d6",
       "shard_index": 22,
       "split": "train",
-      "token_count": 1832276
+      "token_count": 1905136
     },
     {
-      "byte_size": 37703563,
+      "byte_size": 37968017,
       "filename": "juniper-math-dataset-v1.train.00023.jsonl",
       "record_count": 50000,
-      "sha256": "81c83e3834faad46d0ca2792fc48f150def6cf6c011c743e15d11deaf91bc700",
+      "sha256": "0b509a84c259c512c341b431d85d420f6333b401f7da4740192512aef9a1536b",
       "shard_index": 23,
       "split": "train",
-      "token_count": 1833641
+      "token_count": 1917747
     },
     {
-      "byte_size": 37663533,
+      "byte_size": 37903989,
       "filename": "juniper-math-dataset-v1.train.00024.jsonl",
       "record_count": 50000,
-      "sha256": "211f07218b5cecfa12b8b8eae1dc3ea9c8f833813faf2c20fbcbe39c0173088c",
+      "sha256": "0350a4e7bac8193788fbe55d197a2eba8c994b64879ce54c21fa798ab2113700",
       "shard_index": 24,
       "split": "train",
-      "token_count": 1819731
+      "token_count": 1905522
     },
     {
-      "byte_size": 37661248,
+      "byte_size": 37952863,
       "filename": "juniper-math-dataset-v1.train.00025.jsonl",
       "record_count": 50000,
-      "sha256": "e962f82ed3c4967121f4d079b9bdcebbba47025067af83d0c38b33a2c5cea3f8",
+      "sha256": "1ff0f20935133dd55ea951a5ed50023f94e7a2bc168cf315df6bde76ed497c01",
       "shard_index": 25,
       "split": "train",
-      "token_count": 1818209
+      "token_count": 1917503
     },
     {
-      "byte_size": 37711567,
+      "byte_size": 37960628,
       "filename": "juniper-math-dataset-v1.train.00026.jsonl",
       "record_count": 50000,
-      "sha256": "468630d34c06df6fb03e3b6a562cac2f4eb9e9b4e758684dbe5a554909987a51",
+      "sha256": "b727cd253523b0a0b8b6a6c0326074582168b1295f07c093e38764e905cca63c",
       "shard_index": 26,
       "split": "train",
-      "token_count": 1827837
+      "token_count": 1919100
     },
     {
-      "byte_size": 37653989,
+      "byte_size": 37973890,
       "filename": "juniper-math-dataset-v1.train.00027.jsonl",
       "record_count": 50000,
-      "sha256": "0ac6717302b07c4436b0b1ac0123ba08b3369569f18d35379660c43f63569e23",
+      "sha256": "707e35ee2119e7c81b0d7578808b10e3d451b0e4405910b6e203c613b0a1d1fd",
       "shard_index": 27,
       "split": "train",
-      "token_count": 1815246
+      "token_count": 1921719
     },
     {
-      "byte_size": 37674940,
+      "byte_size": 37967978,
       "filename": "juniper-math-dataset-v1.train.00028.jsonl",
       "record_count": 50000,
-      "sha256": "76255f3cebe1ad42700cc833ee444ada95763557ec92f17ff5a6c27e04c75527",
+      "sha256": "f46a844468387b4de9f24df07f46b18a125c2624d8cd9fa15cd7f4eabec9fd94",
       "shard_index": 28,
       "split": "train",
-      "token_count": 1825583
+      "token_count": 1921025
     },
     {
-      "byte_size": 37727554,
+      "byte_size": 12878837,
       "filename": "juniper-math-dataset-v1.train.00029.jsonl",
-      "record_count": 50000,
-      "sha256": "798df65e8bbb465724d9598e891db6e9a2b348bb00c42cdfb7068b9d961dcb1b",
+      "record_count": 16970,
+      "sha256": "0dc58dc579f636109559f190a828ed6f613f2916dd196ea5682f72d0ecbacbab",
       "shard_index": 29,
       "split": "train",
-      "token_count": 1833271
+      "token_count": 647003
     },
     {
-      "byte_size": 37681351,
-      "filename": "juniper-math-dataset-v1.train.00030.jsonl",
-      "record_count": 50000,
-      "sha256": "3195ebb81a1e5f3a0031ccdeb9acf5f0af6e88bb1a239623d10aad03670675d5",
-      "shard_index": 30,
-      "split": "train",
-      "token_count": 1822830
-    },
-    {
-      "byte_size": 37719933,
-      "filename": "juniper-math-dataset-v1.train.00031.jsonl",
-      "record_count": 50000,
-      "sha256": "7ea4a76bb90448f72ab85ad2e8b6ac6a0d0e9c8fdc22a98a599e3eb0586e5d2f",
-      "shard_index": 31,
-      "split": "train",
-      "token_count": 1831063
-    },
-    {
-      "byte_size": 37684304,
-      "filename": "juniper-math-dataset-v1.train.00032.jsonl",
-      "record_count": 50000,
-      "sha256": "a5bc826ca8b306bb8eee034136a17254d43ebd72289cfbd7e8583d1bce8e937b",
-      "shard_index": 32,
-      "split": "train",
-      "token_count": 1819841
-    },
-    {
-      "byte_size": 883621,
-      "filename": "juniper-math-dataset-v1.train.00033.jsonl",
-      "record_count": 1171,
-      "sha256": "cd812b5f5ab9c62d3d016ba0f5fb491f2c2bd149cff9e616bb071c711c978006",
-      "shard_index": 33,
-      "split": "train",
-      "token_count": 43153
-    },
-    {
-      "byte_size": 37940288,
+      "byte_size": 38192944,
       "filename": "juniper-math-dataset-v1.validation.00000.jsonl",
       "record_count": 50000,
-      "sha256": "88db2d79fce22cb8c812d8f66eef4203d156c6c3d26e724486adb3c4c63d65e6",
+      "sha256": "7ccfbbb891cf1d4ccbd4bd431c082400974765efd963ffd8c1f5b5ad2001472c",
       "shard_index": 0,
       "split": "validation",
-      "token_count": 1826147
+      "token_count": 1911102
     },
     {
-      "byte_size": 31295142,
+      "byte_size": 23763575,
       "filename": "juniper-math-dataset-v1.validation.00001.jsonl",
-      "record_count": 41246,
-      "sha256": "2c8b732638a4c9380b53d1049ba394fb770641bdb9d79b354aea685bc12cb224",
+      "record_count": 31094,
+      "sha256": "718d32638aabbea5120dea4dc68d6c07beac2faafe816250d26b6f2980ecb4bc",
       "shard_index": 1,
       "split": "validation",
-      "token_count": 1501610
+      "token_count": 1192811
     }
   ]
 }

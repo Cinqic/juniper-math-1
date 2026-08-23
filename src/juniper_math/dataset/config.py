@@ -42,6 +42,7 @@ class DedupConfig:
     near_duplicate_method: str
     near_duplicate_shingle_size: int
     near_duplicate_jaccard_threshold: float
+    max_structural_repeats_per_family: int
 
 
 @dataclass(frozen=True)
