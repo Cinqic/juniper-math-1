@@ -129,6 +129,12 @@ def run_smoke_train(
     run_evaluate: bool = False,
 ) -> SmokeRunReport:
     training_config, architecture, tokenizer = _load_common(config_path)
+    # Capture provenance before this run creates/rotates its mutable output
+    # files. Otherwise the log lifecycle itself falsely labels a clean source
+    # checkout as dirty.
+    source_commit, source_tree_state = __import__(
+        "juniper_math.cli", fromlist=["describe_git_state"]
+    ).describe_git_state()
     device = _resolve_device(training_config.device)
     set_global_seed(training_config.seed)
 
@@ -150,10 +156,8 @@ def run_smoke_train(
         {
             "event": "run_start",
             "run_id": training_config.run_id,
-            "git_commit": _git_commit(),
-            "source_tree_state": __import__(
-                "juniper_math.cli", fromlist=["describe_git_state"]
-            ).describe_git_state()[1],
+            "git_commit": source_commit,
+            "source_tree_state": source_tree_state,
             "parameter_count": parameter_count,
             "device": str(device),
             "smoke_manifest": manifest.as_dict(),
@@ -183,13 +187,13 @@ def run_smoke_train(
         end_step,
         checkpoint_dir,
         log_path,
-        _git_commit(),
+        source_commit,
     )
     elapsed = time.perf_counter() - start
 
     final_checkpoint_path = checkpoint_dir / f"step_{state.step:06d}_final.pt"
     save_state(
-        state, architecture, training_config, final_checkpoint_path, _git_commit(), extra={"final": True}
+        state, architecture, training_config, final_checkpoint_path, source_commit, extra={"final": True}
     )
 
     final_validation = validate(state, val_ds, training_config.data.micro_batch_size)
