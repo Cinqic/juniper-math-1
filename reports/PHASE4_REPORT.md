@@ -51,7 +51,7 @@ approval PENDING GPT-5.6 Terra (see `reports/PHASE4_TERRA_HANDOFF.md`).
   `contamination-check`), replacing the honest Phase 0-3 placeholder.
 - Four frozen Phase 4 evaluation suites (725 cases total) — see
   `reports/PHASE4_EVALUATION_FREEZE.md`.
-- 42 new tests in `tests/test_dataset.py` covering config parsing,
+- 43 new tests in `tests/test_dataset.py` covering config parsing,
   deterministic generation, schema validation, ground-truth verification
   (including a direct regression test for the Phase 0 tool-001 defect
   class), cleaning, dedup, split determinism/family isolation,
@@ -150,7 +150,7 @@ python -m juniper_math tools self-test     # PASS (unchanged)
 python -m juniper_math evals validate      # PASS (frozen Phase 0 suite, unchanged)
 python -m juniper_math evals verify        # PASS
 
-pytest -v          # 549 passed (507 pre-existing + 42 new)
+pytest -v          # 550 passed (507 pre-existing + 43 new)
 ruff check .        # All checks passed
 ruff format --check . # all files already formatted
 mypy                # Success: no issues found in 51 source files

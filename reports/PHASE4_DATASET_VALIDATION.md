@@ -92,6 +92,38 @@ byte-compared to what was recorded during generation — a change to
 
 Well within FLOWBOX's stated hardware envelope; no swap usage observed.
 
+## Fresh-clone recovery test (Sec. 28)
+
+Performed after pushing the candidate: cloned `phase-4-review-candidate`
+into a fresh directory, built a venv from `requirements-lock.txt` only
+(never touching the original working directory), and ran the full
+validation chain there — see `reports/PHASE4_TERRA_HANDOFF.md` for the
+exact command sequence. Result: `validate-env`, `hash verify` (27/27,
+including all Phase 4 artifacts — the shard *manifest*, *stats*, and
+*identity* files round-trip through Git even though the shards themselves
+don't), `manifests-validate`, `tokenizer validate`, `tools self-test`, and
+the full `pytest` suite (550/550) all passed from the fresh clone alone.
+
+## A defect this fresh-clone test actually caught
+
+`data/processed/juniper-math-dataset-v1/` is tracked in Git (its small
+metadata files are, per the `.gitignore` carve-out — the `.jsonl` shards
+themselves are not). A fresh clone therefore has that directory present
+with zero shard files inside it, and `dataset validate` iterated zero
+records and printed "PASS: schema validation" — a real "silently succeeds
+on unavailable input" defect that the development machine, which always
+has a populated build, could never surface. Fixed in
+`juniper_math.dataset.io.list_shard_files` (now raises when zero `.jsonl`
+files are found, not only when the directory is entirely absent) — see
+`reports/PHASE4_SELF_REVIEW.md` defect 6 for the full writeup. Re-running
+`dataset validate` against a directory with genuinely zero shards now
+raises `JuniperConfigError: No shard files (*.jsonl) found ... Run
+'dataset build' first`, and the fresh-clone chain above was re-run after
+the fix to confirm the corrected behavior end to end (rebuilding the
+corpus in the fresh clone via `dataset eval-suites-build` + `dataset
+build` and re-running `dataset validate`/`verify`/`contamination-check`
+there, all PASS).
+
 ## A defect this validation pass actually caught
 
 The near-duplicate contamination check (`check_near_duplicate_eval_vs_train`)

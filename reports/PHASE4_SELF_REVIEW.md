@@ -62,7 +62,26 @@ areas deliberately checked and found clean.
    `test_build_contamination_report_flags_near_duplicate_eval_leak` test,
    which still passes).
 
-6. **Several mypy type errors** (dict-literal branch inference across
+6. **`dataset validate`/`dataset verify` silently reported success on zero
+   records.** Found during the Sec. 28 fresh-clone recovery test, not
+   during development: `data/processed/juniper-math-dataset-v1/` is
+   tracked in Git (its small `shard_manifest.json`/`stats.json`/
+   `DATASET_IDENTITY.sha256` metadata files are — see `.gitignore`'s Phase
+   4 section), so a fresh clone has that directory present with zero
+   `.jsonl` shard files inside it. `list_shard_files` only checked whether
+   the directory existed, not whether it contained any shards, so `dataset
+   validate` iterated zero records and printed "PASS: schema validation" —
+   exactly the "never print success while skipping unavailable inputs"
+   failure Sec. 20 explicitly forbids. **Fix:** `list_shard_files` now
+   raises when zero `.jsonl` files are found, whether or not the directory
+   itself exists. Regression coverage:
+   `tests/test_dataset.py::test_list_shard_files_fails_honestly_on_existing_but_empty_directory`.
+   This is exactly why the fresh-clone test matters as an *actual* test,
+   not a formality — this defect was invisible on the development machine
+   (which always has a populated build) and only surfaced against a
+   genuinely fresh checkout.
+
+7. **Several mypy type errors** (dict-literal branch inference across
    if/elif/else, a tuple passed where `*args` was expected, a
    `Literal[...]` string parameter). Fixed; `mypy` now reports zero issues
    across all 51 source files including the new `dataset` package.

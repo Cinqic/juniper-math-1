@@ -42,11 +42,27 @@ def example_from_dict(d: dict) -> Example:
 
 
 def list_shard_files(output: OutputConfig) -> list[Path]:
+    """Return every shard file, never silently reporting zero as success.
+
+    ``data/processed/juniper-math-dataset-v1/`` itself is tracked in Git
+    (its small manifest/stats/identity files are — see .gitignore), so the
+    directory existing is not evidence a build ever ran: a fresh clone has
+    the directory with zero .jsonl shards inside it. A caller that iterates
+    an empty list and reports "PASS: 0 records checked" is exactly the
+    "never print success while skipping unavailable inputs" failure Sec. 20
+    forbids, so this raises whenever no shard files are actually found —
+    not only when the directory is entirely missing.
+    """
     if not output.processed_path.is_dir():
         raise JuniperConfigError(
             f"No dataset build found at {output.processed_path}. Run `dataset build` first."
         )
-    return sorted(output.processed_path.glob("*.jsonl"))
+    shard_files = sorted(output.processed_path.glob("*.jsonl"))
+    if not shard_files:
+        raise JuniperConfigError(
+            f"No shard files (*.jsonl) found under {output.processed_path}. Run `dataset build` first."
+        )
+    return shard_files
 
 
 def iter_shard_examples(path: Path) -> Iterator[Example]:

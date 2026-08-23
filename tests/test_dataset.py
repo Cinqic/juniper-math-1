@@ -428,6 +428,32 @@ def test_list_shard_files_fails_honestly_without_a_build(dataset_config):
         list_shard_files(missing_output)
 
 
+def test_list_shard_files_fails_honestly_on_existing_but_empty_directory(tmp_path):
+    """Regression test for a real bug found during the Sec. 28 fresh-clone
+    recovery test: data/processed/juniper-math-dataset-v1/ is tracked in
+    Git (its small metadata files are), so a fresh clone has the directory
+    present with zero .jsonl shards inside — `dataset validate` printed
+    'PASS: schema validation' after checking 0 records, exactly the
+    'never print success while skipping unavailable inputs' failure Sec. 20
+    forbids. list_shard_files must raise when the directory exists but has
+    no shard files, not only when the directory is entirely absent."""
+    from juniper_math.dataset.config import OutputConfig
+    from juniper_math.dataset.io import list_shard_files
+
+    empty_dir = tmp_path / "juniper-math-dataset-v1"
+    empty_dir.mkdir()
+    (empty_dir / "shard_manifest.json").write_text("{}", encoding="utf-8")
+
+    empty_output = OutputConfig(
+        processed_dir=str(empty_dir),
+        manifest_file=str(empty_dir / "shard_manifest.json"),
+        stats_file=str(empty_dir / "stats.json"),
+        dataset_identity_file=str(empty_dir / "DATASET_IDENTITY.sha256"),
+    )
+    with pytest.raises(JuniperConfigError, match="No shard files"):
+        list_shard_files(empty_output)
+
+
 # --------------------------------------------------------------------------
 # frozen Phase 4 eval suites — ongoing re-verification (Sec. 24: "Every
 # deterministic evaluation answer must be reverified automatically"). This

@@ -146,11 +146,14 @@ reconstruction, added this phase).
 
 ## Self-review findings (summary — full detail in PHASE4_SELF_REVIEW.md)
 
-Six real defects were found and fixed during this engineering session,
+Seven real defects were found and fixed during this engineering session,
 including a genuine eval/train contamination leak (caught by the
-contamination checker itself before this report was written) and a
+contamination checker itself before this report was written), a
 performance bug in that same checker that made it impractical at full
-corpus scale (also found and fixed before this report was written). See
+corpus scale, and a "silently reports success on zero records" honesty
+violation in `dataset validate`/`dataset verify` caught only by the actual
+Sec. 28 fresh-clone recovery test below (not by development-machine
+testing, which always has a populated build). See
 `reports/PHASE4_SELF_REVIEW.md` for the complete list with root cause and
 fix for each.
 
