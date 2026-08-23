@@ -9,10 +9,22 @@ Phase 4 end to end using only this document and the repository itself.
 - **Repository:** `https://github.com/Cinqic/juniper-math-1`
 - **Candidate tag:** `phase-4-review-candidate` (non-final — see
   `docs/GIT_POLICY.md`)
+- **Important — review `main` HEAD, not only the tag.** The tag was pushed
+  at commit `84ce076` (the initial Phase 4 candidate). Immediately
+  afterward, the Sec. 28 fresh-clone recovery test surfaced a real defect
+  (`dataset validate` silently passing on zero shards — see
+  `reports/PHASE4_SELF_REVIEW.md` defect 6), which was fixed in a follow-up
+  commit `878fa95` pushed to `main` in the same session. Rather than force-
+  move the tag (git policy: never force-push / rewrite published refs),
+  the fix landed as an ordinary new commit on `main`. **Review `main`'s
+  current HEAD**, which includes the fix; move `phase-4-review-candidate`
+  forward yourself if you want the tag to reflect it exactly, or simply
+  treat `main` as authoritative — Terra is authorized to do either.
 - **Resolve the candidate commit:**
   ```bash
   git fetch origin
-  git rev-parse phase-4-review-candidate^{commit}
+  git rev-parse phase-4-review-candidate^{commit}   # 84ce076... (pre-fix)
+  git rev-parse origin/main                          # 878fa95... (post-fix, review this)
   ```
   (Never trust a hardcoded SHA in this document — Phase 1 and Phase 3 both
   hit the "a commit cannot self-reference its own resulting SHA" issue; the

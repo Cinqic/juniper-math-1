@@ -119,10 +119,15 @@ files are found, not only when the directory is entirely absent) — see
 `dataset validate` against a directory with genuinely zero shards now
 raises `JuniperConfigError: No shard files (*.jsonl) found ... Run
 'dataset build' first`, and the fresh-clone chain above was re-run after
-the fix to confirm the corrected behavior end to end (rebuilding the
-corpus in the fresh clone via `dataset eval-suites-build` + `dataset
-build` and re-running `dataset validate`/`verify`/`contamination-check`
-there, all PASS).
+the fix to confirm the corrected behavior end to end: pulled the fix
+commit into the same fresh clone, confirmed `dataset validate` now fails
+honestly with zero shards present, then rebuilt the full corpus there
+(`dataset eval-suites-build` + `dataset build --scale 1.0`). Result: the
+fresh-clone rebuild produced `dataset_identity
+bf6a4ac1fff421deb4c810c34e8d571ea826a8d68778e5f61648d35c92c0d293` — the
+**same** identity as both dev-machine builds above, a third independent
+confirmation of full determinism — and `dataset
+validate`/`verify`/`contamination-check` all reported PASS there.
 
 ## A defect this validation pass actually caught
 
