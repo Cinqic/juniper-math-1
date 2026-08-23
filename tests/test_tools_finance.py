@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from decimal import ROUND_HALF_UP, Decimal
+from decimal import ROUND_HALF_UP, Decimal, getcontext
 
 import pytest
 
@@ -164,3 +164,16 @@ def test_simple_interest_matches_independent_decimal_oracle():
             "simple_interest", {"principal": principal, "annual_rate_percent": rate, "years": years}
         )
         assert actual == expected
+
+
+def test_finance_is_independent_of_process_global_decimal_context():
+    previous_precision = getcontext().prec
+    args = {"number": Decimal(1), "percent": Decimal(1)}
+    try:
+        getcontext().prec = 8
+        low_precision = compute_finance("percentage_of", args)
+        getcontext().prec = 100
+        high_precision = compute_finance("percentage_of", args)
+    finally:
+        getcontext().prec = previous_precision
+    assert low_precision == high_precision == Decimal("0.010000")

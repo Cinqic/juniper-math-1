@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import random
-from decimal import Decimal
+from decimal import Decimal, getcontext
 
 import pytest
 
@@ -107,3 +107,15 @@ def test_round_trip_deterministic_random_cases():
         # Decimal division introduces bounded rounding; tolerance is generous
         # relative to the 28-digit default Decimal context precision.
         assert abs(back - original) <= abs(original) * Decimal("1e-20") + Decimal("1e-15")
+
+
+def test_conversion_is_independent_of_process_global_decimal_context():
+    previous_precision = getcontext().prec
+    try:
+        getcontext().prec = 8
+        low_precision = convert_value("speed", "kilometers_per_hour", "meters_per_second", Decimal(1))
+        getcontext().prec = 100
+        high_precision = convert_value("speed", "kilometers_per_hour", "meters_per_second", Decimal(1))
+    finally:
+        getcontext().prec = previous_precision
+    assert low_precision == high_precision == Decimal("0.2777777777777777777777777778")

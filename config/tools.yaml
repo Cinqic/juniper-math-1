@@ -49,7 +49,9 @@ error_codes:
 limits:
   max_call_bytes: 8192            # complete serialized tool-call JSON
   max_expression_length: 512      # calculator.evaluate "expression" string
-  max_string_argument_length: 256 # any other string argument (unit names, category, operation)
+  # This generic parser bound must be at least the expression bound: the JSON
+  # parser validates strings before per-tool argument validation.
+  max_string_argument_length: 512 # any string value in a serialized tool call
   max_json_depth: 16              # JSON nesting depth of the call payload
   max_json_members: 64            # object member count at any single JSON level
   max_ast_nodes: 200              # calculator.evaluate parsed AST node count
@@ -58,6 +60,7 @@ limits:
   max_exponent_magnitude: 10000   # |exponent| allowed in "**" when base magnitude > 1
   max_pow_result_bits: 4096       # estimated bit length of an integer "**" result
   max_factorial_n: 5000           # largest accepted factorial() argument
+  max_result_bytes: 8192          # complete canonical serialized tool result
 
 # calculator.evaluate semantics.
 evaluate:

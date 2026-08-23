@@ -4,7 +4,7 @@ A purpose-built, approximately five-million-parameter mathematical language
 model. **No model is trained yet.** This repository has an implemented,
 mechanically-validated architecture (Phase 1), a trained, validated
 math-specific tokenizer (Phase 2, complete), and a deterministic calculator
-tool runtime (Phase 3, implemented, awaiting independent review) — not a
+tool runtime (Phase 3, complete) — not a
 trained model, and not yet mathematical capability of any kind. The runtime
 proves the tool surface a future trained model will call into is correct
 and secure; it does not itself demonstrate learned tool-use behavior.
@@ -24,8 +24,8 @@ and secure; it does not itself demonstrate learned tool-use behavior.
 Phase 0 — Foundation and Recovery:          COMPLETE
 Phase 1 — Architecture:                     COMPLETE
 Phase 2 — Math Tokenizer:                   COMPLETE
-Phase 3 — Cinqic Calculator Tool Runtime:   IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW
-Phase 4 — Dataset and Evaluation Freeze:    NOT AUTHORIZED
+Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
+Phase 4 — Dataset and Evaluation Freeze:    AUTHORIZED — NOT STARTED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -71,8 +71,8 @@ closed tool registry with no dynamic dispatch. Fabricated
 `<tool_result>...`-shaped model text is never trusted as a real execution
 outcome. See [`docs/TOOLS.md`](docs/TOOLS.md) for the full protocol and
 security model. Phase 3 was implemented and self-reviewed by Claude Sonnet
-5 and is awaiting GPT-5.6 Terra's independent review, remediation if
-necessary, and final approval; Phase 4 remains not authorized.
+5 and was independently audited, remediated, and approved by GPT-5.6 Terra;
+Phase 4 is authorized but has not started.
 
 ### Phase 2 release verification
 
@@ -112,6 +112,9 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 3 security review: [`reports/PHASE3_SECURITY.md`](reports/PHASE3_SECURITY.md)
 - Phase 3 tool validation: [`reports/PHASE3_TOOL_VALIDATION.md`](reports/PHASE3_TOOL_VALIDATION.md)
 - Phase 3 Terra handoff package: [`reports/PHASE3_TERRA_HANDOFF.md`](reports/PHASE3_TERRA_HANDOFF.md)
+- Phase 3 Terra review: [`reports/TERRA_PHASE3_REVIEW.md`](reports/TERRA_PHASE3_REVIEW.md)
+- Phase 3 remediation: [`reports/PHASE3_REMEDIATION.md`](reports/PHASE3_REMEDIATION.md)
+- Phase 3 final approval: [`reports/PHASE3_FINAL_APPROVAL.md`](reports/PHASE3_FINAL_APPROVAL.md)
 
 ## Principles
 
@@ -260,8 +263,8 @@ actually exercised — see
 | 0 | Foundation and Recovery | **COMPLETE** |
 | 1 | Architecture — Transformer implementation, validation, benchmarking | **COMPLETE** |
 | 2 | Math Tokenizer | **COMPLETE** |
-| 3 | Deterministic tool integration ("Cinqic Calculator") | **IMPLEMENTED — AWAITING GPT-5.6 TERRA REVIEW** |
-| 4 | Dataset and Evaluation Freeze | **NOT AUTHORIZED** |
+| 3 | Deterministic tool integration ("Cinqic Calculator") | **COMPLETE** |
+| 4 | Dataset and Evaluation Freeze | **AUTHORIZED — NOT STARTED** |
 
 ## License
 

@@ -18,7 +18,14 @@ from typing import Any
 from juniper_math.tools.calculator_backend import compute_finance, convert_value, evaluate_expression
 from juniper_math.tools.config import ToolsConfig, load_tools_config
 from juniper_math.tools.errors import ToolProtocolError
-from juniper_math.tools.protocol import CallLimits, ErrorInfo, ToolCall, ToolResult, parse_tool_call
+from juniper_math.tools.protocol import (
+    CallLimits,
+    ErrorInfo,
+    ToolCall,
+    ToolResult,
+    parse_tool_call,
+    serialize_tool_result,
+)
 from juniper_math.tools.registry import ToolRegistry
 from juniper_math.tools.schemas import (
     validate_convert_arguments,
@@ -109,12 +116,17 @@ class ToolRuntime:
         except (ArithmeticError, ValueError, OverflowError):  # defensive backstop, never a raw traceback
             return self._error_result(call.tool, "INTERNAL_ERROR", "Internal error during tool execution")
 
-        return ToolResult(
+        successful = ToolResult(
             protocol_version=self.config.protocol_version,
             tool=call.tool,
             status="success",
             result=result_payload,
         )
+        if len(serialize_tool_result(successful).encode("utf-8")) > self.config.limits.max_result_bytes:
+            return self._error_result(
+                call.tool, "RESOURCE_LIMIT", "Serialized tool result exceeds the configured size limit"
+            )
+        return successful
 
     def execute_text(self, text: str) -> ToolResult:
         try:

@@ -83,6 +83,12 @@ def test_huge_factorial_bounded(runtime):
     assert result.error.code == "RESOURCE_LIMIT"
 
 
+def test_factorial_at_configured_compute_limit_is_bounded_by_result_limit(runtime):
+    result = runtime.execute_text(_call("calculator.evaluate", {"expression": "factorial(5000)"}))
+    assert result.status == "error"
+    assert result.error.code == "RESOURCE_LIMIT"
+
+
 def test_huge_bare_json_integer_literal_does_not_crash(runtime):
     # Python 3.11+ raises a bare ValueError (not JSONDecodeError) from
     # json.loads when a single integer literal exceeds

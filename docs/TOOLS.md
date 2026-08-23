@@ -177,8 +177,9 @@ never appears anywhere in the output. See
 - **Resource limits**, all configured in `config/tools.yaml` and enforced
   *before* computation: call byte size, expression length, JSON depth/member
   count, AST node count/depth, numeric literal digit count, exponent
-  magnitude, estimated `**` result bit-length, and `factorial()` argument.
-  A syntactically legal expression cannot become a CPU/memory DoS payload.
+  magnitude, estimated `**` result bit-length, `factorial()` argument, and
+  canonical serialized result size. A syntactically legal expression cannot
+  become a CPU/memory DoS payload.
 - **Errors are truthful** — every failure mode gets a real code (not a
   generic `error: true`), and identical invalid calls return identical
   errors every time (`tests/test_tools_security.py::test_repeated_invalid_calls_are_deterministic`).
@@ -212,8 +213,11 @@ see `tests/test_tools_conformance.py::test_evaluate_preserves_large_integer_prec
 **Resource limits** (`config/tools.yaml` → `limits`): expression length
 512 chars, AST node count 200, AST depth 40, numeric literal 40 digits,
 `**` exponent magnitude 10,000, estimated `**` result bit-length 4096,
-`factorial()` argument 5,000. Violations return `RESOURCE_LIMIT` before any
-computation is attempted.
+`factorial()` argument 5,000, and complete serialized result size 8,192 UTF-8
+bytes. The generic JSON-string bound is 512 characters, matching the
+expression limit; unit/category/operation names are additionally constrained
+by their closed runtime allowlists. Violations return `RESOURCE_LIMIT` before
+unbounded output formatting or computation is attempted.
 
 ## 12. `calculator.convert`
 
@@ -235,7 +239,9 @@ behavior and is a deliberate choice, not an oversight — see
 
 All conversion arithmetic uses `decimal.Decimal` end-to-end (constructed via
 `Decimal(str(value))`, never `Decimal(float)` directly) to avoid binary
-float rounding artifacts feeding into the conversion tables.
+float rounding artifacts feeding into the conversion tables. It runs in an
+explicit fixed Decimal context (precision 28, `ROUND_HALF_UP`), so mutations
+to process-global `decimal.getcontext()` cannot alter results.
 
 ## 13. `calculator.finance`
 

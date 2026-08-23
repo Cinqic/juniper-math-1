@@ -25,7 +25,7 @@ from __future__ import annotations
 import ast
 import math
 from dataclasses import dataclass
-from decimal import ROUND_HALF_UP, Decimal, DecimalException, InvalidOperation
+from decimal import ROUND_HALF_UP, Context, Decimal, DecimalException, InvalidOperation, localcontext
 from typing import Any, NoReturn
 
 from juniper_math.tools.config import Limits
@@ -312,6 +312,11 @@ def evaluate_expression(expression: str, limits: Limits) -> EvalOutcome:
         _domain_error("Result is not a real number")
     if isinstance(value, float) and (math.isnan(value) or math.isinf(value)):
         raise ToolProtocolError("NON_FINITE_RESULT", "Result is not finite")
+    # Avoid converting an arbitrarily large integer to decimal text merely to
+    # discover that it cannot fit in the protocol's serialized-result budget.
+    # Four bits per byte is a conservative upper bound for decimal digits.
+    if isinstance(value, int) and value.bit_length() > limits.max_result_bytes * 4:
+        raise ToolProtocolError("RESOURCE_LIMIT", "Evaluation result exceeds the configured size limit")
     return outcome
 
 
@@ -405,23 +410,33 @@ def _from_celsius(unit: str, celsius: Decimal) -> Decimal:
 
 
 def convert_value(category: str, from_unit: str, to_unit: str, value: Decimal) -> Decimal:
-    if category == "temperature":
-        if from_unit not in _TEMPERATURE_UNITS:
-            raise ToolProtocolError("UNSUPPORTED_UNIT", f"Unknown temperature unit: {from_unit}")
-        if to_unit not in _TEMPERATURE_UNITS:
-            raise ToolProtocolError("UNSUPPORTED_UNIT", f"Unknown temperature unit: {to_unit}")
-        return _from_celsius(to_unit, _to_celsius(from_unit, value))
+    try:
+        with localcontext(_DECIMAL_CONTEXT):
+            if category == "temperature":
+                if from_unit not in _TEMPERATURE_UNITS:
+                    raise ToolProtocolError("UNSUPPORTED_UNIT", f"Unknown temperature unit: {from_unit}")
+                if to_unit not in _TEMPERATURE_UNITS:
+                    raise ToolProtocolError("UNSUPPORTED_UNIT", f"Unknown temperature unit: {to_unit}")
+                return _from_celsius(to_unit, _to_celsius(from_unit, value))
 
-    table = CONVERSION_CATEGORIES.get(category)
-    if table is None:
-        raise ToolProtocolError("INVALID_ARGUMENT_VALUE", f"Unknown category: {category}")
-    if from_unit not in table:
-        raise ToolProtocolError("UNSUPPORTED_UNIT", f"Unknown unit {from_unit!r} in category {category!r}")
-    if to_unit not in table:
-        raise ToolProtocolError("UNSUPPORTED_UNIT", f"Unknown unit {to_unit!r} in category {category!r}")
+            table = CONVERSION_CATEGORIES.get(category)
+            if table is None:
+                raise ToolProtocolError("INVALID_ARGUMENT_VALUE", f"Unknown category: {category}")
+            if from_unit not in table:
+                raise ToolProtocolError(
+                    "UNSUPPORTED_UNIT", f"Unknown unit {from_unit!r} in category {category!r}"
+                )
+            if to_unit not in table:
+                raise ToolProtocolError(
+                    "UNSUPPORTED_UNIT", f"Unknown unit {to_unit!r} in category {category!r}"
+                )
 
-    base_value = value * table[from_unit]
-    return base_value / table[to_unit]
+            base_value = value * table[from_unit]
+            return base_value / table[to_unit]
+    except DecimalException as exc:
+        raise ToolProtocolError(
+            "RESOURCE_LIMIT", "Conversion result exceeds representable decimal precision"
+        ) from exc
 
 
 # ---------------------------------------------------------------------------
@@ -429,6 +444,10 @@ def convert_value(category: str, from_unit: str, to_unit: str, value: Decimal) -
 # ---------------------------------------------------------------------------
 
 _TWO_PLACES = Decimal("0.01")
+# Decimal arithmetic otherwise inherits the mutable process-global context.
+# Every public calculation enters this fixed context so a caller cannot alter
+# tool outputs or error boundaries through decimal.getcontext().
+_DECIMAL_CONTEXT = Context(prec=28, rounding=ROUND_HALF_UP)
 
 
 def _round_currency(value: Decimal) -> Decimal:
@@ -472,7 +491,8 @@ def compute_finance(operation: str, args: dict[str, Decimal]) -> Decimal:
     over-large *input*, not an internal bug. See reports/PHASE3_SELF_REVIEW.md.
     """
     try:
-        return _compute_finance_dispatch(operation, args)
+        with localcontext(_DECIMAL_CONTEXT):
+            return _compute_finance_dispatch(operation, args)
     except DecimalException as exc:
         raise ToolProtocolError(
             "RESOURCE_LIMIT", "Finance result exceeds representable decimal precision"

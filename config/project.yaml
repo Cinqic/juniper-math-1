@@ -24,7 +24,7 @@ architecture_config: "config/architecture.yaml"
 
 current_phase: 3
 phase_name: "Cinqic Calculator Tool Runtime"
-phase_status: "AWAITING_GPT_5_6_TERRA_REVIEW"
+phase_status: "COMPLETE"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -103,23 +103,20 @@ phase_2_approval:
   starting_foundation_commit: "83d6106bae2a465a1c166c3137b10b87eda22f91"
   starting_foundation_tag: "phase-1-architecture"
 
-# Phase 3 approval record — implementation and self-review complete;
-# awaiting GPT-5.6 Terra independent review. See
-# reports/PHASE3_REPORT.md, reports/PHASE3_SELF_REVIEW.md,
-# reports/PHASE3_SECURITY.md, reports/PHASE3_TOOL_VALIDATION.md, and
-# reports/PHASE3_TERRA_HANDOFF.md.
+# Phase 3 approval record. See reports/TERRA_PHASE3_REVIEW.md,
+# reports/PHASE3_REMEDIATION.md, and reports/PHASE3_FINAL_APPROVAL.md.
 phase_approval:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
-  terra_independent_review: "pending"
-  terra_final_approval: "pending"
+  terra_independent_review: "approved"
+  terra_final_approval: "approved"
   # Not hardcoded here deliberately: a commit cannot correctly self-reference
   # its own resulting SHA (amending it changes the SHA). Resolve via
   # `git rev-parse phase-3-review-candidate^{commit}` instead — see
   # reports/PHASE3_TERRA_HANDOFF.md, which hit the same issue during Phase 1.
   original_review_candidate: null
   review_candidate_tag: "phase-3-review-candidate"
-  final_tag: null
+  final_tag: "phase-3-tools"
   starting_foundation_commit: "8f81a3b967b3fd58f3ab0b71c115e85e5af36611"
   starting_foundation_tag: "phase-2-tokenizer"
   cinqic_calculator_upstream_repository: "https://github.com/Cinqic/Cinqic-Calculator"
@@ -128,8 +125,8 @@ phase_approval:
 next_phase:
   number: 4
   name: "Dataset and Evaluation Freeze"
-  status: "NOT_AUTHORIZED"
+  status: "AUTHORIZED"
   started: false
   note: >
-    Not authorized. Awaiting GPT-5.6 Terra's independent review, remediation
-    if necessary, and final approval of Phase 3.
+    Authorized after GPT-5.6 Terra's independent review and final approval of
+    Phase 3. It has not started.

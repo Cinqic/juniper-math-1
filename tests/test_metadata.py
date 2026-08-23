@@ -11,7 +11,7 @@ def test_loads_current_status():
     meta = load_project_metadata()
     assert meta.project_name == "Juniper Math 1"
     assert meta.current_phase == 3
-    assert meta.phase_status == "AWAITING_GPT_5_6_TERRA_REVIEW"
+    assert meta.phase_status == "COMPLETE"
     assert "five-million-parameter" in meta.research_question
     assert meta.parameter_target == 5004032
 
@@ -35,16 +35,16 @@ def test_missing_file_raises(tmp_path):
 def test_phase_approval_record_present():
     """Phase 3 records the full approval chain, not just a status string."""
     meta = load_project_metadata()
-    assert meta.phase_status == "AWAITING_GPT_5_6_TERRA_REVIEW"
+    assert meta.phase_status == "COMPLETE"
     approval = meta.phase_approval
     assert approval["sonnet_5_implementation"] == "complete"
-    assert approval["terra_independent_review"] == "pending"
+    assert approval["terra_independent_review"] == "approved"
     assert approval["starting_foundation_tag"] == "phase-2-tokenizer"
 
 
-def test_phase_4_is_not_authorized_and_not_started():
+def test_phase_4_is_authorized_and_not_started():
     meta = load_project_metadata()
     assert meta.next_phase["number"] == 4
     assert meta.next_phase["name"] == "Dataset and Evaluation Freeze"
-    assert meta.next_phase["status"] == "NOT_AUTHORIZED"
+    assert meta.next_phase["status"] == "AUTHORIZED"
     assert meta.next_phase["started"] is False

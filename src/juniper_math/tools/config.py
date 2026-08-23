@@ -30,6 +30,7 @@ class Limits:
     max_exponent_magnitude: int
     max_pow_result_bits: int
     max_factorial_n: int
+    max_result_bytes: int
 
 
 @dataclass(frozen=True)
@@ -62,6 +63,7 @@ _REQUIRED_LIMIT_KEYS = {
     "max_exponent_magnitude",
     "max_pow_result_bits",
     "max_factorial_n",
+    "max_result_bytes",
 }
 
 

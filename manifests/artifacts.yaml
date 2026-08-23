@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "cb61d1c64018e9b6c73ca5ffa51556199a8d98c4dd8c736ee0b978215ad8b281"
+    sha256: "c281b2520b1591ee5b930c6504eb2ba7ec4f684393b64857632fe777412442d0"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -67,7 +67,7 @@ artifacts:
 
   - artifact_id: "tools_config"
     path: "config/tools.yaml"
-    sha256: "0f41577398dda611dc6a6e37281c803f3354bd6877a02dcb15232bc3c231cdb7"
+    sha256: "e4f4d09b95b30bbd1104bd25423ff67ab2605eb598fcdb6f2239655536ed3cf0"
     description: "Frozen Phase 3 tool protocol configuration (juniper-tool-protocol-v1 v1.0.0)."
 
   - artifact_id: "tool_call_schema"
