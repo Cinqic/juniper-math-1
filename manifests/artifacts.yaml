@@ -176,7 +176,7 @@ artifacts:
 
   - artifact_id: "full_training_config"
     path: "config/training_phase7_full.yaml"
-    sha256: "a48d3410baebf8a11fb594d9009e24c341b2e25175dfd147ad1b58b10cc980ae"
+    sha256: "d6d047472c7a606d03e826a60f1b8baf0fdebe4f20e9f110684f4e03d429efe0"
     description: >
       Frozen Phase 7 full-pretraining configuration (entire frozen train/validation splits, no
       subsampling; optimizer, warmup-ratio scheduler, schedule, resume-test parameters). Separate

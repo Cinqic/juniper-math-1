@@ -12,7 +12,7 @@
 # Per reports/PHASE6_FINAL_APPROVAL.md: Phase 7 MUST start from fresh random
 # initialization; the Phase 6 pilot checkpoint is never loaded here.
 
-run_id: "phase7-full-v1"
+run_id: "phase7-full-v2"
 architecture_identity: "0.1.0"          # must match config/architecture.yaml architecture_version
 tokenizer_identity: "juniper-math-tokenizer-v1"
 dataset_identity: "juniper-math-dataset-v1"
@@ -68,25 +68,18 @@ scheduler:
   warmup_ratio: 0.05
   min_lr_ratio: 0.1
 
-# total_steps=8218 targets two full passes over the packed frozen train
-# split at effective batch 16. Measured by a bounded 2-step dry run of this
-# exact pipeline (data/processed/phase7-full/full_manifest.json,
-# experiments/phase7-full/train_log.jsonl "run_start"): the full frozen
-# train split (1,466,970 examples, 56,209,616 raw tokens) packs into 65,746
-# sequences of length 1024 (3.51% padding, 64,897,039 loss-bearing tokens
-# for one pass). Two epochs = 131,492 packed sequences / 16 per step =
-# 8218.25, floored to 8218 steps (131,488 sequences consumed, 99.997% of
-# two full epochs) — a training-token budget of roughly 129.8M loss-bearing
-# tokens for a 5,004,032-parameter model, close to a Chinchilla-style
-# ~20-30x-parameters compute-optimal ratio without requiring any new data
-# beyond the already-frozen and already-verified corpus. See
-# reports/PHASE7_RESULTS.md for the exact measured token/step accounting of
-# the executed run.
+# total_steps=7483 targets two full passes over the corrected frozen train
+# split at effective batch 16. Independent clean reconstruction and streaming
+# packing using the production render/tokenize/first-fit rules measured 59,864
+# sequences of length 1024 (3.519% padding, 59,083,692 loss-bearing tokens
+# per pass). Two epochs = 119,728 packed sequences / 16 = 7,483 exact steps,
+# for 118.17M expected loss-bearing tokens. The prior 8,218-step rationale
+# used an invalid run contaminated by four unmanifested train shards.
 schedule:
-  total_steps: 8218
-  validation_interval: 1644
-  checkpoint_interval: 1644               # 5 mid-run checkpoints + the final save, at each 20% milestone
-  generation_interval: 1644
+  total_steps: 7483
+  validation_interval: 1497
+  checkpoint_interval: 1497               # approximately 20% cadence + final save
+  generation_interval: 1497
   logging_interval: 50
 
 # Resume-comparison gate (Sec. 24-equivalent), same tolerance-based
