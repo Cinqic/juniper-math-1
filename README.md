@@ -19,15 +19,14 @@ tool-use behavior. Phase 6 is independently approved with remediation — see
 [`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md). Phase 7 (Full
 Base Pretraining) trains the same frozen architecture from fresh random
 initialization on the **entire** frozen train split for two epochs
-(~130M loss-bearing tokens) and selects a Base checkpoint by evidence —
-**this is still not a claim of mathematical or tool-use capability**:
-validation loss improves monotonically to 0.5988 and the model reliably
-produces the trained output *format* (`<final>`/`<tool_call>`/
-`<unsupported>` tags), but math/calibration/adversarial accuracy remain at
-or near chance, consistent with Phase 6's prediction that base
-pretraining teaches structure, not arithmetic skill. Phase 7 engineering
-is complete and awaiting GPT-5.6 Terra's independent review — see
-[`reports/PHASE7_RESULTS.md`](reports/PHASE7_RESULTS.md).
+(118.17M loss-bearing tokens) and selects a Base checkpoint by evidence.
+The independent review invalidated the original contaminated candidate,
+retrained from a clean committed source with manifest-backed shards, and
+approved `phase7-full-v2` — **this remains no claim of mathematical or
+tool-use capability**. The selected Base's validation loss is 0.60030;
+math/calibration/adversarial accuracy remain near chance and the tool-use
+smoke suite has no valid parsed calls. See
+[`reports/PHASE7_FINAL_APPROVAL.md`](reports/PHASE7_FINAL_APPROVAL.md).
 
 ## Research question
 
@@ -48,7 +47,7 @@ Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
 Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
 Phase 6 — Pilot Pretraining:                COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
-Phase 7 — Full Base Pretraining:            ENGINEERING COMPLETE — AWAITING TERRA REVIEW
+Phase 7 — Full Base Pretraining:            COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -154,7 +153,8 @@ unlike Phase 5's smoke run — expected at larger scale). See
 [`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md) for full results
 and the evidence-backed Phase 7 recommendation. Phase 6 was implemented
 and self-reviewed by Claude Sonnet 5, then independently remediated and
-approved by GPT-5.6 Terra. Phase 7 is authorized but has not started.
+approved by GPT-5.6 Terra. Phase 7 is complete and Phase 8 is authorized
+but has not started.
 
 ### Phase 2 release verification
 
@@ -224,6 +224,8 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 7 full-pretraining results: [`reports/PHASE7_RESULTS.md`](reports/PHASE7_RESULTS.md)
 - Phase 7 bounded LR preflight: [`reports/PHASE7_LR_PREFLIGHT.md`](reports/PHASE7_LR_PREFLIGHT.md)
 - Phase 7 resume-mechanics check: [`reports/PHASE7_RESUME_CHECK.md`](reports/PHASE7_RESUME_CHECK.md)
+- Phase 7 independent review and remediation: [`reports/TERRA_PHASE7_REVIEW.md`](reports/TERRA_PHASE7_REVIEW.md), [`reports/PHASE7_REMEDIATION.md`](reports/PHASE7_REMEDIATION.md)
+- Phase 7 final approval: [`reports/PHASE7_FINAL_APPROVAL.md`](reports/PHASE7_FINAL_APPROVAL.md)
 
 ## Principles
 

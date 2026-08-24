@@ -52,3 +52,40 @@ invalid training data or source provenance.
 **BLOCKED.** A clean manifest-backed dataset reconstruction and a fresh-random
 initialization Phase 7 rerun are required before checkpoint selection or final
 approval. Phase 8 remains not authorized.
+
+## Final audit update
+
+The required remediation was completed before the replacement run. A clean
+repository at `0a34581ccd07de12b229528de45abbf5cb5a3a5d` rebuilt the exact
+34-shard frozen dataset (1,466,970 train / 81,094 validation / 81,014 test;
+identity `bf9933f032a58b4eb618b32156783b8563097a5fc1c0ef26be4f76445128d25a`).
+The replacement `phase7-full-v2` began from fresh initialization with a clean
+source tree and consumed only those manifest entries.
+
+Its reviewed budget is 7,483 steps: production rendering/tokenization and
+first-fit packing measured 59,864 packed train sequences, 59,083,692
+loss-bearing tokens per epoch, and 3.519% padding. Two epochs therefore give
+119,728 sequences / effective batch 16 = 7,483 steps and 118,167,384
+loss-bearing tokens. The raw run log records exactly those steps/tokens.
+
+All milestone candidates were compared on identical full validation and frozen
+suite settings. Overall validation loss was 0.706918 (20%), 0.643330 (40%),
+0.622091 (60%), 0.607735 (80%), and 0.600296 (final). Nineteen of 24 category
+losses improved monotonically; five had small nonmonotonic changes. The final
+candidate is selected because it has the best overall validation loss and the
+best final values for most categories. Its 62.2% tool-call emission is below
+the 40% candidate's 98.4%, but both candidates have 0% valid parse and tool
+name match; this diagnostic alone does not outweigh the broad held-out-loss
+improvement. Base-pretraining capability remains limited: final math 1/215,
+calibration 0/130, and adversarial 36/195.
+
+The bounded CUDA resume comparison was independently rerun against the same
+manifest-backed full-data path: exact final step 200 and tokens 3,157,988,
+maximum logged-loss difference 0.0001933610, maximum parameter difference
+0.0002411418, and identical fixed generations. This passes the existing
+`< 1e-2` criterion without changing it and is consistent with the documented
+non-bitwise CUDA attention warning.
+
+Final approval and remote-artifact details are recorded in
+`PHASE7_FINAL_APPROVAL.md`. The old candidate is permanently ineligible for
+canonical Base use; its release remains historical evidence only.

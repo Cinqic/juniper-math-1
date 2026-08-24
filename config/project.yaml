@@ -22,8 +22,8 @@ parameter_target: 5004032
 architecture_version: "0.1.0"
 architecture_config: "config/architecture.yaml"
 
-current_phase: 6
-phase_name: "Pilot Pretraining"
+current_phase: 7
+phase_name: "Full Base Pretraining"
 phase_status: "COMPLETE"
 
 primary_hardware:
@@ -176,35 +176,33 @@ phase_6_engineering:
   starting_foundation_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
   starting_foundation_tag: "phase-5-smoke"
 
-# Phase 7 engineering record — implementation and self-review complete,
-# independent review by GPT-5.6 Terra not yet performed. `current_phase`
-# stays 6 (the last independently-approved phase) until that review
-# completes, matching every prior phase's own approval sequence — see
-# reports/PHASE7_RESULTS.md, reports/PHASE7_LR_PREFLIGHT.md, and
-# reports/PHASE7_RESUME_CHECK.md.
+# Phase 7 approval record. The original candidate is preserved as invalidated
+# historical evidence; see reports/TERRA_PHASE7_REVIEW.md,
+# reports/PHASE7_REMEDIATION.md, and reports/PHASE7_FINAL_APPROVAL.md.
 phase_7_engineering:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
-  terra_independent_review: "not_yet_performed"
-  terra_remediation: "not_yet_performed"
-  terra_final_approval: "not_yet_performed"
+  terra_independent_review: "complete"
+  terra_remediation: "complete"
+  terra_final_approval: "approved"
   candidate_tag: "phase-7-pretraining-candidate"
-  final_tag: null
+  final_tag: "phase-7-pretraining"
   starting_foundation_commit: "3b84d6d9f85bfe996c05aac9559922065de54285"
   starting_foundation_tag: "phase-6-pilot"
-  selected_checkpoint_path: "checkpoints/phase7-full/step_008218_final.pt"
-  selected_checkpoint_sha256: "0ed23a8262edcf123fc9cc29e5dbd74f9169cc8bf4922d85b5e982d124d47f8e"
-  selected_checkpoint_remote_preservation: "https://github.com/Cinqic/juniper-math-1/releases/tag/phase-7-pretraining-candidate"
+  acceptance_source_commit: "0a34581ccd07de12b229528de45abbf5cb5a3a5d"
+  selected_checkpoint_path: "checkpoints/phase7-full/step_007483_final.pt"
+  selected_checkpoint_sha256: "2e8098ab3a5db3c59a82fad19af2050154637fbe0628f3f6b0ca932d6cb6ea60"
+  selected_checkpoint_remote_preservation: "https://github.com/Cinqic/juniper-math-1/releases/tag/phase-7-pretraining"
   known_issues:
-    - "resume-mechanics numerical tolerance check FAILED (mechanically exact, numerically outside 1e-2)"
-    - "tool_use_format emission-rate regression from 40% to 100% milestone"
+    - "frozen evaluation is a base-pretraining diagnostic, not evidence of mathematical competence"
+    - "tool-use smoke suite had 0% valid parse/name match at every selected candidate"
+    - "tool-call emission peaked at 98.4% at 40% and ended at 62.2%; final selection prioritizes full validation and category losses"
 
 next_phase:
   number: 8
   name: "Mathematical Instruction and Tool Training"
-  status: "NOT AUTHORIZED — PHASE 7 NOT YET TERRA-APPROVED"
+  status: "AUTHORIZED — NOT STARTED"
   started: false
   note: >
-    Phase 7 Full Base Pretraining engineering is complete and ready for
-    GPT-5.6 Terra's independent review (reports/PHASE7_RESULTS.md). Phase 8
-    must not begin until Terra reviews, audits, and approves Phase 7.
+    Phase 7 Full Base Pretraining is independently approved. Phase 8 is
+    authorized to begin from the approved Phase 7 Base but has not started.

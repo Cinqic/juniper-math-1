@@ -10,7 +10,7 @@ from juniper_math.metadata import load_project_metadata
 def test_loads_current_status():
     meta = load_project_metadata()
     assert meta.project_name == "Juniper Math 1"
-    assert meta.current_phase == 6
+    assert meta.current_phase == 7
     assert meta.phase_status == "COMPLETE"
     assert "five-million-parameter" in meta.research_question
     assert meta.parameter_target == 5004032
@@ -43,12 +43,13 @@ def test_phase_approval_record_present():
     assert approval["starting_foundation_tag"] == "phase-3-tools"
 
 
-def test_phase_6_approved_phase_7_awaits_review():
-    """Phase 7 has engineering evidence, but no independent approval."""
+def test_phase_7_approved_phase_8_authorized_not_started():
+    """Phase 7 approval authorizes, but does not start, Phase 8."""
     meta = load_project_metadata()
-    assert meta.current_phase == 6
+    assert meta.current_phase == 7
     assert meta.next_phase["number"] == 8
-    assert meta.next_phase["status"] == "NOT AUTHORIZED — PHASE 7 NOT YET TERRA-APPROVED"
+    assert meta.next_phase["status"] == "AUTHORIZED — NOT STARTED"
+    assert meta.next_phase["started"] is False
 
     from juniper_math.metadata import PROJECT_CONFIG_PATH
 
@@ -59,4 +60,7 @@ def test_phase_6_approved_phase_7_awaits_review():
     assert raw["phase_6_engineering"]["sonnet_5_implementation"] == "complete"
     assert raw["phase_6_engineering"]["terra_independent_review"] == "approved_with_remediation"
     assert raw["phase_6_engineering"]["terra_final_approval"] == "approved"
-    assert raw["phase_7_engineering"]["terra_independent_review"] == "not_yet_performed"
+    assert raw["phase_7_engineering"]["terra_independent_review"] == "complete"
+    assert raw["phase_7_engineering"]["terra_remediation"] == "complete"
+    assert raw["phase_7_engineering"]["terra_final_approval"] == "approved"
+    assert raw["phase_7_engineering"]["final_tag"] == "phase-7-pretraining"
