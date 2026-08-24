@@ -1,0 +1,80 @@
+# Phase 7 bounded LR preflight config (Terra-mandated, see reports/PHASE6_FINAL_APPROVAL.md).
+# Identical to config/training_phase6_pilot.yaml except learning_rate=0.0006, a 60-step
+# schedule, and dedicated output paths. Reuses the SAME frozen pilot-subset data directory
+# (data/processed/phase6-pilot) so all three LR runs train on identical data/init/seed and
+# only the learning rate varies -- controlled comparison methodology per PHASE6_RESULTS.md.
+
+run_id: phase7-lr-preflight-6e-4
+architecture_identity: 0.1.0
+tokenizer_identity: juniper-math-tokenizer-v1
+dataset_identity: juniper-math-dataset-v1
+seed: 5004032
+pilot_subset:
+  target_train_tokens: 5000000
+  validation_examples: 3000
+  max_sequence_length: 1024
+  min_category_examples: 60
+  min_category_examples_validation: 20
+  pack_sequences: true
+data:
+  micro_batch_size: 4
+  gradient_accumulation_steps: 4
+  shuffle: true
+optimizer:
+  name: adamw
+  learning_rate: 0.0006
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-08
+  grad_clip_norm: 1.0
+scheduler:
+  name: cosine_with_warmup
+  warmup_steps: 3
+  min_lr_ratio: 0.1
+schedule:
+  total_steps: 60
+  validation_interval: 20
+  checkpoint_interval: 60
+  generation_interval: 60
+  logging_interval: 10
+resume_test:
+  interrupt_step: 30
+device: cuda
+precision: fp32
+output:
+  checkpoint_dir: checkpoints/phase7-lr-preflight/6e-4
+  experiment_dir: experiments/phase7-lr-preflight/6e-4
+  pilot_dataset_dir: data/processed/phase6-pilot
+milestone_fractions:
+- 0.0
+- 1.0
+fixed_generation_prompts:
+- category: arithmetic
+  prompt: 12 + 7 =
+- category: word_problem
+  prompt: Maria has 24 apples and gives away 9. How many does she have left?
+- category: basic_algebra
+  prompt: 'Solve for x: 2x + 3 = 11'
+- category: percentages
+  prompt: What is 15% of 240?
+- category: unit_conversion
+  prompt: Convert 3 miles to meters.
+- category: financial_math
+  prompt: What is the simple interest on $500 at 4% annual rate for 2 years?
+- category: multi_step
+  prompt: A train travels 60 miles per hour for 2 hours, then 40 miles per hour for 1 hour. How far did
+    it travel in total?
+- category: tool_use
+  prompt: Use the calculator to evaluate 84317 * 9926.
+- category: no_tool_direct
+  prompt: What is 5 times 6?
+- category: ambiguity
+  prompt: How much is it?
+- category: missing_information
+  prompt: If a shirt is on sale, what is the discounted price?
+- category: unsupported_capability
+  prompt: Solve the differential equation dy/dx = y^2 for me.
+- category: incorrect_supplied_answer
+  prompt: Is it true that 7 times 8 equals 54?
+generation_max_new_tokens: 32

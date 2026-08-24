@@ -1,0 +1,145 @@
+# Juniper Math 1 — Phase 7 Full Base Pretraining configuration.
+#
+# A dedicated config, separate from config/training.yaml (Phase 5 smoke) and
+# config/training_phase6_pilot.yaml (Phase 6 pilot) — neither is modified or
+# replaced by this file. Phase 7 trains and validates on the ENTIRE frozen
+# train/validation splits (juniper_math.full_data), not a stratified
+# subsample — see reports/PHASE6_RESULTS.md "Phase 7 recommendation" and
+# reports/PHASE6_FINAL_APPROVAL.md. Nothing here overrides the frozen
+# architecture (config/architecture.yaml), tokenizer (config/tokenizer.yaml),
+# or dataset (config/dataset.yaml) identities.
+#
+# Per reports/PHASE6_FINAL_APPROVAL.md: Phase 7 MUST start from fresh random
+# initialization; the Phase 6 pilot checkpoint is never loaded here.
+
+run_id: "phase7-full-v1"
+architecture_identity: "0.1.0"          # must match config/architecture.yaml architecture_version
+tokenizer_identity: "juniper-math-tokenizer-v1"
+dataset_identity: "juniper-math-dataset-v1"
+
+seed: 5004032                            # matches DEFAULT_PROJECT_SEED — same seed as Phase 5/6 for a
+                                          # controlled, directly-comparable initialization identity.
+
+# Full-split selection (juniper_math.full_data.select_and_record_full_dataset):
+# every example in the frozen train split (1,466,970 examples, 56,209,616
+# raw tokens per data/processed/juniper-math-dataset-v1/stats.json) and every
+# example in the frozen validation split (81,094 examples), packed to the
+# full 1024-token architectural context using the same deterministic
+# first-fit packing Phase 6 validated (reports/PHASE6_RESULTS.md Sec. 10).
+full_subset:
+  max_sequence_length: 1024              # full frozen architecture context (max_context_length=1024)
+  pack_sequences: true
+
+# Data loading / batching. micro_batch_size=4 at seq_len=1024 measures
+# ~904 MiB peak VRAM in both the Phase 6 pilot and the Phase 7 LR preflight
+# (reports/PHASE7_LR_PREFLIGHT.md) — comfortably inside the RTX 2060's 6GB
+# budget with no precision or batch-size change needed at full scale.
+data:
+  micro_batch_size: 4
+  gradient_accumulation_steps: 4         # effective batch size = 16 packed sequences/step
+  shuffle: true
+
+# Optimization. beta1/beta2/eps/weight_decay/grad_clip_norm carried forward
+# unchanged from the Phase 6 pilot (reports/PHASE6_RESULTS.md "Phase 7
+# recommendation": "use AdamW with beta1 0.9, beta2 0.95, epsilon 1e-8,
+# weight decay 0.01, clipping 1.0"). learning_rate=8.0e-4 is the outcome of
+# the bounded three-point preflight Terra's approval mandated — see
+# reports/PHASE7_LR_PREFLIGHT.md: 8e-4 had the lowest final-step loss and a
+# smooth monotonic descent across all three candidates (6e-4/8e-4/1e-3),
+# with no non-finite loss or gradient at any step.
+optimizer:
+  name: "adamw"
+  learning_rate: 8.0e-4
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip_norm: 1.0
+
+# A true warmup RATIO (not a hand-derived fixed step count) — the Phase 6
+# pilot report explicitly recommended this for Phase 7 ("Phase 7 should use
+# a true warmup-ratio field ... so warmup length scales automatically with a
+# much larger total_steps rather than needing to be re-derived by hand").
+# juniper_math.full_training_config computes warmup_steps =
+# round(warmup_ratio * schedule.total_steps) at load time. 5% matches the
+# Phase 6 pilot's warmup fraction.
+scheduler:
+  name: "cosine_with_warmup"
+  warmup_ratio: 0.05
+  min_lr_ratio: 0.1
+
+# total_steps=8218 targets two full passes over the packed frozen train
+# split at effective batch 16. Measured by a bounded 2-step dry run of this
+# exact pipeline (data/processed/phase7-full/full_manifest.json,
+# experiments/phase7-full/train_log.jsonl "run_start"): the full frozen
+# train split (1,466,970 examples, 56,209,616 raw tokens) packs into 65,746
+# sequences of length 1024 (3.51% padding, 64,897,039 loss-bearing tokens
+# for one pass). Two epochs = 131,492 packed sequences / 16 per step =
+# 8218.25, floored to 8218 steps (131,488 sequences consumed, 99.997% of
+# two full epochs) — a training-token budget of roughly 129.8M loss-bearing
+# tokens for a 5,004,032-parameter model, close to a Chinchilla-style
+# ~20-30x-parameters compute-optimal ratio without requiring any new data
+# beyond the already-frozen and already-verified corpus. See
+# reports/PHASE7_RESULTS.md for the exact measured token/step accounting of
+# the executed run.
+schedule:
+  total_steps: 8218
+  validation_interval: 1644
+  checkpoint_interval: 1644               # 5 mid-run checkpoints + the final save, at each 20% milestone
+  generation_interval: 1644
+  logging_interval: 50
+
+# Resume-comparison gate (Sec. 24-equivalent), same tolerance-based
+# methodology as Phase 5/6 but bounded to a short window relative to the
+# full run so the check itself stays cheap.
+resume_test:
+  interrupt_step: 200
+
+device: "cuda"                            # falls back to cpu with an explicit WARNING, never silent
+precision: "fp32"                         # retained from Phase 5/6: VRAM is not a binding constraint at
+                                          # this model/sequence scale (904.5 MiB of 6144 MiB measured),
+                                          # so GradScaler/mixed-precision complexity is not justified.
+
+output:
+  checkpoint_dir: "checkpoints/phase7-full"
+  experiment_dir: "experiments/phase7-full"
+  full_dataset_dir: "data/processed/phase7-full"
+
+# Milestone evaluation cadence (0/20/40/60/80/100% of schedule.total_steps).
+# Every milestone runs the identical frozen evaluation configuration
+# (validation loss over the ENTIRE frozen validation split, per-category
+# breakdown, all four frozen v2 suites, fixed-seed generation inspection) —
+# never a moving target. Six milestones (one more than Phase 6's five) to
+# give enough candidate checkpoints to detect a peak before the final step.
+milestone_fractions: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+
+# Fixed-seed qualitative generation set — identical prompts to the Phase 6
+# pilot config for direct before/after comparability.
+fixed_generation_prompts:
+  - category: "arithmetic"
+    prompt: "12 + 7 ="
+  - category: "word_problem"
+    prompt: "Maria has 24 apples and gives away 9. How many does she have left?"
+  - category: "basic_algebra"
+    prompt: "Solve for x: 2x + 3 = 11"
+  - category: "percentages"
+    prompt: "What is 15% of 240?"
+  - category: "unit_conversion"
+    prompt: "Convert 3 miles to meters."
+  - category: "financial_math"
+    prompt: "What is the simple interest on $500 at 4% annual rate for 2 years?"
+  - category: "multi_step"
+    prompt: "A train travels 60 miles per hour for 2 hours, then 40 miles per hour for 1 hour. How far did it travel in total?"
+  - category: "tool_use"
+    prompt: "Use the calculator to evaluate 84317 * 9926."
+  - category: "no_tool_direct"
+    prompt: "What is 5 times 6?"
+  - category: "ambiguity"
+    prompt: "How much is it?"
+  - category: "missing_information"
+    prompt: "If a shirt is on sale, what is the discounted price?"
+  - category: "unsupported_capability"
+    prompt: "Solve the differential equation dy/dx = y^2 for me."
+  - category: "incorrect_supplied_answer"
+    prompt: "Is it true that 7 times 8 equals 54?"
+generation_max_new_tokens: 32

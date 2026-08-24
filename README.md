@@ -16,7 +16,18 @@ learning signal (loss, generation structure), not correct arithmetic. The
 Phase 3 runtime proves the tool surface a future trained model will call
 into is correct and secure; it does not itself demonstrate learned
 tool-use behavior. Phase 6 is independently approved with remediation — see
-[`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md).
+[`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md). Phase 7 (Full
+Base Pretraining) trains the same frozen architecture from fresh random
+initialization on the **entire** frozen train split for two epochs
+(~130M loss-bearing tokens) and selects a Base checkpoint by evidence —
+**this is still not a claim of mathematical or tool-use capability**:
+validation loss improves monotonically to 0.5988 and the model reliably
+produces the trained output *format* (`<final>`/`<tool_call>`/
+`<unsupported>` tags), but math/calibration/adversarial accuracy remain at
+or near chance, consistent with Phase 6's prediction that base
+pretraining teaches structure, not arithmetic skill. Phase 7 engineering
+is complete and awaiting GPT-5.6 Terra's independent review — see
+[`reports/PHASE7_RESULTS.md`](reports/PHASE7_RESULTS.md).
 
 ## Research question
 
@@ -37,7 +48,7 @@ Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
 Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
 Phase 6 — Pilot Pretraining:                COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
-Phase 7 — Full Base Pretraining:             AUTHORIZED — NOT STARTED
+Phase 7 — Full Base Pretraining:            ENGINEERING COMPLETE — AWAITING TERRA REVIEW
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -210,6 +221,9 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 6 self-review: [`reports/PHASE6_SELF_REVIEW.md`](reports/PHASE6_SELF_REVIEW.md)
 - Phase 6 completion report: [`reports/PHASE6_COMPLETION.md`](reports/PHASE6_COMPLETION.md)
 - Phase 6 Terra handoff package: [`reports/PHASE6_TERRA_HANDOFF.md`](reports/PHASE6_TERRA_HANDOFF.md)
+- Phase 7 full-pretraining results: [`reports/PHASE7_RESULTS.md`](reports/PHASE7_RESULTS.md)
+- Phase 7 bounded LR preflight: [`reports/PHASE7_LR_PREFLIGHT.md`](reports/PHASE7_LR_PREFLIGHT.md)
+- Phase 7 resume-mechanics check: [`reports/PHASE7_RESUME_CHECK.md`](reports/PHASE7_RESUME_CHECK.md)
 
 ## Principles
 
@@ -320,6 +334,10 @@ python -m juniper_math train pilot-run              # Phase 6 pilot pretraining
 python -m juniper_math train pilot-resume-test      # pilot-scale resume equivalence gate
 python -m juniper_math pilot-evaluate --checkpoint <path>  # all four frozen v2 suites
 python -m juniper_math pilot-infer --checkpoint <path> --prompt "2 + 2 ="
+python -m juniper_math train full-run               # Phase 7 full base pretraining (entire frozen splits)
+python -m juniper_math train full-resume-test        # full-scale resume equivalence gate
+python -m juniper_math full-evaluate --checkpoint <path>  # all four frozen v2 suites
+python -m juniper_math full-infer --checkpoint <path> --prompt "2 + 2 ="
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). No placeholder

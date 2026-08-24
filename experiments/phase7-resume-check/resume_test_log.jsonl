@@ -1,0 +1,27 @@
+{"event": "train_step", "grad_norm": 3.323827028274536, "loss": 4.741204944078458, "lr": 0.0007950900692249801, "step": 20.0, "step_seconds": 0.38089959900003123, "tokens_seen": 315136.0}
+{"event": "train_step", "grad_norm": 1.8012109994888306, "loss": 3.220414047440203, "lr": 0.000756610550434336, "step": 40.0, "step_seconds": 0.3793880939999781, "tokens_seen": 631136.0}
+{"event": "train_step", "grad_norm": 1.2592655420303345, "loss": 2.1427608589479847, "lr": 0.0006838213657852668, "step": 60.0, "step_seconds": 0.3809792780000407, "tokens_seen": 946130.0}
+{"event": "train_step", "grad_norm": 0.854882001876831, "loss": 1.5480834269467387, "lr": 0.0005846103528750691, "step": 80.0, "step_seconds": 0.38135938699997496, "tokens_seen": 1261247.0}
+{"event": "train_step", "grad_norm": 0.7099456787109375, "loss": 1.249261298180537, "lr": 0.00046972856437003973, "step": 100.0, "step_seconds": 0.38145126599988544, "tokens_seen": 1577374.0}
+{"event": "validation", "step": 100, "validation_loss": 1.2986409520130884, "validation_tokens": 3185004}
+{"event": "train_step", "grad_norm": 0.8296518921852112, "loss": 1.0758715961553844, "lr": 0.0003516252246293124, "step": 120.0, "step_seconds": 0.3834133999998812, "tokens_seen": 1892534.0}
+{"event": "train_step", "grad_norm": 0.6456596255302429, "loss": 0.9400563686670926, "lr": 0.00024309866307592644, "step": 140.0, "step_seconds": 0.3848028049997083, "tokens_seen": 2208476.0}
+{"event": "train_step", "grad_norm": 0.6905611753463745, "loss": 0.9358930894088576, "lr": 0.00015590941661729836, "step": 160.0, "step_seconds": 0.38459653600011734, "tokens_seen": 2523798.0}
+{"event": "train_step", "grad_norm": 0.4720582067966461, "loss": 0.8936790358411134, "lr": 9.950579298777153e-05, "step": 180.0, "step_seconds": 0.38605456999994203, "tokens_seen": 2839142.0}
+{"event": "train_step", "grad_norm": 0.648858368396759, "loss": 0.9245474240532782, "lr": 8e-05, "step": 200.0, "step_seconds": 0.3854983629998969, "tokens_seen": 3154674.0}
+{"event": "validation", "step": 200, "validation_loss": 0.9685641123047375, "validation_tokens": 3185004}
+{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase7-resume-check/resume_test/step_000200.pt", "step": 200}
+{"event": "train_step", "grad_norm": 3.323866367340088, "loss": 4.741205299490092, "lr": 0.0007950900692249801, "step": 20.0, "step_seconds": 0.40850294100027895, "tokens_seen": 315136.0}
+{"event": "train_step", "grad_norm": 2.1805050373077393, "loss": 3.219162039733837, "lr": 0.000756610550434336, "step": 40.0, "step_seconds": 0.40927470700034974, "tokens_seen": 631136.0}
+{"event": "train_step", "grad_norm": 1.0481791496276855, "loss": 2.122071214542172, "lr": 0.0006838213657852668, "step": 60.0, "step_seconds": 0.40492660300014904, "tokens_seen": 946130.0}
+{"event": "train_step", "grad_norm": 0.870886504650116, "loss": 1.5493496097873651, "lr": 0.0005846103528750691, "step": 80.0, "step_seconds": 0.4051291720002155, "tokens_seen": 1261247.0}
+{"event": "train_step", "grad_norm": 0.8217502236366272, "loss": 1.2404418097878558, "lr": 0.00046972856437003973, "step": 100.0, "step_seconds": 0.40711683600011384, "tokens_seen": 1577374.0}
+{"event": "validation", "step": 100, "validation_loss": 1.2945802883740403, "validation_tokens": 3185004}
+{"event": "train_step", "grad_norm": 0.5979865193367004, "loss": 1.0646708660932476, "lr": 0.0003516252246293124, "step": 120.0, "step_seconds": 0.4070831249996445, "tokens_seen": 1892534.0}
+{"event": "train_step", "grad_norm": 0.7373431921005249, "loss": 0.9376144697427327, "lr": 0.00024309866307592644, "step": 140.0, "step_seconds": 0.4062441679998301, "tokens_seen": 2208476.0}
+{"event": "train_step", "grad_norm": 0.6607218384742737, "loss": 0.9349645791309895, "lr": 0.00015590941661729836, "step": 160.0, "step_seconds": 0.40886720899970896, "tokens_seen": 2523798.0}
+{"event": "train_step", "grad_norm": 0.984666109085083, "loss": 0.8943309171394256, "lr": 9.950579298777153e-05, "step": 180.0, "step_seconds": 0.5067795499999193, "tokens_seen": 2839142.0}
+{"event": "train_step", "grad_norm": 0.5370519161224365, "loss": 0.921685772264006, "lr": 8e-05, "step": 200.0, "step_seconds": 0.41096955100010746, "tokens_seen": 3154674.0}
+{"event": "validation", "step": 200, "validation_loss": 0.9670398031008182, "validation_tokens": 3185004}
+{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase7-resume-check/resume_test/step_000200.pt", "step": 200}
+{"equivalent": false, "event": "resume_comparison_result", "generations_match": false, "loss_history_max_abs_diff": 0.02082306703466008, "max_param_abs_diff": 0.02199043333530426, "notes": ["Comparison run on CUDA: torch.use_deterministic_algorithms(warn_only=True) is a best-effort determinism request, not a bitwise guarantee — see reports/PHASE6_RESULTS.md 'Resume result'. Small floating-point differences from kernel nondeterminism are possible and are tolerance-checked (<1e-2), not required to be exactly zero; generation divergence on CUDA is expected and not itself a resume failure."], "run_a_final_loss": 0.9245474240532782, "run_a_final_step": 200, "run_a_tokens_seen": 3154674, "run_b_final_loss": 0.921685772264006, "run_b_final_step": 200, "run_b_tokens_seen": 3154674}

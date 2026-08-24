@@ -53,6 +53,14 @@ class SchedulerConfig:
     name: str
     warmup_steps: int
     min_lr_ratio: float
+    # Optional, defaults to None for Phase 5/6 configs (which set warmup_steps
+    # directly and never populate this). Phase 7 introduces a genuine
+    # warmup-ratio field (recommended in reports/PHASE6_RESULTS.md, "Phase 7
+    # recommendation") so warmup length scales automatically with a much
+    # larger total_steps; its loader (full_training_config) computes
+    # warmup_steps = round(warmup_ratio * total_steps) and populates both
+    # fields, so this dataclass's shape does not need to change per phase.
+    warmup_ratio: float | None = None
 
 
 @dataclass(frozen=True)

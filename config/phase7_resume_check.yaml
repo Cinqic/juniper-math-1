@@ -1,0 +1,79 @@
+# Phase 7 bounded resume-mechanics check (Step 12: 'verify checkpoint restoration ...
+# before entering Phase 8 with an untested assumption that the expensive run can resume').
+# Same full-dataset pipeline as config/training_phase7_full.yaml, bounded to 200 steps so
+# this evidence-producing check stays cheap and does not duplicate the canonical run's cost.
+
+run_id: phase7-resume-check-v1
+architecture_identity: 0.1.0
+tokenizer_identity: juniper-math-tokenizer-v1
+dataset_identity: juniper-math-dataset-v1
+seed: 5004032
+full_subset:
+  max_sequence_length: 1024
+  pack_sequences: true
+data:
+  micro_batch_size: 4
+  gradient_accumulation_steps: 4
+  shuffle: true
+optimizer:
+  name: adamw
+  learning_rate: 0.0008
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-08
+  grad_clip_norm: 1.0
+scheduler:
+  name: cosine_with_warmup
+  warmup_ratio: 0.05
+  min_lr_ratio: 0.1
+schedule:
+  total_steps: 200
+  validation_interval: 100
+  checkpoint_interval: 200
+  generation_interval: 200
+  logging_interval: 20
+resume_test:
+  interrupt_step: 100
+device: cuda
+precision: fp32
+output:
+  checkpoint_dir: checkpoints/phase7-resume-check
+  experiment_dir: experiments/phase7-resume-check
+  full_dataset_dir: data/processed/phase7-full
+milestone_fractions:
+- 0.0
+- 0.2
+- 0.4
+- 0.6
+- 0.8
+- 1.0
+fixed_generation_prompts:
+- category: arithmetic
+  prompt: 12 + 7 =
+- category: word_problem
+  prompt: Maria has 24 apples and gives away 9. How many does she have left?
+- category: basic_algebra
+  prompt: 'Solve for x: 2x + 3 = 11'
+- category: percentages
+  prompt: What is 15% of 240?
+- category: unit_conversion
+  prompt: Convert 3 miles to meters.
+- category: financial_math
+  prompt: What is the simple interest on $500 at 4% annual rate for 2 years?
+- category: multi_step
+  prompt: A train travels 60 miles per hour for 2 hours, then 40 miles per hour for 1 hour. How far did
+    it travel in total?
+- category: tool_use
+  prompt: Use the calculator to evaluate 84317 * 9926.
+- category: no_tool_direct
+  prompt: What is 5 times 6?
+- category: ambiguity
+  prompt: How much is it?
+- category: missing_information
+  prompt: If a shirt is on sale, what is the discounted price?
+- category: unsupported_capability
+  prompt: Solve the differential equation dy/dx = y^2 for me.
+- category: incorrect_supplied_answer
+  prompt: Is it true that 7 times 8 equals 54?
+generation_max_new_tokens: 32

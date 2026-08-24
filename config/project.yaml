@@ -176,12 +176,35 @@ phase_6_engineering:
   starting_foundation_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
   starting_foundation_tag: "phase-5-smoke"
 
+# Phase 7 engineering record — implementation and self-review complete,
+# independent review by GPT-5.6 Terra not yet performed. `current_phase`
+# stays 6 (the last independently-approved phase) until that review
+# completes, matching every prior phase's own approval sequence — see
+# reports/PHASE7_RESULTS.md, reports/PHASE7_LR_PREFLIGHT.md, and
+# reports/PHASE7_RESUME_CHECK.md.
+phase_7_engineering:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "not_yet_performed"
+  terra_remediation: "not_yet_performed"
+  terra_final_approval: "not_yet_performed"
+  candidate_tag: null
+  final_tag: null
+  starting_foundation_commit: "3b84d6d9f85bfe996c05aac9559922065de54285"
+  starting_foundation_tag: "phase-6-pilot"
+  selected_checkpoint_path: "checkpoints/phase7-full/step_008218_final.pt"
+  selected_checkpoint_sha256: "0ed23a8262edcf123fc9cc29e5dbd74f9169cc8bf4922d85b5e982d124d47f8e"
+  selected_checkpoint_remote_preservation: "not_yet_completed_pending_user_authorization"
+  known_issues:
+    - "resume-mechanics numerical tolerance check FAILED (mechanically exact, numerically outside 1e-2)"
+    - "tool_use_format emission-rate regression from 40% to 100% milestone"
+
 next_phase:
-  number: 7
-  name: "Full Base Pretraining"
-  status: "AUTHORIZED — NOT STARTED"
+  number: 8
+  name: "Mathematical Instruction and Tool Training"
+  status: "NOT AUTHORIZED — PHASE 7 NOT YET TERRA-APPROVED"
   started: false
   note: >
-    Phase 6 Pilot Pretraining was independently remediated and approved by
-    GPT-5.6 Terra. Phase 7 Full Base Pretraining is authorized but must start
-    from fresh random initialization and must not reuse the pilot checkpoint.
+    Phase 7 Full Base Pretraining engineering is complete and ready for
+    GPT-5.6 Terra's independent review (reports/PHASE7_RESULTS.md). Phase 8
+    must not begin until Terra reviews, audits, and approves Phase 7.

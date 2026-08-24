@@ -173,3 +173,11 @@ artifacts:
     description: >
       Frozen Phase 6 pilot-pretraining configuration (category-stratified pilot subset, optimizer,
       schedule, resume-test parameters). Separate from and does not modify training_config.
+
+  - artifact_id: "full_training_config"
+    path: "config/training_phase7_full.yaml"
+    sha256: "a48d3410baebf8a11fb594d9009e24c341b2e25175dfd147ad1b58b10cc980ae"
+    description: >
+      Frozen Phase 7 full-pretraining configuration (entire frozen train/validation splits, no
+      subsampling; optimizer, warmup-ratio scheduler, schedule, resume-test parameters). Separate
+      from and does not modify training_config or pilot_training_config.
