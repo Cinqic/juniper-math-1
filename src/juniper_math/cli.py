@@ -1335,7 +1335,9 @@ def build_parser() -> argparse.ArgumentParser:
         "full-evaluate",
         help="Phase 7 capability evaluation: run all four frozen v2 suites against a checkpoint",
     )
-    full_evaluate_parser.add_argument("--checkpoint", required=True, help="path to a training checkpoint (.pt)")
+    full_evaluate_parser.add_argument(
+        "--checkpoint", required=True, help="path to a training checkpoint (.pt)"
+    )
     full_evaluate_parser.add_argument("--config", default=None, help="full training config path")
     full_evaluate_parser.add_argument(
         "--sample-size",

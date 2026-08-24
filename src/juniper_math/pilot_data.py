@@ -101,7 +101,11 @@ def manifest_shard_files(dataset_config: DatasetConfig, split: str) -> list[Path
         if filename in seen:
             raise PilotDataError(f"Dataset shard manifest contains duplicate filename: {filename}.")
         seen.add(filename)
-        if not isinstance(expected_hash, str) or not isinstance(expected_size, int) or not isinstance(shard_index, int):
+        if (
+            not isinstance(expected_hash, str)
+            or not isinstance(expected_size, int)
+            or not isinstance(shard_index, int)
+        ):
             raise PilotDataError("Dataset shard manifest entry is missing hash, size, or shard index.")
         path = dataset_config.output.processed_path / filename
         if not path.is_file():

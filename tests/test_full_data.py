@@ -9,9 +9,9 @@ stratified-target behavior (which full_data does not have).
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import json
 import shutil
+from dataclasses import dataclass
 
 import pytest
 
