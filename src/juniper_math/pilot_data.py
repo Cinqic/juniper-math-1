@@ -94,7 +94,9 @@ def manifest_shard_files(dataset_config: DatasetConfig, split: str) -> list[Path
             raise PilotDataError("Dataset shard manifest contains a malformed entry.")
         filename, entry_split = entry.get("filename"), entry.get("split")
         expected_hash, expected_size, shard_index = (
-            entry.get("sha256"), entry.get("byte_size"), entry.get("shard_index")
+            entry.get("sha256"),
+            entry.get("byte_size"),
+            entry.get("shard_index"),
         )
         if not isinstance(filename, str) or not isinstance(entry_split, str):
             raise PilotDataError("Dataset shard manifest entry is missing filename or split.")

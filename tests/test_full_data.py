@@ -185,8 +185,12 @@ def test_full_selection_rejects_unmanifested_matching_shard(tiny_dataset_config,
     shutil.copyfile(source, processed / "test.train.99999.jsonl")
     with pytest.raises(PilotDataError, match="Unexpected unmanifested"):
         select_and_record_full_dataset(
-            dataset_id="test-full-dataset-v1", tokenizer_identity="x", seed=1,
-            max_sequence_length=64, pack_sequences_flag=True, output_dir=tmp_path / "out",
+            dataset_id="test-full-dataset-v1",
+            tokenizer_identity="x",
+            seed=1,
+            max_sequence_length=64,
+            pack_sequences_flag=True,
+            output_dir=tmp_path / "out",
             dataset_config=tiny_dataset_config,
         )
 
@@ -198,8 +202,12 @@ def test_full_selection_rejects_duplicate_manifest_entry(tiny_dataset_config, tm
     manifest_path.write_text(json.dumps(manifest))
     with pytest.raises(PilotDataError, match="duplicate filename"):
         select_and_record_full_dataset(
-            dataset_id="test-full-dataset-v1", tokenizer_identity="x", seed=1,
-            max_sequence_length=64, pack_sequences_flag=True, output_dir=tmp_path / "out",
+            dataset_id="test-full-dataset-v1",
+            tokenizer_identity="x",
+            seed=1,
+            max_sequence_length=64,
+            pack_sequences_flag=True,
+            output_dir=tmp_path / "out",
             dataset_config=tiny_dataset_config,
         )
 
@@ -211,7 +219,11 @@ def test_full_selection_rejects_wrong_manifest_split_metadata(tiny_dataset_confi
     manifest_path.write_text(json.dumps(manifest))
     with pytest.raises(PilotDataError, match="No manifest shard files"):
         select_and_record_full_dataset(
-            dataset_id="test-full-dataset-v1", tokenizer_identity="x", seed=1,
-            max_sequence_length=64, pack_sequences_flag=True, output_dir=tmp_path / "out",
+            dataset_id="test-full-dataset-v1",
+            tokenizer_identity="x",
+            seed=1,
+            max_sequence_length=64,
+            pack_sequences_flag=True,
+            output_dir=tmp_path / "out",
             dataset_config=tiny_dataset_config,
         )
