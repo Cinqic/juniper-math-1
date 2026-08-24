@@ -76,11 +76,53 @@ class PilotDataError(ValueError):
     """Raised for invalid pilot-subset selection, packing, or tokenization state."""
 
 
-def _split_shard_files(processed_dir: Path, split: str) -> list[Path]:
-    files = sorted(processed_dir.glob(f"*.{split}.*.jsonl"))
-    if not files:
-        raise PilotDataError(f"No shard files found for split {split!r} under {processed_dir}.")
-    return files
+def manifest_shard_files(dataset_config: DatasetConfig, split: str) -> list[Path]:
+    """Return exactly the hash-verified manifest entries for ``split``.
+
+    A processed directory is not an authority: it can contain old shards from
+    an earlier build.  Reject every unmanifested JSONL shard rather than
+    globbing it into a training run.
+    """
+    manifest = _read_shard_manifest(dataset_config.output.manifest_path)
+    entries = manifest.get("shards")
+    if not isinstance(entries, list) or not entries:
+        raise PilotDataError("Dataset shard manifest has no shard entries.")
+    seen: set[str] = set()
+    selected: list[tuple[int, Path]] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            raise PilotDataError("Dataset shard manifest contains a malformed entry.")
+        filename, entry_split = entry.get("filename"), entry.get("split")
+        expected_hash, expected_size, shard_index = (
+            entry.get("sha256"), entry.get("byte_size"), entry.get("shard_index")
+        )
+        if not isinstance(filename, str) or not isinstance(entry_split, str):
+            raise PilotDataError("Dataset shard manifest entry is missing filename or split.")
+        if filename in seen:
+            raise PilotDataError(f"Dataset shard manifest contains duplicate filename: {filename}.")
+        seen.add(filename)
+        if not isinstance(expected_hash, str) or not isinstance(expected_size, int) or not isinstance(shard_index, int):
+            raise PilotDataError("Dataset shard manifest entry is missing hash, size, or shard index.")
+        path = dataset_config.output.processed_path / filename
+        if not path.is_file():
+            raise PilotDataError(f"Dataset shard listed in manifest is missing: {path}.")
+        if path.stat().st_size != expected_size or sha256_file(path) != expected_hash:
+            raise PilotDataError(f"Dataset shard does not match frozen manifest: {path}.")
+        if entry_split == split:
+            selected.append((shard_index, path))
+    unexpected = sorted(
+        path.name for path in dataset_config.output.processed_path.glob("*.jsonl") if path.name not in seen
+    )
+    if unexpected:
+        raise PilotDataError(f"Unexpected unmanifested dataset shard files: {unexpected}.")
+    selected.sort()
+    if not selected:
+        raise PilotDataError(f"No manifest shard files found for split {split!r}.")
+    return [path for _, path in selected]
+
+
+def _split_shard_files(dataset_config: DatasetConfig, split: str) -> list[Path]:
+    return manifest_shard_files(dataset_config, split)
 
 
 def _read_shard_manifest(manifest_path: Path) -> dict[str, Any]:
@@ -101,7 +143,7 @@ def count_categories(dataset_config: DatasetConfig, split: str) -> CategoryCount
     """Pass 1: exact per-category record/token counts for `split` (single sequential scan)."""
     record_count: dict[str, int] = {}
     token_count: dict[str, int] = {}
-    for shard_path in _split_shard_files(dataset_config.output.processed_path, split):
+    for shard_path in _split_shard_files(dataset_config, split):
         with shard_path.open(encoding="utf-8") as handle:
             for line in handle:
                 line = line.strip()
@@ -153,7 +195,7 @@ def select_pilot_examples(
 
     running_index: dict[str, int] = {cat: 0 for cat in counts.record_count}
     selected_by_category: dict[str, list[Example]] = {cat: [] for cat in counts.record_count}
-    for shard_path in _split_shard_files(dataset_config.output.processed_path, split):
+    for shard_path in _split_shard_files(dataset_config, split):
         with shard_path.open(encoding="utf-8") as handle:
             for line in handle:
                 line = line.strip()
@@ -219,25 +261,12 @@ def verify_parent_dataset_shards(dataset_config: DatasetConfig) -> None:
     shard_entries = manifest.get("shards")
     if not isinstance(shard_entries, list) or not shard_entries:
         raise PilotDataError("Dataset shard manifest has no shard entries.")
-    hashes: list[str] = []
-    for entry in shard_entries:
-        if not isinstance(entry, dict):
-            raise PilotDataError("Dataset shard manifest contains a malformed entry.")
-        filename = entry.get("filename")
-        expected_hash = entry.get("sha256")
-        expected_size = entry.get("byte_size")
-        if (
-            not isinstance(filename, str)
-            or not isinstance(expected_hash, str)
-            or not isinstance(expected_size, int)
-        ):
-            raise PilotDataError("Dataset shard manifest entry is missing filename, sha256, or byte_size.")
-        path = dataset_config.output.processed_path / filename
-        if not path.is_file():
-            raise PilotDataError(f"Dataset shard listed in manifest is missing: {path}.")
-        if path.stat().st_size != expected_size or sha256_file(path) != expected_hash:
-            raise PilotDataError(f"Dataset shard does not match frozen manifest: {path}.")
-        hashes.append(expected_hash)
+    splits = {entry.get("split") for entry in shard_entries if isinstance(entry, dict)}
+    for split in splits:
+        if not isinstance(split, str):
+            raise PilotDataError("Dataset shard manifest contains malformed split metadata.")
+        manifest_shard_files(dataset_config, split)
+    hashes = [entry["sha256"] for entry in shard_entries]
     computed_identity = hashlib.sha256("\n".join(hashes).encode("utf-8")).hexdigest()
     if computed_identity != _read_dataset_identity(dataset_config):
         raise PilotDataError("Dataset shard hashes do not match DATASET_IDENTITY.sha256.")

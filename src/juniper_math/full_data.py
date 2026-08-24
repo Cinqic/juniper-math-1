@@ -24,16 +24,9 @@ from typing import Any
 from juniper_math.dataset.config import DatasetConfig, load_dataset_config
 from juniper_math.dataset.io import example_from_dict
 from juniper_math.dataset.schema import Example
-from juniper_math.pilot_data import PilotDataError, verify_parent_dataset_shards
+from juniper_math.pilot_data import PilotDataError, manifest_shard_files, verify_parent_dataset_shards
 
 FULL_MANIFEST_SCHEMA_VERSION = "1.0.0"
-
-
-def _split_shard_files(processed_dir: Path, split: str) -> list[Path]:
-    files = sorted(processed_dir.glob(f"*.{split}.*.jsonl"))
-    if not files:
-        raise PilotDataError(f"No shard files found for split {split!r} under {processed_dir}.")
-    return files
 
 
 def load_full_split(dataset_config: DatasetConfig, split: str) -> list[Example]:
@@ -42,13 +35,19 @@ def load_full_split(dataset_config: DatasetConfig, split: str) -> list[Example]:
     Deterministic and total: no sampling, no category floor, no rounding.
     """
     examples: list[Example] = []
-    for shard_path in _split_shard_files(dataset_config.output.processed_path, split):
+    for shard_path in manifest_shard_files(dataset_config, split):
         with shard_path.open(encoding="utf-8") as handle:
             for line in handle:
                 line = line.strip()
                 if not line:
                     continue
-                examples.append(example_from_dict(json.loads(line)))
+                example = example_from_dict(json.loads(line))
+                if example.split != split:
+                    raise PilotDataError(
+                        f"Manifest-backed shard {shard_path.name} contains {example.split!r} "
+                        f"records while loading split {split!r}."
+                    )
+                examples.append(example)
     if not examples:
         raise PilotDataError(f"Dataset split {split!r} contains zero records.")
     return examples
