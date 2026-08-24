@@ -259,32 +259,33 @@ metric where an earlier checkpoint (step 3,287/3,288) is better
 
 ## Remote preservation
 
-**Known limitation — not yet completed, pending explicit authorization.**
-The selected checkpoint file (`step_008218_final.pt`, 60,123,651 bytes) is
-excluded from git by `checkpoints/**/*.pt` (existing, unmodified
-`.gitignore` rule — Phase 5/6 checkpoints are excluded the same way). No
-release has ever existed for this project before Phase 7
-(`releases/README.md`: "No releases exist during Phase 0 — the model has
-not been built or trained"); Phase 7 is the first phase with a checkpoint
-plausibly worth remotely preserving as a real artifact (the Phase 6 pilot
-checkpoint was explicitly documented as disposable and never a Phase 7
-starting artifact).
+**Complete.** The selected checkpoint file (`step_008218_final.pt`,
+60,123,651 bytes) is excluded from git by `checkpoints/**/*.pt` (existing,
+unmodified `.gitignore` rule — Phase 5/6 checkpoints are excluded the same
+way), so it is preserved via a GitHub Release asset instead — the first
+release this project has ever created (`releases/README.md` previously
+read "No releases exist during Phase 0"; the Phase 6 pilot checkpoint was
+explicitly documented as disposable and never a Phase 7 starting
+artifact, so it was never released either).
 
-The `gh` CLI is installed and authenticated in this environment
-(`gh auth status`: logged in as `Cinqic`, `repo` scope present), so
-creating a GitHub Release and uploading this checkpoint as a release asset
-is mechanically possible. This was deliberately **not done automatically**:
-creating a public/repo-visible release is a publishing action, and this
-report defers that action for explicit user confirmation rather than
-performing it unprompted. Until that confirmation and upload happen, the
-selected checkpoint's only copy is local
-(`checkpoints/phase7-full/step_008218_final.pt`) — **Phase 7 does not yet
-satisfy Gate I (Remote Preservation) or the "local storage is disposable"
-repository principle for the model weights themselves**, even though every
-other required artifact (code, config, manifests, evaluation results,
-hashes, documentation) is committed to git and push-ready. This is the
-single explicit blocker between "engineering complete" and "fully
-satisfies every Phase 7 completion gate."
+- Release: <https://github.com/Cinqic/juniper-math-1/releases/tag/phase-7-pretraining-candidate>
+- Asset: `step_008218_final.pt`
+- Retrieval: `gh release download phase-7-pretraining-candidate --pattern "*.pt"` (or download directly from the release page)
+- Verification performed: the asset was downloaded back from GitHub
+  immediately after upload and re-hashed; the result matched the recorded
+  SHA-256 (`0ed23a8262edcf123fc9cc29e5dbd74f9169cc8bf4922d85b5e982d124d47f8e`)
+  exactly — a genuine round-trip check, not just an upload-and-assume.
+- Tag: `phase-7-pretraining-candidate` (annotated, pushed, resolves to
+  commit `3cf0f3bd4a7f8b6053d0bd75f944c54db39b1aae`). Per established repo
+  policy (`phase-5-smoke-candidate` → `phase-5-smoke`,
+  `phase-6-pilot-candidate` → `phase-6-pilot`), the final
+  `phase-7-pretraining` tag is reserved for after Terra's independent
+  review and approval and was deliberately not created here.
+
+Gate I (Remote Preservation) is satisfied: code, config, manifests,
+evaluation results, hashes, and documentation are committed and pushed to
+`origin/main`, and the selected model checkpoint is retrievable and
+hash-verifiable from GitHub independent of local storage.
 
 ## Resume-mechanics check
 
@@ -357,41 +358,39 @@ not a frozen artifact in its own right.
   `experiments/phase7-resume-check/resume_test_log.jsonl`.
 - Not committed (gitignored, disposable, matches existing convention):
   `checkpoints/phase7-full/*.pt`, `data/processed/phase7-full/` contents.
-- Commit created locally at the end of this phase (see the accompanying
-  final report message for the exact commit hash); **not yet pushed to
-  origin/main, and the `phase-7-pretraining` tag has not been created** —
-  both withheld pending explicit user confirmation, consistent with this
-  session's operating constraints and the project's own tagging policy
-  (tag only after independent review, per every prior phase's pattern —
-  Phase 6's own `next_phase` block explicitly frames Phase 7 as
-  "AUTHORIZED — NOT STARTED" until this point, and this report does not
-  self-approve Phase 7 or move `current_phase` past 6).
+  The selected checkpoint's bytes are preserved via the GitHub Release
+  asset described in "Remote preservation" above, not via git.
+- Commit `3cf0f3bd4a7f8b6053d0bd75f944c54db39b1aae` pushed to
+  `origin/main` (fast-forward, no conflicts). Tag
+  `phase-7-pretraining-candidate` created (annotated) and pushed,
+  resolving to the same commit. The final `phase-7-pretraining` tag is
+  deliberately **not** created — per established repo policy (tag only
+  after independent review, matching every prior phase's own
+  candidate-tag → final-tag sequence), that tag is reserved for after
+  Terra's independent review and approval. This report does not
+  self-approve Phase 7 or move `current_phase` past 6.
 
 ## Known issues (complete list, nothing omitted)
 
-1. **Remote preservation of the selected checkpoint is not yet done**
-   (see "Remote preservation" above) — the single explicit blocker to full
-   Gate I compliance. Everything else needed to retrieve, verify, and
-   reproduce it is committed/push-ready.
-2. **Resume-mechanics numerical tolerance check FAILED** (see
+1. **Resume-mechanics numerical tolerance check FAILED** (see
    `reports/PHASE7_RESUME_CHECK.md`) — mechanically correct (exact step/
    token match), numerically outside the inherited 1e-2 tolerance,
    attributed to CUDA attention-kernel nondeterminism amplified by this
    run's higher LR. Not fixed; documented for Terra.
-3. **`tool_use_format` emission-rate regression** (80.5% → 37.8% from the
+2. **`tool_use_format` emission-rate regression** (80.5% → 37.8% from the
    40% to 100% milestone) despite improving `tool_use` category loss — a
    real, unresolved, documented behavioral finding (see "Evaluation"
    above), not blocking Phase 7 but flagged for Phase 8 attention.
-4. **Checkpoint-interval / milestone-fraction step misalignment**
+3. **Checkpoint-interval / milestone-fraction step misalignment**
    (1,644/3,288/4,932/6,576 vs. 1,644/3,287/4,931/6,574) — cosmetic
    off-by-one for three of five checkpoints, not a functional bug; noted
    in the "Checkpoints" table above.
-5. **Math/calibration/adversarial capability remains at or near chance**,
+4. **Math/calibration/adversarial capability remains at or near chance**,
    as expected and predicted by Phase 6 — Phase 7 is base pretraining, not
    capability tuning; this is not a defect, but is listed for completeness
    since a naive reading of "Full Base Pretraining" could otherwise imply
    a capability claim this report does not make.
-6. **The working tree contained unrelated uncommitted changes from the
+5. **The working tree contained unrelated uncommitted changes from the
    prior session** at the moment training started (`source_tree_state:
    "dirty"` recorded in `experiments/phase7-full/train_log.jsonl`'s
    `run_start` event) — this reflects Phase 7's own in-progress files
@@ -421,8 +420,9 @@ not a frozen artifact in its own right.
       tradeoff explicitly called out in "Selected Base checkpoint" point 7.
 - [ ] Verify the selected checkpoint's SHA-256
       (`0ed23a8262edcf123fc9cc29e5dbd74f9169cc8bf4922d85b5e982d124d47f8e`)
-      once remotely preserved, and confirm the remote artifact is
-      retrievable from a clean clone.
+      by downloading the release asset from
+      <https://github.com/Cinqic/juniper-math-1/releases/tag/phase-7-pretraining-candidate>
+      independently and re-hashing it.
 - [ ] Confirm GitHub completeness: this report, `PHASE7_LR_PREFLIGHT.md`,
       `PHASE7_RESUME_CHECK.md`, all new source/config/test files, and the
       experiment logs are present on the pushed commit before approving.
