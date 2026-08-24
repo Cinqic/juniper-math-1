@@ -8,7 +8,7 @@ git_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
 source_tree_state: "dirty"  # Phase 6 implementation work was in progress in the working tree at run time;
                              # the run itself only reads frozen/committed artifacts (architecture, tokenizer,
                              # dataset), never uncommitted code paths outside this phase's own new modules.
-candidate_commit: null  # filled in once the Phase 6 candidate is committed — see reports/PHASE6_COMPLETION.md
+candidate_commit: "713adca2d144e897849fb2654454c7b31859b954"
 
 intent: >
   Establish whether Juniper Math 1 learns stably from a meaningful,
