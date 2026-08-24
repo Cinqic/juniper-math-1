@@ -1,5 +1,9 @@
 # Phase 6 Self-Review
 
+> Historical candidate self-review only. Its pilot counts and `tool_error`
+> conclusion were invalidated by the independent shard-integrity audit; see
+> `reports/PHASE6_REMEDIATION.md` for the authoritative correction.
+
 Written from an adversarial stance after implementation appeared complete
 — assume Phase 6 is wrong until demonstrated otherwise (Sec. 34). This
 documents both defects found and fixed during this engineering session and

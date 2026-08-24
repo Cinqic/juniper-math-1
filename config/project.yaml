@@ -22,8 +22,8 @@ parameter_target: 5004032
 architecture_version: "0.1.0"
 architecture_config: "config/architecture.yaml"
 
-current_phase: 5
-phase_name: "Smoke Pretraining"
+current_phase: 6
+phase_name: "Pilot Pretraining"
 phase_status: "COMPLETE"
 
 primary_hardware:
@@ -167,19 +167,20 @@ phase_5_engineering:
 phase_6_engineering:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
-  terra_independent_review: "not_yet_performed"
+  terra_independent_review: "approved_with_remediation"
+  terra_remediation: "complete"
+  terra_final_approval: "approved"
   candidate_tag: "phase-6-pilot-candidate"
+  final_tag: "phase-6-pilot"
   starting_foundation_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
   starting_foundation_tag: "phase-5-smoke"
 
 next_phase:
-  number: 6
-  name: "Pilot Pretraining"
-  status: "ENGINEERING COMPLETE — PENDING INDEPENDENT REVIEW"
-  started: true
+  number: 7
+  name: "Full Base Pretraining"
+  status: "AUTHORIZED — NOT STARTED"
+  started: false
   note: >
-    Phase 6 Pilot Pretraining is implementation-complete and self-reviewed
-    by Claude Sonnet 5 (reports/PHASE6_RESULTS.md, reports/PHASE6_SELF_REVIEW.md,
-    reports/PHASE6_COMPLETION.md). Independent review by GPT-5.6 Terra has
-    not yet been performed — see reports/PHASE6_TERRA_HANDOFF.md. Phase 7
-    is NOT authorized until Terra completes review and updates this file.
+    Phase 6 Pilot Pretraining was independently remediated and approved by
+    GPT-5.6 Terra. Phase 7 Full Base Pretraining is authorized but must start
+    from fresh random initialization and must not reuse the pilot checkpoint.

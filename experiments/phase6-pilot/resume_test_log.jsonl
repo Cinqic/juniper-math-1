@@ -1,89 +1,89 @@
-{"event": "train_step", "grad_norm": 2.3809919357299805, "loss": 7.226714529301442, "lr": 0.00041249999999999994, "step": 10.0, "step_seconds": 0.3783032519995686, "tokens_seen": 158188.0}
-{"event": "train_step", "grad_norm": 1.8943462371826172, "loss": 5.666119594498949, "lr": 0.0005997693547645712, "step": 20.0, "step_seconds": 0.3770889190000162, "tokens_seen": 317010.0}
-{"event": "train_step", "grad_norm": 1.536515474319458, "loss": 4.484808192393271, "lr": 0.0005971791191983448, "step": 30.0, "step_seconds": 0.376560442000482, "tokens_seen": 475828.0}
-{"event": "train_step", "grad_norm": 1.9643681049346924, "loss": 3.7569051311501993, "lr": 0.0005917380718036191, "step": 40.0, "step_seconds": 0.37957907899999555, "tokens_seen": 634661.0}
-{"event": "validation", "step": 40, "validation_loss": 3.810167772596088, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 1.786996603012085, "loss": 3.181455690875986, "lr": 0.000583504268772506, "step": 50.0, "step_seconds": 0.3798924689999694, "tokens_seen": 792704.0}
-{"event": "train_step", "grad_norm": 1.4318177700042725, "loss": 2.461442342897382, "lr": 0.0005725655651108342, "step": 60.0, "step_seconds": 0.37989574400035053, "tokens_seen": 951727.0}
-{"event": "train_step", "grad_norm": 1.8183188438415527, "loss": 2.188729082274014, "lr": 0.0005590386772217448, "step": 70.0, "step_seconds": 0.3791383459993085, "tokens_seen": 1109804.0}
-{"event": "train_step", "grad_norm": 1.6555885076522827, "loss": 1.8406725110697948, "lr": 0.0005430679375370263, "step": 80.0, "step_seconds": 0.3792218970002068, "tokens_seen": 1268396.0}
-{"event": "validation", "step": 80, "validation_loss": 2.116815479664257, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000080.pt", "step": 80}
-{"event": "train_step", "grad_norm": 0.9911199808120728, "loss": 1.589300876176172, "lr": 0.0005248237544843268, "step": 90.0, "step_seconds": 0.380360350999581, "tokens_seen": 1425473.0}
-{"event": "train_step", "grad_norm": 1.1221898794174194, "loss": 1.3763404087341211, "lr": 0.0005045007942224539, "step": 100.0, "step_seconds": 0.3801514599999791, "tokens_seen": 1584662.0}
-{"event": "train_step", "grad_norm": 1.0155543088912964, "loss": 1.2826319581948453, "lr": 0.0004823159035457177, "step": 110.0, "step_seconds": 0.38091669000004913, "tokens_seen": 1742277.0}
-{"event": "train_step", "grad_norm": 1.5928432941436768, "loss": 1.507742339174502, "lr": 0.0004585057961200098, "step": 120.0, "step_seconds": 0.3794067859998904, "tokens_seen": 1899838.0}
-{"event": "validation", "step": 120, "validation_loss": 1.442584930805108, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 0.8427907824516296, "loss": 1.1895542181709078, "lr": 0.00043332452673857416, "step": 130.0, "step_seconds": 0.3816977059996134, "tokens_seen": 2057847.0}
-{"event": "train_step", "grad_norm": 0.8071600198745728, "loss": 1.2262924076665611, "lr": 0.0004070407805472584, "step": 140.0, "step_seconds": 0.38179830300032336, "tokens_seen": 2216267.0}
-{"event": "train_step", "grad_norm": 0.7404035329818726, "loss": 0.9259329942501137, "lr": 0.0003799350061633208, "step": 150.0, "step_seconds": 0.38087868700040417, "tokens_seen": 2374468.0}
-{"event": "train_step", "grad_norm": 0.935563325881958, "loss": 1.04167259627844, "lr": 0.0003522964232775297, "step": 160.0, "step_seconds": 0.3816283160003877, "tokens_seen": 2533398.0}
-{"event": "validation", "step": 160, "validation_loss": 1.174049846107425, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000160.pt", "step": 160}
-{"event": "train_step", "grad_norm": 0.6226082444190979, "loss": 0.9127820088019305, "lr": 0.00032441993666856037, "step": 170.0, "step_seconds": 0.4224747380003464, "tokens_seen": 2690941.0}
-{"event": "train_step", "grad_norm": 0.5814679861068726, "loss": 1.001183993082372, "lr": 0.0002966029895572761, "step": 180.0, "step_seconds": 0.42416537500048435, "tokens_seen": 2848709.0}
-{"event": "train_step", "grad_norm": 0.5839042663574219, "loss": 0.9363173821584689, "lr": 0.00026914238987573233, "step": 190.0, "step_seconds": 0.42278150700076367, "tokens_seen": 3006978.0}
-{"event": "train_step", "grad_norm": 0.4593767523765564, "loss": 0.8649790314591702, "lr": 0.0002423311433147355, "step": 200.0, "step_seconds": 0.4228561110003284, "tokens_seen": 3166272.0}
-{"event": "validation", "step": 200, "validation_loss": 1.0749796655782557, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 0.465800940990448, "loss": 0.8577067019229226, "lr": 0.00021645532694146893, "step": 210.0, "step_seconds": 0.42269813799975964, "tokens_seen": 3323362.0}
-{"event": "train_step", "grad_norm": 0.6262382864952087, "loss": 0.9123930541088865, "lr": 0.00019179103674580778, "step": 220.0, "step_seconds": 0.4231142500002534, "tokens_seen": 3480802.0}
-{"event": "train_step", "grad_norm": 0.45554685592651367, "loss": 0.8564951069469476, "lr": 0.00016860144168512494, "step": 230.0, "step_seconds": 0.42422258500027965, "tokens_seen": 3639000.0}
-{"event": "train_step", "grad_norm": 0.4795141816139221, "loss": 0.8231851534925332, "lr": 0.00014713397566104995, "step": 240.0, "step_seconds": 0.4247795119999864, "tokens_seen": 3797696.0}
-{"event": "validation", "step": 240, "validation_loss": 1.0265824576154243, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000240.pt", "step": 240}
-{"event": "train_step", "grad_norm": 0.39462798833847046, "loss": 0.8330134777306984, "lr": 0.000127617697389896, "step": 250.0, "step_seconds": 0.4238642970003639, "tokens_seen": 3955954.0}
-{"event": "train_step", "grad_norm": 0.6242117285728455, "loss": 0.9344195898901553, "lr": 0.00011026084633704736, "step": 260.0, "step_seconds": 0.4259432540002308, "tokens_seen": 4114281.0}
-{"event": "train_step", "grad_norm": 0.4386931359767914, "loss": 1.0205217657902907, "lr": 9.524862079358092e-05, "step": 270.0, "step_seconds": 0.4236870889999409, "tokens_seen": 4272700.0}
-{"event": "train_step", "grad_norm": 1.095994472503662, "loss": 0.9306771512821941, "lr": 8.274120180313446e-05, "step": 280.0, "step_seconds": 0.4243921160004902, "tokens_seen": 4430734.0}
-{"event": "validation", "step": 280, "validation_loss": 1.0032704855037715, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 0.4125330150127411, "loss": 0.7711939936590281, "lr": 7.287204402380011e-05, "step": 290.0, "step_seconds": 0.4238664479998988, "tokens_seen": 4587558.0}
-{"event": "train_step", "grad_norm": 0.44794702529907227, "loss": 0.8976643884728105, "lr": 6.574645176161429e-05, "step": 300.0, "step_seconds": 0.4227180510006292, "tokens_seen": 4746526.0}
-{"event": "train_step", "grad_norm": 0.4071332514286041, "loss": 0.8203417527494015, "lr": 6.144045536942451e-05, "step": 310.0, "step_seconds": 0.4227537480001047, "tokens_seen": 4904228.0}
-{"event": "train_step", "grad_norm": 0.3664647936820984, "loss": 1.0024919797201934, "lr": 5.9999999999999995e-05, "step": 320.0, "step_seconds": 0.4276208569999653, "tokens_seen": 5062958.0}
-{"event": "validation", "step": 320, "validation_loss": 0.9807455675217366, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000320.pt", "step": 320}
-{"event": "train_step", "grad_norm": 2.3809919357299805, "loss": 7.226714529301442, "lr": 0.00041249999999999994, "step": 10.0, "step_seconds": 0.42206941899985395, "tokens_seen": 158188.0}
-{"event": "train_step", "grad_norm": 1.8943461179733276, "loss": 5.666119594498949, "lr": 0.0005997693547645712, "step": 20.0, "step_seconds": 0.42454608400021243, "tokens_seen": 317010.0}
-{"event": "train_step", "grad_norm": 1.5365114212036133, "loss": 4.484807952692391, "lr": 0.0005971791191983448, "step": 30.0, "step_seconds": 0.42419543199957843, "tokens_seen": 475828.0}
-{"event": "train_step", "grad_norm": 1.9643946886062622, "loss": 3.756905309426886, "lr": 0.0005917380718036191, "step": 40.0, "step_seconds": 0.42347406900080387, "tokens_seen": 634661.0}
-{"event": "validation", "step": 40, "validation_loss": 3.8101680283060255, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 1.786988615989685, "loss": 3.181455810982947, "lr": 0.000583504268772506, "step": 50.0, "step_seconds": 0.4231329940002979, "tokens_seen": 792704.0}
-{"event": "train_step", "grad_norm": 1.4318212270736694, "loss": 2.4614443794522383, "lr": 0.0005725655651108342, "step": 60.0, "step_seconds": 0.4234565389997442, "tokens_seen": 951727.0}
-{"event": "train_step", "grad_norm": 1.8186191320419312, "loss": 2.188736416938522, "lr": 0.0005590386772217448, "step": 70.0, "step_seconds": 0.4224216519996844, "tokens_seen": 1109804.0}
-{"event": "train_step", "grad_norm": 1.6552432775497437, "loss": 1.8406638013252012, "lr": 0.0005430679375370263, "step": 80.0, "step_seconds": 0.4246832450007787, "tokens_seen": 1268396.0}
-{"event": "validation", "step": 80, "validation_loss": 2.1168090968224744, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000080.pt", "step": 80}
-{"event": "train_step", "grad_norm": 0.991083562374115, "loss": 1.5892815875423945, "lr": 0.0005248237544843268, "step": 90.0, "step_seconds": 0.4238004130002082, "tokens_seen": 1425473.0}
-{"event": "train_step", "grad_norm": 1.1219708919525146, "loss": 1.3762935515522328, "lr": 0.0005045007942224539, "step": 100.0, "step_seconds": 0.42238718699991296, "tokens_seen": 1584662.0}
-{"event": "train_step", "grad_norm": 1.01487398147583, "loss": 1.2825295557970324, "lr": 0.0004823159035457177, "step": 110.0, "step_seconds": 0.4225086119995467, "tokens_seen": 1742277.0}
-{"event": "train_step", "grad_norm": 1.5945391654968262, "loss": 1.5078351294075356, "lr": 0.0004585057961200098, "step": 120.0, "step_seconds": 0.424844357999973, "tokens_seen": 1899838.0}
-{"event": "validation", "step": 120, "validation_loss": 1.4427258348137215, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 0.842003583908081, "loss": 1.1895482323559703, "lr": 0.00043332452673857416, "step": 130.0, "step_seconds": 0.42369572000006883, "tokens_seen": 2057847.0}
-{"event": "train_step", "grad_norm": 0.8093210458755493, "loss": 1.2262312854457362, "lr": 0.0004070407805472584, "step": 140.0, "step_seconds": 0.4246044940000502, "tokens_seen": 2216267.0}
-{"event": "train_step", "grad_norm": 0.7392219305038452, "loss": 0.9257623203993678, "lr": 0.0003799350061633208, "step": 150.0, "step_seconds": 0.42360706599993136, "tokens_seen": 2374468.0}
-{"event": "train_step", "grad_norm": 0.9523482918739319, "loss": 1.0422951817101576, "lr": 0.0003522964232775297, "step": 160.0, "step_seconds": 0.42273673999989114, "tokens_seen": 2533398.0}
-{"event": "validation", "step": 160, "validation_loss": 1.1740376452150292, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000160.pt", "step": 160}
-{"event": "train_step", "grad_norm": 0.6174247860908508, "loss": 0.9126865109958975, "lr": 0.00032441993666856037, "step": 170.0, "step_seconds": 0.4244651919998432, "tokens_seen": 2690941.0}
-{"event": "train_step", "grad_norm": 0.5771900415420532, "loss": 1.0011104851758426, "lr": 0.0002966029895572761, "step": 180.0, "step_seconds": 0.42342504399948666, "tokens_seen": 2848709.0}
-{"event": "train_step", "grad_norm": 0.5830188393592834, "loss": 0.9361523494238594, "lr": 0.00026914238987573233, "step": 190.0, "step_seconds": 0.42273578999993333, "tokens_seen": 3006978.0}
-{"event": "train_step", "grad_norm": 0.4612882435321808, "loss": 0.8649919691653791, "lr": 0.0002423311433147355, "step": 200.0, "step_seconds": 0.42318505399998685, "tokens_seen": 3166272.0}
-{"event": "validation", "step": 200, "validation_loss": 1.0747722164967333, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 0.46831437945365906, "loss": 0.857645960483728, "lr": 0.00021645532694146893, "step": 210.0, "step_seconds": 0.4231359410005098, "tokens_seen": 3323362.0}
-{"event": "train_step", "grad_norm": 0.627068817615509, "loss": 0.912295016931877, "lr": 0.00019179103674580778, "step": 220.0, "step_seconds": 0.4249340799997299, "tokens_seen": 3480802.0}
-{"event": "train_step", "grad_norm": 0.4592498242855072, "loss": 0.8565904932653159, "lr": 0.00016860144168512494, "step": 230.0, "step_seconds": 0.42397343599986925, "tokens_seen": 3639000.0}
-{"event": "train_step", "grad_norm": 0.47720733284950256, "loss": 0.8230507980092199, "lr": 0.00014713397566104995, "step": 240.0, "step_seconds": 0.4231196249993445, "tokens_seen": 3797696.0}
-{"event": "validation", "step": 240, "validation_loss": 1.0264268216421468, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000240.pt", "step": 240}
-{"event": "train_step", "grad_norm": 0.39343756437301636, "loss": 0.8328429240377421, "lr": 0.000127617697389896, "step": 250.0, "step_seconds": 0.4223182129999259, "tokens_seen": 3955954.0}
-{"event": "train_step", "grad_norm": 0.6260996460914612, "loss": 0.9345387242232678, "lr": 0.00011026084633704736, "step": 260.0, "step_seconds": 0.42505877900021005, "tokens_seen": 4114281.0}
-{"event": "train_step", "grad_norm": 0.4297071695327759, "loss": 1.0204166479586358, "lr": 9.524862079358092e-05, "step": 270.0, "step_seconds": 0.4243463779994272, "tokens_seen": 4272700.0}
-{"event": "train_step", "grad_norm": 1.095333456993103, "loss": 0.9305159805909864, "lr": 8.274120180313446e-05, "step": 280.0, "step_seconds": 0.42265685300026234, "tokens_seen": 4430734.0}
-{"event": "validation", "step": 280, "validation_loss": 1.0032015561225764, "validation_tokens": 115808}
-{"event": "train_step", "grad_norm": 0.4110534191131592, "loss": 0.7710696678605788, "lr": 7.287204402380011e-05, "step": 290.0, "step_seconds": 0.42247246300030383, "tokens_seen": 4587558.0}
-{"event": "train_step", "grad_norm": 0.44016143679618835, "loss": 0.897544781977967, "lr": 6.574645176161429e-05, "step": 300.0, "step_seconds": 0.4228038840001318, "tokens_seen": 4746526.0}
-{"event": "train_step", "grad_norm": 0.39105311036109924, "loss": 0.820192487409846, "lr": 6.144045536942451e-05, "step": 310.0, "step_seconds": 0.42217063199950644, "tokens_seen": 4904228.0}
-{"event": "train_step", "grad_norm": 0.3760949969291687, "loss": 1.0025223562941916, "lr": 5.9999999999999995e-05, "step": 320.0, "step_seconds": 0.424423661000219, "tokens_seen": 5062958.0}
-{"event": "validation", "step": 320, "validation_loss": 0.9807031640670236, "validation_tokens": 115808}
-{"event": "checkpoint", "path": "/home/cinqic/Documents/Juniper Math 1/checkpoints/phase6-pilot/resume_test/step_000320.pt", "step": 320}
-{"equivalent": true, "event": "resume_comparison_result", "generations_match": true, "loss_history_max_abs_diff": 0.0009533531856931177, "max_param_abs_diff": 0.0034764092415571213, "notes": ["Comparison run on CUDA: torch.use_deterministic_algorithms(warn_only=True) is a best-effort determinism request, not a bitwise guarantee at this larger pilot scale; small floating-point differences from kernel nondeterminism are possible and are tolerance-checked (<1e-2), not required to be exactly zero — unlike Phase 5's smoke run, which happened to be bitwise-exact but was never guaranteed to be (see reports/PHASE5_RESULTS.md)."], "run_a_final_loss": 1.0024919797201934, "run_a_final_step": 320, "run_a_tokens_seen": 5062958, "run_b_final_loss": 1.0025223562941916, "run_b_final_step": 320, "run_b_tokens_seen": 5062958}
+{"event": "train_step", "grad_norm": 2.188002824783325, "loss": 7.304640775805964, "lr": 0.00041249999999999994, "step": 10.0, "step_seconds": 0.38673354200000176, "tokens_seen": 157106.0}
+{"event": "train_step", "grad_norm": 3.8668503761291504, "loss": 5.729327355827274, "lr": 0.0005997693547645712, "step": 20.0, "step_seconds": 0.39210298900070484, "tokens_seen": 314981.0}
+{"event": "train_step", "grad_norm": 1.6309137344360352, "loss": 4.376142347500764, "lr": 0.0005971791191983448, "step": 30.0, "step_seconds": 0.39461691900214646, "tokens_seen": 472977.0}
+{"event": "train_step", "grad_norm": 2.329505443572998, "loss": 3.779152470417019, "lr": 0.0005917380718036191, "step": 40.0, "step_seconds": 0.3832101740008511, "tokens_seen": 630202.0}
+{"event": "validation", "step": 40, "validation_loss": 3.8462149130605563, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 1.6922849416732788, "loss": 3.133841694540612, "lr": 0.000583504268772506, "step": 50.0, "step_seconds": 0.3827349300008791, "tokens_seen": 788233.0}
+{"event": "train_step", "grad_norm": 1.8615258932113647, "loss": 2.6767967368755587, "lr": 0.0005725655651108342, "step": 60.0, "step_seconds": 0.3926520029999665, "tokens_seen": 944995.0}
+{"event": "train_step", "grad_norm": 1.8457400798797607, "loss": 2.3167427701457424, "lr": 0.0005590386772217448, "step": 70.0, "step_seconds": 0.39223131699691294, "tokens_seen": 1102351.0}
+{"event": "train_step", "grad_norm": 1.3074758052825928, "loss": 1.8994381024672775, "lr": 0.0005430679375370263, "step": 80.0, "step_seconds": 0.38215136699727736, "tokens_seen": 1259478.0}
+{"event": "validation", "step": 80, "validation_loss": 2.132680330874611, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000080.pt", "step": 80}
+{"event": "train_step", "grad_norm": 1.1798866987228394, "loss": 1.6957092642103435, "lr": 0.0005248237544843268, "step": 90.0, "step_seconds": 0.38078512299762224, "tokens_seen": 1416964.0}
+{"event": "train_step", "grad_norm": 1.2248525619506836, "loss": 1.4291219944455131, "lr": 0.0005045007942224539, "step": 100.0, "step_seconds": 0.39129473800130654, "tokens_seen": 1575171.0}
+{"event": "train_step", "grad_norm": 0.7884339094161987, "loss": 1.2635178260586712, "lr": 0.0004823159035457177, "step": 110.0, "step_seconds": 0.39078410499860183, "tokens_seen": 1733194.0}
+{"event": "train_step", "grad_norm": 1.3168946504592896, "loss": 1.084054907694786, "lr": 0.0004585057961200098, "step": 120.0, "step_seconds": 0.3770152869983576, "tokens_seen": 1890670.0}
+{"event": "validation", "step": 120, "validation_loss": 1.4456125526932606, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 0.8566451072692871, "loss": 1.09351069926769, "lr": 0.00043332452673857416, "step": 130.0, "step_seconds": 0.392492115002824, "tokens_seen": 2048355.0}
+{"event": "train_step", "grad_norm": 0.6737860441207886, "loss": 1.0231131054138607, "lr": 0.0004070407805472584, "step": 140.0, "step_seconds": 0.39154963600230985, "tokens_seen": 2207240.0}
+{"event": "train_step", "grad_norm": 1.1658247709274292, "loss": 1.0104163181581367, "lr": 0.0003799350061633208, "step": 150.0, "step_seconds": 0.3791597810013627, "tokens_seen": 2365265.0}
+{"event": "train_step", "grad_norm": 0.5414933562278748, "loss": 0.9050500615127585, "lr": 0.0003522964232775297, "step": 160.0, "step_seconds": 0.3793416699991212, "tokens_seen": 2522343.0}
+{"event": "validation", "step": 160, "validation_loss": 1.182428857151456, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000160.pt", "step": 160}
+{"event": "train_step", "grad_norm": 0.7672523260116577, "loss": 1.1178114195118147, "lr": 0.00032441993666856037, "step": 170.0, "step_seconds": 0.3918064929966931, "tokens_seen": 2681046.0}
+{"event": "train_step", "grad_norm": 0.6267344951629639, "loss": 1.0433078594814544, "lr": 0.0002966029895572761, "step": 180.0, "step_seconds": 0.3919759310010704, "tokens_seen": 2838635.0}
+{"event": "train_step", "grad_norm": 0.6303790807723999, "loss": 0.8282138032302827, "lr": 0.00026914238987573233, "step": 190.0, "step_seconds": 0.37866786700033117, "tokens_seen": 2996359.0}
+{"event": "train_step", "grad_norm": 1.1478700637817383, "loss": 1.063347923438132, "lr": 0.0002423311433147355, "step": 200.0, "step_seconds": 0.3771012150027673, "tokens_seen": 3155033.0}
+{"event": "validation", "step": 200, "validation_loss": 1.0692199905063344, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 0.5905032753944397, "loss": 0.8640316512807493, "lr": 0.00021645532694146893, "step": 210.0, "step_seconds": 0.39005367499703425, "tokens_seen": 3313274.0}
+{"event": "train_step", "grad_norm": 0.5708737373352051, "loss": 0.9059099978013829, "lr": 0.00019179103674580778, "step": 220.0, "step_seconds": 0.3766120000000228, "tokens_seen": 3470418.0}
+{"event": "train_step", "grad_norm": 0.44050997495651245, "loss": 0.8288240071729512, "lr": 0.00016860144168512494, "step": 230.0, "step_seconds": 0.3803156809990469, "tokens_seen": 3627198.0}
+{"event": "train_step", "grad_norm": 0.6263867616653442, "loss": 0.9026448866953808, "lr": 0.00014713397566104995, "step": 240.0, "step_seconds": 0.3798678659986763, "tokens_seen": 3785985.0}
+{"event": "validation", "step": 240, "validation_loss": 1.030868730254246, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000240.pt", "step": 240}
+{"event": "train_step", "grad_norm": 0.6868274807929993, "loss": 1.100049049542675, "lr": 0.000127617697389896, "step": 250.0, "step_seconds": 0.390255951002473, "tokens_seen": 3945328.0}
+{"event": "train_step", "grad_norm": 0.7367409467697144, "loss": 0.8693504365855883, "lr": 0.00011026084633704736, "step": 260.0, "step_seconds": 0.38171697500001756, "tokens_seen": 4104446.0}
+{"event": "train_step", "grad_norm": 0.6427292823791504, "loss": 0.7882879962111304, "lr": 9.524862079358092e-05, "step": 270.0, "step_seconds": 0.380070560000604, "tokens_seen": 4262412.0}
+{"event": "train_step", "grad_norm": 0.7060458660125732, "loss": 1.0869484794168136, "lr": 8.274120180313446e-05, "step": 280.0, "step_seconds": 0.38462163300209795, "tokens_seen": 4419725.0}
+{"event": "validation", "step": 280, "validation_loss": 0.9979163111661611, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 0.34111517667770386, "loss": 0.7914566533218814, "lr": 7.287204402380011e-05, "step": 290.0, "step_seconds": 0.38823241499994765, "tokens_seen": 4576515.0}
+{"event": "train_step", "grad_norm": 0.44104909896850586, "loss": 0.8012703648374953, "lr": 6.574645176161429e-05, "step": 300.0, "step_seconds": 0.3837448359990958, "tokens_seen": 4733999.0}
+{"event": "train_step", "grad_norm": 0.4627102017402649, "loss": 0.9054313932814269, "lr": 6.144045536942451e-05, "step": 310.0, "step_seconds": 0.3838591280000401, "tokens_seen": 4892891.0}
+{"event": "train_step", "grad_norm": 0.32409191131591797, "loss": 0.7935349271094431, "lr": 5.9999999999999995e-05, "step": 320.0, "step_seconds": 0.39357034600107, "tokens_seen": 5051139.0}
+{"event": "validation", "step": 320, "validation_loss": 0.9776153720543825, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000320.pt", "step": 320}
+{"event": "train_step", "grad_norm": 2.188002824783325, "loss": 7.304640655664362, "lr": 0.00041249999999999994, "step": 10.0, "step_seconds": 0.3917490429994359, "tokens_seen": 157106.0}
+{"event": "train_step", "grad_norm": 3.8668506145477295, "loss": 5.729327355827274, "lr": 0.0005997693547645712, "step": 20.0, "step_seconds": 0.3845633380005893, "tokens_seen": 314981.0}
+{"event": "train_step", "grad_norm": 1.6309399604797363, "loss": 4.376142714020121, "lr": 0.0005971791191983448, "step": 30.0, "step_seconds": 0.3856324999978824, "tokens_seen": 472977.0}
+{"event": "train_step", "grad_norm": 2.330068588256836, "loss": 3.7791600273571127, "lr": 0.0005917380718036191, "step": 40.0, "step_seconds": 0.388695485999051, "tokens_seen": 630202.0}
+{"event": "validation", "step": 40, "validation_loss": 3.846272998990807, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 1.6929736137390137, "loss": 3.133882645550038, "lr": 0.000583504268772506, "step": 50.0, "step_seconds": 0.39645104100054596, "tokens_seen": 788233.0}
+{"event": "train_step", "grad_norm": 1.8609646558761597, "loss": 2.6768987545946974, "lr": 0.0005725655651108342, "step": 60.0, "step_seconds": 0.39003338999827974, "tokens_seen": 944995.0}
+{"event": "train_step", "grad_norm": 1.845316767692566, "loss": 2.316828979886308, "lr": 0.0005590386772217448, "step": 70.0, "step_seconds": 0.38962739600174245, "tokens_seen": 1102351.0}
+{"event": "train_step", "grad_norm": 1.3074703216552734, "loss": 1.8994873717166096, "lr": 0.0005430679375370263, "step": 80.0, "step_seconds": 0.3906124200002523, "tokens_seen": 1259478.0}
+{"event": "validation", "step": 80, "validation_loss": 2.1326992126399142, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000080.pt", "step": 80}
+{"event": "train_step", "grad_norm": 1.1805838346481323, "loss": 1.695714841742, "lr": 0.0005248237544843268, "step": 90.0, "step_seconds": 0.39843690400084597, "tokens_seen": 1416964.0}
+{"event": "train_step", "grad_norm": 1.225520133972168, "loss": 1.4291842708370888, "lr": 0.0005045007942224539, "step": 100.0, "step_seconds": 0.3870762480000849, "tokens_seen": 1575171.0}
+{"event": "train_step", "grad_norm": 0.7876107096672058, "loss": 1.2635140078031444, "lr": 0.0004823159035457177, "step": 110.0, "step_seconds": 0.3887227859995619, "tokens_seen": 1733194.0}
+{"event": "train_step", "grad_norm": 1.3181302547454834, "loss": 1.0841755391029209, "lr": 0.0004585057961200098, "step": 120.0, "step_seconds": 0.38937795300080325, "tokens_seen": 1890670.0}
+{"event": "validation", "step": 120, "validation_loss": 1.445888611419036, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 0.8528661131858826, "loss": 1.0934157771143047, "lr": 0.00043332452673857416, "step": 130.0, "step_seconds": 0.40012553199994727, "tokens_seen": 2048355.0}
+{"event": "train_step", "grad_norm": 0.6854259967803955, "loss": 1.023351808585891, "lr": 0.0004070407805472584, "step": 140.0, "step_seconds": 0.3843322270004137, "tokens_seen": 2207240.0}
+{"event": "train_step", "grad_norm": 1.1676675081253052, "loss": 1.010746306046593, "lr": 0.0003799350061633208, "step": 150.0, "step_seconds": 0.38917734600181575, "tokens_seen": 2365265.0}
+{"event": "train_step", "grad_norm": 0.5389061570167542, "loss": 0.905204158762718, "lr": 0.0003522964232775297, "step": 160.0, "step_seconds": 0.38996608199886396, "tokens_seen": 2522343.0}
+{"event": "validation", "step": 160, "validation_loss": 1.1824165637206845, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000160.pt", "step": 160}
+{"event": "train_step", "grad_norm": 0.7659845352172852, "loss": 1.1174946508614032, "lr": 0.00032441993666856037, "step": 170.0, "step_seconds": 0.39934344299763325, "tokens_seen": 2681046.0}
+{"event": "train_step", "grad_norm": 0.6132168173789978, "loss": 1.0430308877066035, "lr": 0.0002966029895572761, "step": 180.0, "step_seconds": 0.38465366899981746, "tokens_seen": 2838635.0}
+{"event": "train_step", "grad_norm": 0.6202821731567383, "loss": 0.8277860889492151, "lr": 0.00026914238987573233, "step": 190.0, "step_seconds": 0.3903627409999899, "tokens_seen": 2996359.0}
+{"event": "train_step", "grad_norm": 1.1409488916397095, "loss": 1.0630885372985315, "lr": 0.0002423311433147355, "step": 200.0, "step_seconds": 0.38827976299944567, "tokens_seen": 3155033.0}
+{"event": "validation", "step": 200, "validation_loss": 1.0693882261205647, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 0.6123862266540527, "loss": 0.8650610156750421, "lr": 0.00021645532694146893, "step": 210.0, "step_seconds": 0.4018773940006213, "tokens_seen": 3313274.0}
+{"event": "train_step", "grad_norm": 0.5536118149757385, "loss": 0.9058308850686738, "lr": 0.00019179103674580778, "step": 220.0, "step_seconds": 0.38894623599844635, "tokens_seen": 3470418.0}
+{"event": "train_step", "grad_norm": 0.434660404920578, "loss": 0.8286723685617086, "lr": 0.00016860144168512494, "step": 230.0, "step_seconds": 0.3910933599981945, "tokens_seen": 3627198.0}
+{"event": "train_step", "grad_norm": 0.6459471583366394, "loss": 0.9028961537440805, "lr": 0.00014713397566104995, "step": 240.0, "step_seconds": 0.3884952179978427, "tokens_seen": 3785985.0}
+{"event": "validation", "step": 240, "validation_loss": 1.0299397121855796, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000240.pt", "step": 240}
+{"event": "train_step", "grad_norm": 0.7065657377243042, "loss": 1.1001683156163202, "lr": 0.000127617697389896, "step": 250.0, "step_seconds": 0.40158783300284995, "tokens_seen": 3945328.0}
+{"event": "train_step", "grad_norm": 0.7706881761550903, "loss": 0.8698291662695529, "lr": 0.00011026084633704736, "step": 260.0, "step_seconds": 0.3909646449974389, "tokens_seen": 4104446.0}
+{"event": "train_step", "grad_norm": 0.6234039068222046, "loss": 0.7876156474991097, "lr": 9.524862079358092e-05, "step": 270.0, "step_seconds": 0.38871269000082975, "tokens_seen": 4262412.0}
+{"event": "train_step", "grad_norm": 0.6854336261749268, "loss": 1.0873142157790219, "lr": 8.274120180313446e-05, "step": 280.0, "step_seconds": 0.3911339619990031, "tokens_seen": 4419725.0}
+{"event": "validation", "step": 280, "validation_loss": 0.9981009887554939, "validation_tokens": 123203}
+{"event": "train_step", "grad_norm": 0.33234235644340515, "loss": 0.791455088583496, "lr": 7.287204402380011e-05, "step": 290.0, "step_seconds": 0.40382955899985973, "tokens_seen": 4576515.0}
+{"event": "train_step", "grad_norm": 0.3689870238304138, "loss": 0.8006180982605022, "lr": 6.574645176161429e-05, "step": 300.0, "step_seconds": 0.3899641829993925, "tokens_seen": 4733999.0}
+{"event": "train_step", "grad_norm": 0.46196237206459045, "loss": 0.9051955897259798, "lr": 6.144045536942451e-05, "step": 310.0, "step_seconds": 0.38992230800067773, "tokens_seen": 4892891.0}
+{"event": "train_step", "grad_norm": 0.30351096391677856, "loss": 0.7934052043563306, "lr": 5.9999999999999995e-05, "step": 320.0, "step_seconds": 0.39025056900209165, "tokens_seen": 5051139.0}
+{"event": "validation", "step": 320, "validation_loss": 0.9778851494659332, "validation_tokens": 123203}
+{"event": "checkpoint", "path": "/tmp/juniper-math-1-phase6-review/checkpoints/phase6-pilot/resume_test/step_000320.pt", "step": 320}
+{"equivalent": true, "event": "resume_comparison_result", "generations_match": false, "loss_history_max_abs_diff": 0.0030593124687194884, "max_param_abs_diff": 0.005874741822481155, "notes": ["Comparison run on CUDA: torch.use_deterministic_algorithms(warn_only=True) is a best-effort determinism request, not a bitwise guarantee at this larger pilot scale; small floating-point differences from kernel nondeterminism are possible and are tolerance-checked (<1e-2), not required to be exactly zero — unlike Phase 5's smoke run, which happened to be bitwise-exact but was never guaranteed to be (see reports/PHASE5_RESULTS.md)."], "run_a_final_loss": 0.7935349271094431, "run_a_final_step": 320, "run_a_tokens_seen": 5051139, "run_b_final_loss": 0.7934052043563306, "run_b_final_step": 320, "run_b_tokens_seen": 5051139}

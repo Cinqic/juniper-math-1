@@ -1,5 +1,10 @@
 # Phase 6 Terra Handoff Package
 
+> Historical engineering handoff only. The independent review found that its
+> recorded pilot selection used unverified ignored shards. Do not use its
+> counts, checkpoint identity, or `tool_error` conclusion; see
+> `reports/TERRA_PHASE6_REVIEW.md` and `reports/PHASE6_RESULTS.md`.
+
 This package is self-contained: GPT-5.6 Terra should be able to clone the
 repository with zero knowledge of this session and independently audit
 Phase 6 end to end using only this document and the repository itself.

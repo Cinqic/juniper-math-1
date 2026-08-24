@@ -7,7 +7,7 @@ repository has an implemented, mechanically-validated architecture
 deterministic calculator tool runtime (Phase 3), a frozen dataset and
 evaluation suite (Phase 4), a validated smoke-pretraining pipeline
 (Phase 5) that trains a tiny checkpoint end to end purely to prove the
-training mechanics work, and a pilot-pretraining engineering candidate
+training mechanics work, and an independently remediated pilot-pretraining run
 (Phase 6) that trains on a ~5M-token, category-stratified slice of the
 frozen corpus to establish whether the model learns stably and to
 recommend a Phase 7 configuration — **the pilot checkpoint is not a claim
@@ -15,8 +15,7 @@ of mathematical capability either**: it demonstrates a clear, attributable
 learning signal (loss, generation structure), not correct arithmetic. The
 Phase 3 runtime proves the tool surface a future trained model will call
 into is correct and secure; it does not itself demonstrate learned
-tool-use behavior. Phase 6 is implementation-complete and self-reviewed;
-independent review by GPT-5.6 Terra is pending — see
+tool-use behavior. Phase 6 is independently approved with remediation — see
 [`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md).
 
 ## Research question
@@ -37,7 +36,8 @@ Phase 2 — Math Tokenizer:                   COMPLETE
 Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
 Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
-Phase 6 — Pilot Pretraining:                ENGINEERING COMPLETE — PENDING INDEPENDENT REVIEW
+Phase 6 — Pilot Pretraining:                COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
+Phase 7 — Full Base Pretraining:             AUTHORIZED — NOT STARTED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -123,11 +123,11 @@ Phase 6 (Pilot Pretraining) is the first phase where model behavior is
 meant to matter — not to produce a capable model, but to establish
 whether Juniper Math 1 learns stably from a meaningful slice of the frozen
 corpus and to recommend a Phase 7 configuration backed by measurement. A
-deterministic, category-stratified subset (137,057 train / 3,043
-validation examples, 5,002,683 train tokens — 8.0% of the full corpus)
+deterministic, category-stratified subset (130,492 train / 3,051
+validation examples, 4,997,273 train tokens)
 extends Phase 5's own approved selection algorithm to guarantee every one
 of the 24 frozen categories is represented, then packs examples to the
-full 1,024-token architectural context (3.3% padding waste, vs. Phase 5's
+full 1,024-token architectural context (3.55% padding waste, vs. Phase 5's
 unpacked smoke approach) for training efficiency. Over 320 optimizer steps
 on the RTX 2060 (peak 904.5 MiB VRAM, ~6.8 minutes total including
 milestone evaluation): validation loss fell monotonically from 8.38 to
@@ -142,8 +142,8 @@ unlike Phase 5's smoke run — expected at larger scale). See
 [`docs/PILOT_TRAINING.md`](docs/PILOT_TRAINING.md) and
 [`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md) for full results
 and the evidence-backed Phase 7 recommendation. Phase 6 was implemented
-and self-reviewed by Claude Sonnet 5; independent review by GPT-5.6 Terra
-is pending.
+and self-reviewed by Claude Sonnet 5, then independently remediated and
+approved by GPT-5.6 Terra. Phase 7 is authorized but has not started.
 
 ### Phase 2 release verification
 
@@ -369,7 +369,8 @@ actually exercised — see
 | 3 | Deterministic tool integration ("Cinqic Calculator") | **COMPLETE** |
 | 4 | Dataset and Evaluation Freeze | **COMPLETE** |
 | 5 | Smoke Pretraining | **COMPLETE — INDEPENDENTLY APPROVED** |
-| 6 | Pilot Pretraining | **ENGINEERING COMPLETE — PENDING INDEPENDENT REVIEW** |
+| 6 | Pilot Pretraining | **COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION** |
+| 7 | Full Base Pretraining | **AUTHORIZED — NOT STARTED** |
 
 ## License
 

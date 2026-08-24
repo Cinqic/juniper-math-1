@@ -1,5 +1,10 @@
 # Phase 6 Completion Report — Pilot Pretraining
 
+> Superseded by the independent remediation: the candidate dataset selection
+> evidence in this historical report used unverified ignored shards. Use
+> `reports/PHASE6_RESULTS.md`, `reports/PHASE6_REMEDIATION.md`, and
+> `reports/TERRA_PHASE6_REVIEW.md` for the authoritative Phase 6 record.
+
 ## Status
 
 **PASS — Phase 6 implementation complete and ready for independent
