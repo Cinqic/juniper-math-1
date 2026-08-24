@@ -10,6 +10,38 @@ from juniper_math.dataset.schema import Example
 from juniper_math.hashing import sha256_file
 from juniper_math.tools.protocol import CANONICAL_SEPARATORS
 
+BEHAVIOR_TAG = {
+    "refuse_unsupported": "unsupported",
+    "flag_undefined": "error",
+    "flag_missing_information": "unsupported",
+    "request_clarification": "unsupported",
+}
+
+# Back-compat alias for the original module-private name.
+_BEHAVIOR_TAG = BEHAVIOR_TAG
+
+
+def expected_completion(ex: Example) -> tuple[str, str | None]:
+    """The canonical terminal control tag and value `render_training_text` appends.
+
+    Returns ``("final", str(expected_answer))`` when the example carries a
+    concrete expected answer (covers ``answer``, ``flag_incorrect_answer``,
+    and any tool-required example whose ground truth resolves to a final
+    value), or ``(BEHAVIOR_TAG[behavior], None)`` for the four
+    answer-less refusal/clarification behaviors. Exists so evaluation code
+    (e.g. a model-scoring pass) can check generated output against exactly
+    the same ground-truth rule ``render_training_text`` uses, rather than a
+    second, potentially-drifting reimplementation of this mapping.
+    """
+    if ex.expected_answer is not None:
+        return "final", str(ex.expected_answer)
+    if ex.expected_behavior in BEHAVIOR_TAG:
+        return BEHAVIOR_TAG[ex.expected_behavior], None
+    raise ValueError(
+        f"example {ex.example_id!r}: no expected_answer and expected_behavior "
+        f"{ex.expected_behavior!r} has no known terminal tag."
+    )
+
 
 def render_training_text(ex: Example) -> str:
     """Render one example into the exact text a token-counting pass sees.
@@ -38,16 +70,8 @@ def render_training_text(ex: Example) -> str:
         "flag_missing_information",
         "request_clarification",
     }:
-        parts.append(f"<{_BEHAVIOR_TAG[ex.expected_behavior]}>")
+        parts.append(f"<{BEHAVIOR_TAG[ex.expected_behavior]}>")
     return "\n".join(parts)
-
-
-_BEHAVIOR_TAG = {
-    "refuse_unsupported": "unsupported",
-    "flag_undefined": "error",
-    "flag_missing_information": "unsupported",
-    "request_clarification": "unsupported",
-}
 
 
 def record_dict(ex: Example) -> dict:

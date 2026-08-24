@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "74dfce022d2f3c79e53ff7ce4603023d04423cc253aeaa5db42cf4cb1dffcb2b"
+    sha256: "1907e76c945ae53fd63c0f15d4fb9a51f0c2d263b62288f9f60a527001bfe98f"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -166,3 +166,10 @@ artifacts:
     path: "config/training.yaml"
     sha256: "ceec5c1c4ed2efe7a17fee0290c878ac00b656bf50189612e0ab39434ea0ce60"
     description: "Frozen Phase 5 smoke-pretraining configuration (smoke subset, optimizer, schedule, resume-test parameters)."
+
+  - artifact_id: "pilot_training_config"
+    path: "config/training_phase6_pilot.yaml"
+    sha256: "cb2eb8249fef4c8cc7b87c3e3e4f9807988aa230268780f1214df64a6d676343"
+    description: >
+      Frozen Phase 6 pilot-pretraining configuration (category-stratified pilot subset, optimizer,
+      schedule, resume-test parameters). Separate from and does not modify training_config.

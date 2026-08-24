@@ -117,6 +117,15 @@ python -m juniper_math dataset contamination-check
 #     docs/TRAINING.md and reports/PHASE5_RESULTS.md.
 python -m juniper_math train run --evaluate
 python -m juniper_math train resume-test
+
+# 15. (Phase 6+) Reconstruct the pilot pretraining pipeline. The pilot
+#     subset manifest, checkpoints, and JSONL step logs are gitignored and
+#     disposable — re-running against the same frozen dataset build and
+#     config/training_phase6_pilot.yaml reproduces an equivalent run (the
+#     pilot resume-test gate demonstrates this reproducibility directly).
+#     See docs/PILOT_TRAINING.md and reports/PHASE6_RESULTS.md.
+python -m juniper_math train pilot-run
+python -m juniper_math train pilot-resume-test
 ```
 
 A successful recovery satisfies all of the following:
@@ -126,10 +135,12 @@ A successful recovery satisfies all of the following:
   hardware — see the recovery test report for what was and was not
   exercised).
 - `pytest` reports 0 failures.
-- `status` reports Phase 4 as `COMPLETE`; `config/project.yaml` identifies
-  Phase 5, Smoke Pretraining, as implementation-complete and pending
-  independent review (`config/project.yaml:phase_5_engineering`).
-- Step 14's `train run`/`train resume-test` both report PASS on the actual
+- `status` reports Phase 5, Smoke Pretraining, as `COMPLETE` and
+  independently approved; `config/project.yaml` identifies Phase 6, Pilot
+  Pretraining, as engineering-complete and pending independent review
+  (`config/project.yaml:phase_6_engineering`).
+- Step 14's `train run`/`train resume-test` and step 15's `train
+  pilot-run`/`train pilot-resume-test` all report PASS on the actual
   target GPU hardware (they run on CPU with an explicit WARNING otherwise,
   which does not validate the intended hardware fit).
 

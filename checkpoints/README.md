@@ -19,3 +19,32 @@ against the same frozen dataset build reproduces an equivalent checkpoint
 this reproducibility directly). What is preserved in Git is the checkpoint
 *metadata* (`python -m juniper_math checkpoint inspect <path>` output),
 recorded in `reports/PHASE5_RESULTS.md` and `experiments/phase5-smoke/`.
+
+## Phase 6 pilot checkpoints
+
+Phase 6 (`python -m juniper_math train pilot-run`) produces real
+checkpoints under `checkpoints/phase6-pilot/` (`.pt`, `.gitignore`d), one
+per milestone plus a final checkpoint. These are also treated as
+**disposable, not archived** to Git LFS or a GitHub release, for two
+independent reasons documented here per `docs/CHECKPOINT_POLICY.md` and
+Sec. 29 of the Phase 6 instructions:
+
+1. **Exact reproducibility.** `config/training_phase6_pilot.yaml`'s seed,
+   category-stratified pilot-subset selection, and schedule are committed
+   and frozen, so re-running `train pilot-run` against the same frozen
+   dataset build reproduces an equivalent run — demonstrated directly by
+   the pilot resume-comparison gate (`train pilot-resume-test`,
+   `reports/PHASE6_RESULTS.md` §Resume verification).
+2. **Phase 7 restart policy.** Per Sec. 28, the recommended default is for
+   Phase 7 to begin from a clean, deliberately chosen initialization —
+   not to silently continue from whatever pilot checkpoint happens to
+   exist. Nothing about the frozen architecture, tokenizer, special
+   tokens, sequence representation, or training objective changed during
+   Phase 6 (see `reports/PHASE6_RESULTS.md` §Phase 7 restart rule), so
+   there is no correctness reason a pilot checkpoint would need to survive
+   into Phase 7 either.
+
+What is preserved in Git is the checkpoint *metadata*
+(`python -m juniper_math checkpoint inspect <path>` output) and every
+checkpoint's SHA-256, recorded in `reports/PHASE6_RESULTS.md` and
+`experiments/phase6-pilot/`.

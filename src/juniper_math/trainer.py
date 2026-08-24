@@ -15,12 +15,13 @@ from __future__ import annotations
 import json
 import math
 import time
+from collections.abc import Sized
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol, cast
 
 import torch
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 
 from juniper_math.architecture import ArchitectureConfig
 from juniper_math.checkpoint import (
@@ -34,8 +35,37 @@ from juniper_math.model import (
     build_model,
     verify_parameter_count,
 )
-from juniper_math.smoke_data import TokenizedSmokeDataset, collate_smoke_batch, epoch_order
-from juniper_math.training_config import TrainingConfig
+from juniper_math.smoke_data import collate_smoke_batch, epoch_order
+from juniper_math.training_config import DataConfig, OptimizerConfig, ScheduleConfig, SchedulerConfig
+
+
+class TrainingConfigLike(Protocol):
+    """The subset of `TrainingConfig`/`PilotTrainingConfig` this module actually uses.
+
+    Phase 5's `TrainingConfig` (`juniper_math.training_config`) and Phase
+    6's `PilotTrainingConfig` (`juniper_math.pilot_training_config`) share
+    these sections' dataclasses exactly (imported, not redefined) — only
+    their subset-selection section differs, and this loop never touches
+    that section — so one training loop serves both phases' configs without
+    a second copy of it.
+    """
+
+    # Declared as read-only properties, not plain attributes: both
+    # `TrainingConfig` and `PilotTrainingConfig` are frozen dataclasses, and
+    # a plain mutable-attribute Protocol member does not structurally match
+    # a frozen dataclass field under mypy.
+    @property
+    def seed(self) -> int: ...
+    @property
+    def data(self) -> DataConfig: ...
+    @property
+    def optimizer(self) -> OptimizerConfig: ...
+    @property
+    def scheduler(self) -> SchedulerConfig: ...
+    @property
+    def schedule(self) -> ScheduleConfig: ...
+    @property
+    def raw(self) -> dict[str, Any]: ...
 
 
 class TrainingNumericalError(RuntimeError):
@@ -69,7 +99,7 @@ def build_lr_lambda(warmup_steps: int, total_steps: int, min_lr_ratio: float):
 
 
 def init_state(
-    architecture: ArchitectureConfig, training_config: TrainingConfig, device: torch.device
+    architecture: ArchitectureConfig, training_config: TrainingConfigLike, device: torch.device
 ) -> TrainState:
     """Construct a fresh model/optimizer/scheduler. Caller must have seeded RNG beforehand."""
     model = build_model(architecture).to(device)
@@ -113,18 +143,22 @@ def loss_bearing_tokens(labels: torch.Tensor) -> int:
     return int((labels[:, 1:] != -100).sum().item())
 
 
-def make_loader(dataset: TokenizedSmokeDataset, indices: list[int], batch_size: int) -> DataLoader:
+def make_loader(dataset: Dataset[Any], indices: list[int], batch_size: int) -> DataLoader:
     subset = torch.utils.data.Subset(dataset, indices)
     return DataLoader(subset, batch_size=batch_size, shuffle=False, collate_fn=collate_smoke_batch)
 
 
 def _next_micro_batches(
-    state: TrainState, dataset: TokenizedSmokeDataset, training_config: TrainingConfig, n: int
+    state: TrainState, dataset: Dataset[Any], training_config: TrainingConfigLike, n: int
 ) -> list[dict[str, torch.Tensor]]:
     """Advance the deterministic epoch cursor by n micro-batches, wrapping epochs as needed."""
     batches: list[dict[str, torch.Tensor]] = []
     for _ in range(n):
-        order = epoch_order(len(dataset), training_config.seed, state.epoch, training_config.data.shuffle)
+        # torch's Dataset stub does not declare __len__ (it's a per-subclass convention, not part
+        # of the ABC); both TokenizedSmokeDataset and PackedPilotDataset define it.
+        order = epoch_order(
+            len(cast(Sized, dataset)), training_config.seed, state.epoch, training_config.data.shuffle
+        )
         remaining = len(order) - state.position_in_epoch
         take = min(training_config.data.micro_batch_size, remaining)
         indices = order[state.position_in_epoch : state.position_in_epoch + take]
@@ -138,7 +172,7 @@ def _next_micro_batches(
 
 
 def train_one_optimizer_step(
-    state: TrainState, dataset: TokenizedSmokeDataset, training_config: TrainingConfig
+    state: TrainState, dataset: Dataset[Any], training_config: TrainingConfigLike
 ) -> dict[str, float]:
     state.model.train()
     state.optimizer.zero_grad(set_to_none=True)
@@ -193,7 +227,7 @@ def train_one_optimizer_step(
 
 
 @torch.no_grad()
-def validate(state: TrainState, dataset: TokenizedSmokeDataset, batch_size: int) -> dict[str, float]:
+def validate(state: TrainState, dataset: Dataset[Any], batch_size: int) -> dict[str, float]:
     state.model.eval()
     loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_smoke_batch)
     total_loss = 0.0
@@ -217,7 +251,7 @@ def data_stream_position(state: TrainState) -> dict[str, Any]:
 def save_state(
     state: TrainState,
     architecture: ArchitectureConfig,
-    training_config: TrainingConfig,
+    training_config: TrainingConfigLike,
     path: Path,
     git_commit: str,
     extra: dict[str, Any] | None = None,
@@ -273,10 +307,10 @@ def append_jsonl(path: Path, record: dict[str, Any]) -> None:
 
 def run_training(
     state: TrainState,
-    train_dataset: TokenizedSmokeDataset,
-    val_dataset: TokenizedSmokeDataset,
+    train_dataset: Dataset[Any],
+    val_dataset: Dataset[Any],
     architecture: ArchitectureConfig,
-    training_config: TrainingConfig,
+    training_config: TrainingConfigLike,
     end_step: int,
     checkpoint_dir: Path,
     log_path: Path,

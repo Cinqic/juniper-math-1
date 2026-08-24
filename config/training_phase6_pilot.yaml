@@ -1,0 +1,169 @@
+# Juniper Math 1 — Phase 6 Pilot Pretraining configuration.
+#
+# A dedicated config, separate from config/training.yaml (Phase 5's smoke
+# config, which this file does not modify or replace — Phase 5 remains
+# reproducible exactly as approved). This is the first training phase where
+# model behavior is meant to matter: it trains on a deterministic,
+# category-stratified ~5M-loss-bearing-token subset of the frozen train
+# split (juniper_math.pilot_data), packed to the full 1024-token
+# architectural context to avoid the padding waste an unpacked run at this
+# scale would incur. See reports/PHASE6_PLAN.md and reports/PHASE6_RESULTS.md
+# for the evidence behind every number below. Nothing here overrides the
+# frozen architecture (config/architecture.yaml), tokenizer
+# (config/tokenizer.yaml), or dataset (config/dataset.yaml) identities.
+
+run_id: "phase6-pilot-v1"
+architecture_identity: "0.1.0"          # must match config/architecture.yaml architecture_version
+tokenizer_identity: "juniper-math-tokenizer-v1"
+dataset_identity: "juniper-math-dataset-v1"
+
+seed: 5004032                            # matches DEFAULT_PROJECT_SEED — same seed as Phase 5 for a
+                                          # controlled, directly-comparable initialization identity.
+
+# Deterministic, category-stratified pilot subset (juniper_math.pilot_data).
+# Selection extends Phase 5's approved fixed-stride algorithm
+# (compute_stride_selection) to run once per category instead of once per
+# split, so every one of the 24 frozen categories — including the rare
+# truthfulness/error ones (tool_error, missing_information,
+# incorrect_tool_call, undefined_operation, ambiguity,
+# unsupported_capability) — is guaranteed at least min_category_examples
+# regardless of proportional rounding. Measured result at these settings
+# (reports/PHASE6_RESULTS.md): 137,057 train examples / 5,002,683 raw
+# tokens (~8.9% of the frozen train split's 56.2M tokens, ~8.0% of the full
+# corpus), packed into 5,331 sequences of length 1024 with only 3.3%
+# padding waste; 3,043 validation examples packed into 121 sequences
+# (4.1% padding), frozen for the whole pilot (never trained on, never
+# re-selected between milestones).
+pilot_subset:
+  target_train_tokens: 5000000
+  validation_examples: 3000
+  max_sequence_length: 1024              # full frozen architecture context (max_context_length=1024);
+                                          # justified by scripts/benchmark_phase1.py on this exact
+                                          # RTX 2060: seq_len 1024 costs 757.6 MiB peak VRAM at batch 4
+                                          # (vs. 159.3 MiB at seq_len 128) — trivial relative to the 6GB
+                                          # budget — while packing (below) keeps it data-efficient rather
+                                          # than padding-dominated.
+  min_category_examples: 60              # train-split rare-category floor
+  min_category_examples_validation: 20   # validation-split rare-category floor
+  pack_sequences: true                   # simple deterministic first-fit packing (juniper_math.pilot_data);
+                                          # see reports/PHASE6_RESULTS.md Sec. 10 for the padding-waste
+                                          # measurement that justifies this over Phase 5's fixed-pad approach.
+
+# Data loading / batching. micro_batch_size=4 at seq_len=1024 measures
+# ~757 MiB peak VRAM (scripts/benchmark_phase1.py, batch=4); effective
+# batch 16 packed sequences/step gives ~320 optimizer steps over one pass
+# of the packed train set (5,331 packed sequences / 16 ≈ 333, rounded down
+# to a clean milestone-aligned total below).
+data:
+  micro_batch_size: 4
+  gradient_accumulation_steps: 4         # effective batch size = 16 packed sequences/step
+  shuffle: true
+
+# Optimization. Starting point is the Phase 5 baseline
+# (config/training.yaml), but Sec. 14 asks for at least a short controlled
+# screening before accepting it unchanged, so a single variable (peak
+# learning_rate) was screened: three 60-optimizer-step runs from the same
+# init/seed/pilot data at 1.5e-4 / 3.0e-4 (baseline) / 6.0e-4, holding
+# everything else fixed (reports/PHASE6_RESULTS.md, "Controlled
+# experiments"). Result: final-10-step mean training loss was 5.06 / 3.82 /
+# 2.77 respectively — 6.0e-4 converged clearly faster with no non-finite
+# loss and a bounded pre-clip gradient norm (max 6.0, clip threshold 1.0)
+# across all 60 steps. A follow-up screen at 1.0e-3 converged faster still
+# (mean 2.20) but was not adopted: it was not part of the original
+# screening design, only two runs deep, and pushes further from the
+# validated Phase 5 operating point than a single conservative,
+# evidence-backed bump justifies for a first capability run. 6.0e-4 (2x the
+# Phase 5 baseline) is adopted as the pilot's peak learning rate.
+optimizer:
+  name: "adamw"
+  learning_rate: 6.0e-4
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip_norm: 1.0
+
+# warmup_steps=16 is a *fixed step count* for this run, but was derived as
+# a 5% warmup-*ratio* of schedule.total_steps (320 * 0.05 = 16), not copied
+# from Phase 5's fixed 20-step warmup. Sec. 15 recommendation: Phase 7
+# should use a true warmup-ratio field (config schema does not need one for
+# a single fixed-length pilot run) so warmup length scales automatically
+# with a much larger total_steps rather than needing to be re-derived by
+# hand.
+scheduler:
+  name: "cosine_with_warmup"
+  warmup_steps: 16
+  min_lr_ratio: 0.1
+
+# total_steps=320 is deliberately just under one full pass over the 5,331
+# packed train sequences at effective batch 16 (320*16=5,120 sequences
+# consumed, ~96% of one epoch) — enough optimizer steps to observe a real
+# loss trajectory without silently drifting into a second epoch mid-run.
+# Milestone cadence below evaluates at 0/25/50/75/100% of total_steps,
+# matching milestone_fractions.
+schedule:
+  total_steps: 320
+  validation_interval: 40
+  checkpoint_interval: 80
+  generation_interval: 80
+  logging_interval: 10
+
+# Resume-comparison gate (Sec. 24), same methodology as Phase 5 Sec. 22 but
+# run at this pilot's actual scale rather than assumed to transfer.
+resume_test:
+  interrupt_step: 160
+
+device: "cuda"                            # falls back to cpu with an explicit WARNING, never silent
+precision: "fp32"                         # retained from Phase 5: at this model/sequence scale VRAM
+                                          # is not a binding constraint (757 MiB of 6144 MiB at seq_len
+                                          # 1024), so the added complexity of a GradScaler and mixed-
+                                          # precision resume/finite-check plumbing (Sec. 12) is not
+                                          # justified by any measured benefit. See
+                                          # reports/PHASE6_RESULTS.md, "Precision".
+
+output:
+  checkpoint_dir: "checkpoints/phase6-pilot"
+  experiment_dir: "experiments/phase6-pilot"
+  pilot_dataset_dir: "data/processed/phase6-pilot"
+
+# Milestone evaluation cadence, expressed as fractions of schedule.total_steps
+# (Sec. 17). Every milestone runs the identical frozen evaluation
+# configuration (validation loss, category losses, the four frozen v2
+# suites, fixed-seed generation inspection) — never a moving target.
+milestone_fractions: [0.0, 0.25, 0.5, 0.75, 1.0]
+
+# Fixed-seed qualitative generation set (Sec. 20). Frozen prompts, frozen
+# decoding (temperature=0.0, greedy), frozen max_new_tokens, evaluated at
+# every milestone. Chosen to cover: direct arithmetic, word problems,
+# algebra, percentages, units, financial math, multi-step, a tool-required
+# case, a no-tool-necessary case, an ambiguous request, a missing-information
+# request, an unsupported-capability request, and an incorrect-supplied-answer
+# case.
+fixed_generation_prompts:
+  - category: "arithmetic"
+    prompt: "12 + 7 ="
+  - category: "word_problem"
+    prompt: "Maria has 24 apples and gives away 9. How many does she have left?"
+  - category: "basic_algebra"
+    prompt: "Solve for x: 2x + 3 = 11"
+  - category: "percentages"
+    prompt: "What is 15% of 240?"
+  - category: "unit_conversion"
+    prompt: "Convert 3 miles to meters."
+  - category: "financial_math"
+    prompt: "What is the simple interest on $500 at 4% annual rate for 2 years?"
+  - category: "multi_step"
+    prompt: "A train travels 60 miles per hour for 2 hours, then 40 miles per hour for 1 hour. How far did it travel in total?"
+  - category: "tool_use"
+    prompt: "Use the calculator to evaluate 84317 * 9926."
+  - category: "no_tool_direct"
+    prompt: "What is 5 times 6?"
+  - category: "ambiguity"
+    prompt: "How much is it?"
+  - category: "missing_information"
+    prompt: "If a shirt is on sale, what is the discounted price?"
+  - category: "unsupported_capability"
+    prompt: "Solve the differential equation dy/dx = y^2 for me."
+  - category: "incorrect_supplied_answer"
+    prompt: "Is it true that 7 times 8 equals 54?"
+generation_max_new_tokens: 32

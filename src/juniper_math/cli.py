@@ -4,17 +4,17 @@ Usage: `python -m juniper_math <command> ...` or the installed
 `juniper-math <command> ...` console script (same entry point — pick one
 style and use it consistently; both resolve here).
 
-Commands are split into two honest categories:
-  - Fully functional now (Phases 0–4): status, validate-env,
-    validate-config, seed-test, evals validate, evals verify, hash verify,
-    manifests-validate, deps-check, model, checkpoint inspect,
-    tokenizer train/inspect/encode/decode/validate/benchmark,
-    tools list/schemas/validate/call/self-test.
-    dataset acquire/build/validate/verify/stats/contamination-check and
-    dataset eval-suites-build are also functional.
-  - Not yet implemented (Phase 5 and later): train, evaluate, infer.
-    These print an explicit "not implemented until Phase N" message and
-    exit non-zero — they never silently pretend to succeed.
+Every command below is fully functional: status, validate-env,
+validate-config, seed-test, evals validate, evals verify, hash verify,
+manifests-validate, deps-check, model, checkpoint inspect, tokenizer
+train/inspect/encode/decode/validate/benchmark, tools
+list/schemas/validate/call/self-test, dataset
+acquire/build/validate/verify/stats/contamination-check/eval-suites-build
+(Phase 4), train run/resume-test, evaluate, infer (Phase 5 smoke
+pretraining), and train pilot-run/pilot-resume-test, pilot-evaluate,
+pilot-infer (Phase 6 pilot pretraining). Any command not yet implemented
+for a future phase prints an explicit "not implemented until Phase N"
+message and exits non-zero — it never silently pretends to succeed.
 """
 
 from __future__ import annotations
@@ -58,7 +58,7 @@ except ImportError as exc:  # pragma: no cover - exercised only without torch in
 
 _TRAIN_IMPORT_ERROR: Exception | None
 try:
-    from juniper_math import train_pipeline
+    from juniper_math import pilot_pipeline, train_pipeline
     from juniper_math.trainer import TrainingNumericalError
 
     _TRAIN_IMPORT_ERROR = None
@@ -466,6 +466,92 @@ def _cmd_infer(args: argparse.Namespace) -> int:
         )
     except (JuniperConfigError, CheckpointError, FileNotFoundError) as exc:
         print(f"FAIL: inference aborted: {exc}", file=sys.stderr)
+        return 1
+    print(result.text)
+    return 0
+
+
+def _cmd_train_pilot_run(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        report = pilot_pipeline.run_pilot_train(
+            config_path=config_path,
+            max_steps=args.max_steps,
+            eval_sample_size=args.eval_sample_size,
+            milestone_eval=not args.no_milestone_eval,
+        )
+    except (JuniperConfigError, TrainingNumericalError) as exc:
+        print(f"FAIL: pilot training aborted: {exc}", file=sys.stderr)
+        return 1
+    print(f"PASS: pilot training run {report.training_config.run_id} complete")
+    print(f"  device:                 {report.device}")
+    print(f"  parameters:             {report.parameter_count:,}")
+    print(f"  train packed sequences: {report.train_packed_sequences:,}")
+    print(f"  train padding fraction: {report.train_padding_fraction:.4f}")
+    print(f"  train loss-bearing tok: {report.train_total_loss_tokens:,}")
+    print(f"  checkpoint:             {report.final_checkpoint_path}")
+    print(f"  log:                    {report.log_path}")
+    print(f"  elapsed:                {report.elapsed_seconds:.1f}s")
+    if report.peak_cuda_memory_bytes is not None:
+        print(f"  peak CUDA memory:       {report.peak_cuda_memory_bytes / (1024**2):.1f} MiB")
+    print(f"\n{len(report.milestones)} milestone(s) evaluated:")
+    for m in report.milestones:
+        print(f"  step {m.step} ({m.fraction:.0%}): validation_loss={m.validation_loss:.4f}")
+    return 0
+
+
+def _cmd_train_pilot_resume_test(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        report = pilot_pipeline.run_pilot_resume_test(config_path=config_path)
+    except JuniperConfigError as exc:
+        print(f"FAIL: pilot resume comparison aborted: {exc}", file=sys.stderr)
+        return 1
+    for key, value in report.as_dict().items():
+        print(f"{key}: {value}")
+    print(
+        "\nPASS: resume comparison equivalent" if report.equivalent else "\nFAIL: resume comparison diverged"
+    )
+    return 0 if report.equivalent else 1
+
+
+def _cmd_pilot_evaluate(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        reports = pilot_pipeline.evaluate_pilot_checkpoint(
+            Path(args.checkpoint), config_path=config_path, sample_size=args.sample_size
+        )
+    except (JuniperConfigError, FileNotFoundError) as exc:
+        print(f"FAIL: pilot evaluation aborted: {exc}", file=sys.stderr)
+        return 1
+    for suite_name, summary in reports.items():
+        print(f"\n[{suite_name}]")
+        for key, value in summary.items():
+            if key == "category_accuracy":
+                print("  category_accuracy:")
+                for cat, acc in value.items():
+                    print(f"    {cat}: {acc:.4f}")
+            else:
+                print(f"  {key}: {value}")
+    return 0
+
+
+def _cmd_pilot_infer(args: argparse.Namespace) -> int:
+    if (fail := _require_train_module()) is not None:
+        return fail
+    config_path = Path(args.config) if args.config else None
+    try:
+        result = pilot_pipeline.run_pilot_infer(
+            Path(args.checkpoint), args.prompt, args.max_new_tokens, config_path=config_path
+        )
+    except (JuniperConfigError, CheckpointError, FileNotFoundError) as exc:
+        print(f"FAIL: pilot inference aborted: {exc}", file=sys.stderr)
         return 1
     print(result.text)
     return 0
@@ -1051,6 +1137,35 @@ def build_parser() -> argparse.ArgumentParser:
     train_resume_parser.add_argument("--config", default=None, help="training config path")
     train_resume_parser.set_defaults(func=_cmd_train_resume_test)
 
+    pilot_run_parser = train_sub.add_parser(
+        "pilot-run", help="Run Phase 6 pilot pretraining from config/training_phase6_pilot.yaml"
+    )
+    pilot_run_parser.add_argument(
+        "--config",
+        default=None,
+        help="pilot training config path (default: config/training_phase6_pilot.yaml)",
+    )
+    pilot_run_parser.add_argument(
+        "--max-steps", type=int, default=None, help="override schedule.total_steps (for fast checks)"
+    )
+    pilot_run_parser.add_argument(
+        "--eval-sample-size",
+        type=int,
+        default=None,
+        help="cases per frozen suite at each milestone (default: the complete suite)",
+    )
+    pilot_run_parser.add_argument(
+        "--no-milestone-eval", action="store_true", help="skip the milestone capability/generation evaluation"
+    )
+    pilot_run_parser.set_defaults(func=_cmd_train_pilot_run)
+
+    pilot_resume_parser = train_sub.add_parser(
+        "pilot-resume-test",
+        help="Sec. 24 gate at pilot scale: compare an uninterrupted run against an interrupted, resumed run",
+    )
+    pilot_resume_parser.add_argument("--config", default=None, help="pilot training config path")
+    pilot_resume_parser.set_defaults(func=_cmd_train_pilot_resume_test)
+
     evaluate_parser = subparsers.add_parser(
         "evaluate", help="Phase 5 smoke evaluation: run the frozen tool-use suite against a checkpoint"
     )
@@ -1064,12 +1179,37 @@ def build_parser() -> argparse.ArgumentParser:
     )
     evaluate_parser.set_defaults(func=_cmd_evaluate)
 
+    pilot_evaluate_parser = subparsers.add_parser(
+        "pilot-evaluate",
+        help="Phase 6 capability evaluation: run all four frozen v2 suites against a checkpoint",
+    )
+    pilot_evaluate_parser.add_argument(
+        "--checkpoint", required=True, help="path to a training checkpoint (.pt)"
+    )
+    pilot_evaluate_parser.add_argument("--config", default=None, help="pilot training config path")
+    pilot_evaluate_parser.add_argument(
+        "--sample-size",
+        type=int,
+        default=None,
+        help="number of cases per suite to evaluate (default: each complete frozen suite)",
+    )
+    pilot_evaluate_parser.set_defaults(func=_cmd_pilot_evaluate)
+
     infer_parser = subparsers.add_parser("infer", help="Generate text from a checkpoint for a single prompt")
     infer_parser.add_argument("--checkpoint", required=True, help="path to a training checkpoint (.pt)")
     infer_parser.add_argument("--prompt", required=True)
     infer_parser.add_argument("--max-new-tokens", type=int, default=32)
     infer_parser.add_argument("--config", default=None, help="training config path")
     infer_parser.set_defaults(func=_cmd_infer)
+
+    pilot_infer_parser = subparsers.add_parser(
+        "pilot-infer", help="Generate text from a Phase 6 pilot checkpoint for a single prompt"
+    )
+    pilot_infer_parser.add_argument("--checkpoint", required=True, help="path to a training checkpoint (.pt)")
+    pilot_infer_parser.add_argument("--prompt", required=True)
+    pilot_infer_parser.add_argument("--max-new-tokens", type=int, default=32)
+    pilot_infer_parser.add_argument("--config", default=None, help="pilot training config path")
+    pilot_infer_parser.set_defaults(func=_cmd_pilot_infer)
 
     for command, phase in _NOT_IMPLEMENTED.items():
         sub = subparsers.add_parser(command, help=f"(Phase {phase}) not yet implemented")

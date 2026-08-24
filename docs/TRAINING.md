@@ -137,8 +137,16 @@ equivalence and exits non-zero if the comparison fails a tolerance check.
 ## Scope boundary
 
 Phase 5 does not: retrain the tokenizer, modify the frozen dataset or
-evaluation suites, change the architecture, run a hyperparameter sweep, or
-begin Pilot Pretraining (Phase 6). `config/training.yaml`'s smoke-scale
-parameters (2,048 train examples, 200 optimizer steps) are deliberately
-small — see `reports/PHASE5_RESULTS.md` for why they are sufficient to
-validate the pipeline without doing Phase 6's job.
+evaluation suites, change the architecture, or run a hyperparameter sweep.
+`config/training.yaml`'s smoke-scale parameters (2,048 train examples, 200
+optimizer steps) are deliberately small — see `reports/PHASE5_RESULTS.md`
+for why they are sufficient to validate the pipeline without doing Phase
+6's job.
+
+Pilot Pretraining is Phase 6, documented separately in
+[`docs/PILOT_TRAINING.md`](PILOT_TRAINING.md) — it reuses this phase's
+training loop (`juniper_math.trainer`) unchanged but adds a
+category-stratified, packed pilot dataset and multi-suite milestone
+evaluation on top of it. Nothing in this file was changed to enable that;
+`config/training.yaml`, `training_config.py`, and `smoke_data.py` remain
+exactly as Phase 5 approved them.

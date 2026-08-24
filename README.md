@@ -5,13 +5,19 @@ model. **No model with mathematical capability exists yet.** This
 repository has an implemented, mechanically-validated architecture
 (Phase 1), a trained, validated math-specific tokenizer (Phase 2), a
 deterministic calculator tool runtime (Phase 3), a frozen dataset and
-evaluation suite (Phase 4), and a validated smoke-pretraining pipeline
+evaluation suite (Phase 4), a validated smoke-pretraining pipeline
 (Phase 5) that trains a tiny checkpoint end to end purely to prove the
-training mechanics work — that checkpoint is not a claim of mathematical
-capability of any kind. The Phase 3 runtime proves the tool surface a
-future trained model will call into is correct and secure; it does not
-itself demonstrate learned tool-use behavior. Real capability training is
-Phase 6 (Pilot Pretraining), not yet started.
+training mechanics work, and a pilot-pretraining engineering candidate
+(Phase 6) that trains on a ~5M-token, category-stratified slice of the
+frozen corpus to establish whether the model learns stably and to
+recommend a Phase 7 configuration — **the pilot checkpoint is not a claim
+of mathematical capability either**: it demonstrates a clear, attributable
+learning signal (loss, generation structure), not correct arithmetic. The
+Phase 3 runtime proves the tool surface a future trained model will call
+into is correct and secure; it does not itself demonstrate learned
+tool-use behavior. Phase 6 is implementation-complete and self-reviewed;
+independent review by GPT-5.6 Terra is pending — see
+[`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md).
 
 ## Research question
 
@@ -31,6 +37,7 @@ Phase 2 — Math Tokenizer:                   COMPLETE
 Phase 3 — Cinqic Calculator Tool Runtime:   COMPLETE
 Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
+Phase 6 — Pilot Pretraining:                ENGINEERING COMPLETE — PENDING INDEPENDENT REVIEW
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -109,8 +116,34 @@ comparison (bitwise-identical on this run), and the tool-format evaluation
 infrastructure against the frozen `evals/phase4_tool_use_v2.json` suite all
 executed successfully. See [`docs/TRAINING.md`](docs/TRAINING.md) and
 [`reports/PHASE5_RESULTS.md`](reports/PHASE5_RESULTS.md) for full results.
-Phase 5 was implemented and self-reviewed by Claude Sonnet 5; independent
-review is pending.
+Phase 5 was implemented and self-reviewed by Claude Sonnet 5, then
+independently reviewed, remediated, and approved by GPT-5.6 Terra.
+
+Phase 6 (Pilot Pretraining) is the first phase where model behavior is
+meant to matter — not to produce a capable model, but to establish
+whether Juniper Math 1 learns stably from a meaningful slice of the frozen
+corpus and to recommend a Phase 7 configuration backed by measurement. A
+deterministic, category-stratified subset (137,057 train / 3,043
+validation examples, 5,002,683 train tokens — 8.0% of the full corpus)
+extends Phase 5's own approved selection algorithm to guarantee every one
+of the 24 frozen categories is represented, then packs examples to the
+full 1,024-token architectural context (3.3% padding waste, vs. Phase 5's
+unpacked smoke approach) for training efficiency. Over 320 optimizer steps
+on the RTX 2060 (peak 904.5 MiB VRAM, ~6.8 minutes total including
+milestone evaluation): validation loss fell monotonically from 8.38 to
+0.98, generation moved from degenerate token repetition to structured,
+prompt-dependent `<final>`/`<tool_call>`/`<unsupported>` control-token
+usage, and all four frozen v2 evaluation suites (725 cases) were scored in
+full at every milestone — capability accuracy stayed at 0-0.5% throughout,
+the expected and honestly-reported result at this scale, not a claim of
+mathematical capability. A pilot-scale interrupted-vs-uninterrupted resume
+comparison passed within the existing tolerance (not bitwise-identical,
+unlike Phase 5's smoke run — expected at larger scale). See
+[`docs/PILOT_TRAINING.md`](docs/PILOT_TRAINING.md) and
+[`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md) for full results
+and the evidence-backed Phase 7 recommendation. Phase 6 was implemented
+and self-reviewed by Claude Sonnet 5; independent review by GPT-5.6 Terra
+is pending.
 
 ### Phase 2 release verification
 
@@ -168,6 +201,15 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 5 engineering report: [`reports/PHASE5_REPORT.md`](reports/PHASE5_REPORT.md)
 - Phase 5 smoke-run results: [`reports/PHASE5_RESULTS.md`](reports/PHASE5_RESULTS.md)
 - Phase 5 completion report: [`reports/PHASE5_COMPLETION.md`](reports/PHASE5_COMPLETION.md)
+- Phase 5 independent review: [`reports/TERRA_PHASE5_REVIEW.md`](reports/TERRA_PHASE5_REVIEW.md)
+- Phase 5 remediation: [`reports/PHASE5_REMEDIATION.md`](reports/PHASE5_REMEDIATION.md)
+- Phase 5 final approval: [`reports/PHASE5_FINAL_APPROVAL.md`](reports/PHASE5_FINAL_APPROVAL.md)
+- Phase 6 pilot-pretraining documentation: [`docs/PILOT_TRAINING.md`](docs/PILOT_TRAINING.md)
+- Phase 6 plan: [`reports/PHASE6_PLAN.md`](reports/PHASE6_PLAN.md)
+- Phase 6 pilot-run results: [`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md)
+- Phase 6 self-review: [`reports/PHASE6_SELF_REVIEW.md`](reports/PHASE6_SELF_REVIEW.md)
+- Phase 6 completion report: [`reports/PHASE6_COMPLETION.md`](reports/PHASE6_COMPLETION.md)
+- Phase 6 Terra handoff package: [`reports/PHASE6_TERRA_HANDOFF.md`](reports/PHASE6_TERRA_HANDOFF.md)
 
 ## Principles
 
@@ -274,11 +316,16 @@ python -m juniper_math train run            # Phase 5 smoke pretraining
 python -m juniper_math train resume-test    # interrupted-vs-uninterrupted resume equivalence gate
 python -m juniper_math evaluate --checkpoint <path>   # smoke tool-format evaluation
 python -m juniper_math infer --checkpoint <path> --prompt "2 + 2 ="
+python -m juniper_math train pilot-run              # Phase 6 pilot pretraining
+python -m juniper_math train pilot-resume-test      # pilot-scale resume equivalence gate
+python -m juniper_math pilot-evaluate --checkpoint <path>  # all four frozen v2 suites
+python -m juniper_math pilot-infer --checkpoint <path> --prompt "2 + 2 ="
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). No placeholder
 commands remain — see [`docs/TRAINING.md`](docs/TRAINING.md) for the Phase 5
-smoke-pretraining pipeline.
+smoke-pretraining pipeline and [`docs/PILOT_TRAINING.md`](docs/PILOT_TRAINING.md)
+for Phase 6 pilot pretraining.
 
 ## Testing
 
@@ -322,7 +369,7 @@ actually exercised — see
 | 3 | Deterministic tool integration ("Cinqic Calculator") | **COMPLETE** |
 | 4 | Dataset and Evaluation Freeze | **COMPLETE** |
 | 5 | Smoke Pretraining | **COMPLETE — INDEPENDENTLY APPROVED** |
-| 6 | Pilot Pretraining | **AUTHORIZED — NOT STARTED** |
+| 6 | Pilot Pretraining | **ENGINEERING COMPLETE — PENDING INDEPENDENT REVIEW** |
 
 ## License
 

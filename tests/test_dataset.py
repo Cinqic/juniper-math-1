@@ -402,6 +402,35 @@ def test_tokenizer_encode_is_deterministic(tokenizer):
     assert tokenizer.encode(text) == tokenizer.encode(text)
 
 
+def test_expected_completion_final_tag_when_answer_present():
+    from juniper_math.dataset.shard import expected_completion
+
+    ex = _minimal_example(expected_answer="4")
+    tag, value = expected_completion(ex)
+    assert tag == "final"
+    assert value == "4"
+    assert render_training_text(ex).endswith(f"<final>{value}")
+
+
+def test_expected_completion_matches_render_training_text_for_each_behavior_tag():
+    from juniper_math.dataset.shard import BEHAVIOR_TAG, expected_completion
+
+    for behavior, tag in BEHAVIOR_TAG.items():
+        ex = _minimal_example(expected_behavior=behavior, expected_answer=None)
+        got_tag, got_value = expected_completion(ex)
+        assert got_tag == tag
+        assert got_value is None
+        assert render_training_text(ex).endswith(f"<{tag}>")
+
+
+def test_expected_completion_rejects_answerless_unknown_behavior():
+    from juniper_math.dataset.shard import expected_completion
+
+    ex = _minimal_example(expected_behavior="invoke_tool", expected_answer=None)
+    with pytest.raises(ValueError):
+        expected_completion(ex)
+
+
 # --------------------------------------------------------------------------
 # end-to-end tiny build (the "full tiny end-to-end dataset build" gate)
 # --------------------------------------------------------------------------

@@ -79,9 +79,21 @@ and rebuild procedure.
 | `infer --checkpoint PATH --prompt TEXT [--max-new-tokens N]` | Generate text from a checkpoint for a single prompt |
 
 See [`docs/TRAINING.md`](TRAINING.md) for the full smoke-training pipeline,
-configuration, and scope boundary. No later-phase placeholder commands
-remain — every command in `python -m juniper_math --help` is a real
-implementation.
+configuration, and scope boundary.
+
+## Functional in Phase 6
+
+| Command | Purpose |
+|---|---|
+| `train pilot-run [--config PATH] [--max-steps N] [--eval-sample-size N] [--no-milestone-eval]` | Run pilot pretraining: category-stratified packed-subset selection, training, milestone validation/capability evaluation, checkpointing |
+| `train pilot-resume-test [--config PATH]` | Sec. 24 gate at pilot scale: compare an uninterrupted run against an interrupted-and-resumed run |
+| `pilot-evaluate --checkpoint PATH [--config PATH] [--sample-size N]` | Run all four frozen v2 evaluation suites (math, tool_use, calibration, adversarial) against a checkpoint |
+| `pilot-infer --checkpoint PATH --prompt TEXT [--max-new-tokens N]` | Generate text from a pilot checkpoint for a single prompt |
+
+See [`docs/PILOT_TRAINING.md`](PILOT_TRAINING.md) for the full pilot
+pipeline, configuration, and scope boundary. No later-phase placeholder
+commands remain — every command in `python -m juniper_math --help` is a
+real implementation.
 
 ## Examples
 
@@ -112,6 +124,11 @@ python -m juniper_math train run --max-steps 3 --evaluate
 python -m juniper_math train resume-test
 python -m juniper_math evaluate --checkpoint checkpoints/phase5-smoke/step_000200_final.pt
 python -m juniper_math infer --checkpoint checkpoints/phase5-smoke/step_000200_final.pt --prompt "2 + 2 ="
+python -m juniper_math train pilot-run
+python -m juniper_math train pilot-run --max-steps 3 --eval-sample-size 5
+python -m juniper_math train pilot-resume-test
+python -m juniper_math pilot-evaluate --checkpoint checkpoints/phase6-pilot/step_000320_final.pt
+python -m juniper_math pilot-infer --checkpoint checkpoints/phase6-pilot/step_000320_final.pt --prompt "2 + 2 ="
 python -m juniper_math --version
 ```
 

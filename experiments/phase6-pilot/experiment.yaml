@@ -1,0 +1,83 @@
+# Phase 6 pilot-pretraining experiment record.
+# Naming convention: docs/EXPERIMENT_NAMING.md
+
+experiment_id: "p6-20260823-pilot-pretraining"
+phase: 6
+phase_name: "Pilot Pretraining"
+git_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
+source_tree_state: "dirty"  # Phase 6 implementation work was in progress in the working tree at run time;
+                             # the run itself only reads frozen/committed artifacts (architecture, tokenizer,
+                             # dataset), never uncommitted code paths outside this phase's own new modules.
+candidate_commit: null  # filled in once the Phase 6 candidate is committed — see reports/PHASE6_COMPLETION.md
+
+intent: >
+  Establish whether Juniper Math 1 learns stably from a meaningful,
+  category-stratified, representative subset (~8% of the frozen corpus,
+  5,002,683 tokens) of the frozen train split, packed to the full
+  1024-token architectural context, and produce an evidence-backed
+  recommendation for Phase 7's base-pretraining configuration. Not a
+  capability run — the pilot model is not expected to be mathematically
+  useful. See reports/PHASE6_PLAN.md and reports/PHASE6_RESULTS.md.
+
+frozen_artifact_identities:
+  architecture_version: "0.1.0"
+  parameter_count: 5004032
+  tokenizer_identity: "juniper-math-tokenizer-v1"
+  dataset_identity: "juniper-math-dataset-v1"
+  dataset_whole_identity_sha256: "bf9933f032a58b4eb618b32156783b8563097a5fc1c0ef26be4f76445128d25a"
+  tool_protocol_identity: "juniper-tool-protocol-v1"
+  tool_protocol_version: "1.0.0"
+
+training_config: "config/training_phase6_pilot.yaml"
+training_config_sha256: "cb2eb8249fef4c8cc7b87c3e3e4f9807988aa230268780f1214df64a6d676343"
+seed: 5004032
+
+pilot_subset:
+  train_examples: 137057
+  train_tokens: 5002683
+  validation_examples: 3043
+  validation_tokens: 112765
+  selection_method: >
+    Category-stratified fixed-stride sampling: Phase 5's compute_stride_selection
+    applied once per category (juniper_math.pilot_data), floored at
+    min(60, available-in-train) so rare categories cannot round to zero. See
+    data/processed/phase6-pilot/pilot_manifest.json and pilot_selection_audit.json
+    (not committed; reproducible from the frozen dataset + this config + seed).
+  packed_sequences: 5331
+  padding_fraction: 0.0334
+
+environment:
+  python: "3.12.3"
+  torch: "2.13.0+cu130"
+  cuda: "13.0"
+  gpu: "NVIDIA GeForce RTX 2060 6GB"
+  driver: "595.84"
+  os: "Linux 7.0.0-30-generic"
+
+outcome: >
+  PASS. 320 optimizer steps, effective batch size 16 (packed sequences),
+  seq_len 1024, fp32, lr 6.0e-4 (evidence-backed 2x the Phase 5 baseline —
+  see reports/PHASE6_RESULTS.md "Controlled experiments"). Validation loss
+  fell monotonically from 8.3834 (init) to 0.9807 (final) across all 5
+  milestones (0/25/50/75/100%). Gradients and parameters stayed finite at
+  every step. Fixed-prompt generation moved from degenerate token
+  repetition at init to structured, prompt-dependent <final>/<tool_call>/
+  <unsupported> control-token usage by the final milestone. All four
+  frozen v2 evaluation suites (725 cases total) were scored in full at
+  every milestone via the new juniper_math.pilot_eval capability
+  evaluator (math/calibration/adversarial) plus Phase 5's existing
+  tool_format_eval (tool_use); capability accuracy stayed at 0-0.5%
+  throughout, the expected result at this scale. Checkpoint save/restore
+  and the pilot-scale interrupted-vs-uninterrupted resume comparison
+  (train pilot-resume-test) were equivalent within the existing 1e-2
+  tolerance (max parameter abs diff 2.37e-4, max loss-history abs diff
+  2.90e-4) — not bitwise-identical, unlike Phase 5's smoke run, which
+  happened to be bitwise-exact but was never guaranteed to be. Full
+  numbers: reports/PHASE6_RESULTS.md.
+
+outputs:
+  final_checkpoint: "checkpoints/phase6-pilot/step_000320_final.pt (not committed; disposable/reproducible — see checkpoints/README.md)"
+  final_checkpoint_sha256: "6087d10aa802080b45bf748c70496e2ea8bef64e06c827d3b3387f196032f81b"
+  final_checkpoint_size_bytes: 60123779
+  train_log: "experiments/phase6-pilot/train_log.jsonl"
+  resume_test_log: "experiments/phase6-pilot/resume_test_log.jsonl"

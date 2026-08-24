@@ -158,11 +158,28 @@ phase_5_engineering:
   starting_foundation_tag: "phase-4-dataset"
   acceptance_source_commit: "a7a290b0edcb220c5a8d3edcdc5a572e9fd722c3"
 
+# Phase 6 engineering record — implementation and self-review complete,
+# independent review by GPT-5.6 Terra not yet performed. `current_phase`
+# stays 5 (the last independently-approved phase) until that review
+# completes, matching every prior phase's own approval sequence — see
+# reports/PHASE6_RESULTS.md, reports/PHASE6_SELF_REVIEW.md, and
+# reports/PHASE6_COMPLETION.md.
+phase_6_engineering:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "not_yet_performed"
+  candidate_tag: "phase-6-pilot-candidate"
+  starting_foundation_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
+  starting_foundation_tag: "phase-5-smoke"
+
 next_phase:
   number: 6
   name: "Pilot Pretraining"
-  status: "AUTHORIZED — NOT STARTED"
-  started: false
+  status: "ENGINEERING COMPLETE — PENDING INDEPENDENT REVIEW"
+  started: true
   note: >
-    Phase 5 Smoke Pretraining is independently approved. Phase 6 is
-    authorized but has not started.
+    Phase 6 Pilot Pretraining is implementation-complete and self-reviewed
+    by Claude Sonnet 5 (reports/PHASE6_RESULTS.md, reports/PHASE6_SELF_REVIEW.md,
+    reports/PHASE6_COMPLETION.md). Independent review by GPT-5.6 Terra has
+    not yet been performed — see reports/PHASE6_TERRA_HANDOFF.md. Phase 7
+    is NOT authorized until Terra completes review and updates this file.
