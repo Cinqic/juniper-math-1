@@ -12,8 +12,15 @@ This is an initial independent review, not a final approval.
 The frozen shard manifest and `stats.json` specify 1,466,970 train examples
 and 56,209,616 train tokens.  The raw `phase7-full-v1` `run_start` event
 records 1,618,141 train examples and 61,726,503 train tokens: 151,171 extra
-examples.  Its `full_manifest` therefore cannot describe the frozen train
-split.  The candidate checkpoint is ineligible as the Phase 7 Base.
+examples and 5,516,887 extra tokens.  Its `full_manifest` therefore cannot
+describe the frozen train split.  The candidate checkpoint is ineligible as
+the Phase 7 Base.
+
+The historical training directory contains exactly four unmanifested train
+shards, `00030` through `00033`, totaling 151,171 records and 5,516,887
+tokens. Their exact totals match the run-log difference, proving that the
+broad glob ingested them.  The three full shards contain 50,000 records each;
+the final shard contains 1,171 records.
 
 Root cause: `full_data.py` and inherited Phase 6 selection helpers globbed
 `*.{split}.*.jsonl`; verification checked manifest entries but did not reject
