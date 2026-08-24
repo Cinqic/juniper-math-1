@@ -2,9 +2,13 @@
 
 ## Status
 
-**READY FOR TERRA REVIEW.** Not approved. Not independently reviewed.
-GPT-5.6 Terra performs the independent audit, correction, and approval, as
-in every prior phase.
+> **Historical invalidated candidate record — not the approved Phase 7 Base.**
+> The `phase7-full-v1` run described below ingested four unmanifested shards
+> (151,171 extra training examples) and used a dirty source tree. Its
+> checkpoint and reported selection are superseded by clean
+> `phase7-full-v2`. Preserve this document as evidence of the original
+> candidate; use `reports/PHASE7_FINAL_APPROVAL.md` for the approved artifact
+> and `reports/TERRA_PHASE7_REVIEW.md` for the forensic finding.
 
 ## Starting state
 
