@@ -24,6 +24,7 @@ from juniper_math.pilot_data import (
     select_and_record_pilot_subset,
     select_pilot_examples,
     tokenize_examples,
+    verify_parent_dataset_shards,
 )
 from juniper_math.smoke_data import compute_stride_selection
 from juniper_math.tokenizer import JuniperTokenizer
@@ -227,6 +228,12 @@ def test_packed_pilot_dataset_rejects_empty_input(tokenizer):
         PackedPilotDataset([], tokenizer, 32)
 
 
+def test_packed_pilot_dataset_honors_disabled_packing(tokenizer):
+    examples = [_example(i, "train", "arithmetic") for i in range(6)]
+    dataset = PackedPilotDataset(examples, tokenizer, 256, pack_sequences_flag=False)
+    assert len(dataset) == len(examples)
+
+
 # --------------------------------------------------------------------------
 # end-to-end selection + manifest
 # --------------------------------------------------------------------------
@@ -269,3 +276,10 @@ def test_select_and_record_pilot_subset_rejects_dataset_identity_mismatch(tiny_d
             output_dir=tmp_path / "out",
             dataset_config=tiny_dataset_config,
         )
+
+
+def test_verify_parent_dataset_shards_rejects_stale_shard(tiny_dataset_config):
+    shard = next(tiny_dataset_config.output.processed_path.glob("*.train.*.jsonl"))
+    shard.write_text(shard.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+    with pytest.raises(PilotDataError, match="does not match frozen manifest"):
+        verify_parent_dataset_shards(tiny_dataset_config)

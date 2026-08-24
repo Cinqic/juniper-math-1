@@ -65,6 +65,7 @@ from juniper_math.dataset.config import DatasetConfig, load_dataset_config
 from juniper_math.dataset.io import example_from_dict
 from juniper_math.dataset.schema import Example
 from juniper_math.dataset.shard import render_training_text
+from juniper_math.hashing import sha256_file
 from juniper_math.smoke_data import compute_stride_selection
 from juniper_math.tokenizer import JuniperTokenizer
 
@@ -202,6 +203,44 @@ def _read_dataset_identity(dataset_config: DatasetConfig) -> str:
     if not path.is_file():
         raise PilotDataError(f"Dataset identity file not found at {path}. Run `dataset build` first.")
     return path.read_text(encoding="utf-8").split()[0]
+
+
+def verify_parent_dataset_shards(dataset_config: DatasetConfig) -> None:
+    """Require the on-disk shards to match the frozen manifest before selection.
+
+    The dataset's identity file and manifest are repository-controlled, while
+    the large JSONL shards are deliberately ignored.  Checking only the
+    repository-controlled metadata can therefore allow a stale local shard
+    directory to be selected and described as the frozen dataset.  A pilot
+    run is an evidence-producing operation, so fail closed when any shard
+    differs from the recorded bytes.
+    """
+    manifest = _read_shard_manifest(dataset_config.output.manifest_path)
+    shard_entries = manifest.get("shards")
+    if not isinstance(shard_entries, list) or not shard_entries:
+        raise PilotDataError("Dataset shard manifest has no shard entries.")
+    hashes: list[str] = []
+    for entry in shard_entries:
+        if not isinstance(entry, dict):
+            raise PilotDataError("Dataset shard manifest contains a malformed entry.")
+        filename = entry.get("filename")
+        expected_hash = entry.get("sha256")
+        expected_size = entry.get("byte_size")
+        if (
+            not isinstance(filename, str)
+            or not isinstance(expected_hash, str)
+            or not isinstance(expected_size, int)
+        ):
+            raise PilotDataError("Dataset shard manifest entry is missing filename, sha256, or byte_size.")
+        path = dataset_config.output.processed_path / filename
+        if not path.is_file():
+            raise PilotDataError(f"Dataset shard listed in manifest is missing: {path}.")
+        if path.stat().st_size != expected_size or sha256_file(path) != expected_hash:
+            raise PilotDataError(f"Dataset shard does not match frozen manifest: {path}.")
+        hashes.append(expected_hash)
+    computed_identity = hashlib.sha256("\n".join(hashes).encode("utf-8")).hexdigest()
+    if computed_identity != _read_dataset_identity(dataset_config):
+        raise PilotDataError("Dataset shard hashes do not match DATASET_IDENTITY.sha256.")
 
 
 @dataclass(frozen=True)
@@ -343,7 +382,11 @@ class PackedPilotDataset(Dataset):
     """
 
     def __init__(
-        self, examples: list[Example], tokenizer: JuniperTokenizer, max_sequence_length: int
+        self,
+        examples: list[Example],
+        tokenizer: JuniperTokenizer,
+        max_sequence_length: int,
+        pack_sequences_flag: bool = True,
     ) -> None:
         if not examples:
             raise PilotDataError("PackedPilotDataset requires at least one example.")
@@ -351,7 +394,14 @@ class PackedPilotDataset(Dataset):
         self.pad_id = tokenizer.token_to_id("<pad>")
 
         tokenized = tokenize_examples(examples, tokenizer, max_sequence_length)
-        self.bins = pack_sequences(tokenized, max_sequence_length)
+        # Keep the configuration meaningful: the pilot uses packing, but a
+        # deliberately un-packed control run must retain one example per
+        # sequence rather than silently taking the packed path.
+        self.bins = (
+            pack_sequences(tokenized, max_sequence_length)
+            if pack_sequences_flag
+            else [[item] for item in tokenized]
+        )
 
         self._input_ids: list[torch.Tensor] = []
         self._labels: list[torch.Tensor] = []
@@ -412,6 +462,7 @@ def select_and_record_pilot_subset(
             f"pilot config dataset_identity {dataset_id!r} does not match config/dataset.yaml "
             f"dataset_id {dataset_config.dataset_id!r}."
         )
+    verify_parent_dataset_shards(dataset_config)
     train_examples, train_audit = select_pilot_examples(
         dataset_config, "train", target_train_tokens, min_category_examples, seed
     )
@@ -451,6 +502,7 @@ __all__ = [
     "select_and_record_pilot_subset",
     "select_pilot_examples",
     "tokenize_examples",
+    "verify_parent_dataset_shards",
     "write_pilot_manifest",
 ]
 

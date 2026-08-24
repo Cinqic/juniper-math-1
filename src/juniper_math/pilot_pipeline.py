@@ -137,7 +137,9 @@ def _build_datasets(training_config: PilotTrainingConfig, tokenizer: JuniperToke
         output_dir=training_config.output.pilot_dataset_path,
         dataset_config=dataset_config,
     )
-    train_ds = PackedPilotDataset(selections["train"], tokenizer, ps.max_sequence_length)
+    train_ds = PackedPilotDataset(
+        selections["train"], tokenizer, ps.max_sequence_length, pack_sequences_flag=ps.pack_sequences
+    )
     val_ds = TokenizedSmokeDataset(selections["validation"], tokenizer, VALIDATION_MAX_SEQUENCE_LENGTH)
     return PilotDatasets(
         train=train_ds, validation=val_ds, validation_examples=selections["validation"], manifest=manifest
