@@ -2,6 +2,8 @@
 
 ## APPROVED
 
+Acceptance source commit: `ac2bbe9c6c40c9da9a4fc5dcb1dcd34cd458c6aa`.
+
 Phase 6 Pilot Pretraining is independently verified and approved after
 remediation. The original candidate experiment is invalidated and preserved
 only as superseded historical evidence; the authoritative evidence is the

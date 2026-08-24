@@ -172,6 +172,7 @@ phase_6_engineering:
   terra_final_approval: "approved"
   candidate_tag: "phase-6-pilot-candidate"
   final_tag: "phase-6-pilot"
+  acceptance_source_commit: "ac2bbe9c6c40c9da9a4fc5dcb1dcd34cd458c6aa"
   starting_foundation_commit: "73792c04f365c6f139a979f6950fa87be2af5d76"
   starting_foundation_tag: "phase-5-smoke"
 
