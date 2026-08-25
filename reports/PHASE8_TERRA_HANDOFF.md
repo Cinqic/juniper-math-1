@@ -150,6 +150,64 @@ PYTHONPATH="$PWD/src" python -m juniper_math sft-evaluate --checkpoint checkpoin
 - Candidate tag: `phase-8-math-sft-candidate`
 - Resolve the exact commit with: `git rev-parse phase-8-math-sft-candidate^{commit}`
 
+## Recovery test performed this session
+
+A genuine fresh `git clone` of `https://github.com/Cinqic/juniper-math-1.git`
+into a scratch directory, checked out at `phase-8-math-sft-candidate`
+(`git log -1`: `a0c4ec4 phase 8: implement and run mathematical
+instruction/tool SFT`), confirmed:
+
+1. `requirements-lock.txt` in the clone is byte-identical to the working
+   copy's (same locked environment).
+2. `juniper_math.pilot_data.verify_parent_dataset_shards` passes against
+   the clone's own committed `shard_manifest.json`/`DATASET_IDENTITY.sha256`
+   — **with one documented limitation**: the actual `.jsonl` shard bytes
+   (correctly not committed to Git, per this project's own
+   local-storage-is-disposable convention) were copied in from this
+   session's already-verified local copy rather than regenerated from
+   scratch via `dataset build`, because a full 1.46M-example regeneration
+   was judged too time-expensive for this session's bounded recovery
+   check. The hash-verification step itself is genuine and unmodified;
+   only the *source* of the shard bytes it checked was not a from-scratch
+   rebuild. This is a real limitation, stated rather than concealed.
+3. The Phase 7 Base checkpoint and the selected Phase 8 checkpoint were
+   both retrieved fresh from their respective GitHub releases (not copied
+   from the working copy) and independently re-hashed inside the clone:
+   both matched their recorded SHA-256 exactly.
+4. The clone's own `src/` (via `PYTHONPATH`) successfully: loaded the
+   Phase 8 model from the retrieved checkpoint; ran direct inference
+   (`"What is 5 times 6?"` → `<final>30`); ran the full end-to-end
+   tool-interaction loop (`run_tool_interaction`) on a tool-use prompt;
+   and ran the Phase 8 eval suite (`run_phase8_eval_suite`) on a 10-case
+   sample.
+5. The Python environment itself was **not** rebuilt from
+   `requirements-lock.txt` in a fresh venv — this session reused the
+   already-validated `.venv` for the clone's execution, given time
+   constraints. This is the other explicitly documented limitation of
+   this recovery check.
+
+Exact commands:
+
+```bash
+git clone https://github.com/Cinqic/juniper-math-1.git recovery_clone
+cd recovery_clone && git checkout phase-8-math-sft-candidate
+
+# (shard bytes copied in locally — see limitation above)
+PYTHONPATH="$PWD/src" python -c "
+from juniper_math.dataset.config import load_dataset_config
+from juniper_math.pilot_data import verify_parent_dataset_shards
+verify_parent_dataset_shards(load_dataset_config())"
+
+gh release download phase-7-pretraining --repo Cinqic/juniper-math-1 \
+  --pattern step_007483_final.pt --dir checkpoints/phase7-full-v2/
+gh release download phase-8-math-sft-candidate --repo Cinqic/juniper-math-1 \
+  --pattern step_002700.pt --dir checkpoints/phase8-sft/
+sha256sum checkpoints/phase7-full-v2/step_007483_final.pt checkpoints/phase8-sft/step_002700.pt
+
+PYTHONPATH="$PWD/src" python -m juniper_math sft-infer \
+  --checkpoint checkpoints/phase8-sft/step_002700.pt --prompt "What is 5 times 6?"
+```
+
 ## Repository status
 
 `config/project.yaml`: `current_phase: 7` (last independently approved
