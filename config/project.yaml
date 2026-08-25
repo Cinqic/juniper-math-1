@@ -249,6 +249,9 @@ phase_10:
   note: "Phase 10 assumed a release-quality trained model; it is not executed."
 
 final_project_record:
+  final_research_tag: "juniper-math-1-final"
+  final_research_release: "https://github.com/Cinqic/juniper-math-1/releases/tag/juniper-math-1-final"
+  final_research_report: "reports/FINAL_RESEARCH_CONCLUSION.md"
   last_approved_model_phase: 7
   approved_checkpoint_path: "checkpoints/phase7-full-v2/step_007483_final.pt"
   approved_checkpoint_sha256: "2e8098ab3a5db3c59a82fad19af2050154637fbe0628f3f6b0ca932d6cb6ea60"
