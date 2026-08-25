@@ -152,8 +152,8 @@ artifacts:
 
   - artifact_id: "phase8_sft_training_config"
     path: "config/training_phase8_sft.yaml"
-    sha256: "533c7ef0ecb3694afcfb2b1a8cb382d7ac26a94eb5b5bbe30f522de1abab0967"
-    description: "Phase 8 staged tool-call safety/replay bounded preflight configuration (run_id phase8-sft-v15-call-stage-preflight); historical rejected and preflight configurations remain preserved in Git history."
+    sha256: "3a4d51231eb13e4d4016e5befdec2654c9efa1695e4dfa16210e90eb0919fdac"
+    description: "Phase 8 staged tool-call safety/replay 600-step milestone configuration (run_id phase8-sft-v16-call-stage-milestones); historical rejected and preflight configurations remain preserved in Git history."
 
   - artifact_id: "dataset_shard_manifest"
     path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"
