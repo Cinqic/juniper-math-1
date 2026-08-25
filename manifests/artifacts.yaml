@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "b7c0be8db16d21457dc0526659e6dbd26a3ad8ecc4404b9cff7abfc942a62b2a"
+    sha256: "99329a0532310fa1cba927684885ff4aa7f49ee8e0c83d590be9cbdb58e421b6"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -152,8 +152,8 @@ artifacts:
 
   - artifact_id: "phase8_sft_training_config"
     path: "config/training_phase8_sft.yaml"
-    sha256: "f0657af69023f939acd71a371da0c75bad1cb28076f9cb4bc58d75f04ab9e71d"
-    description: "Frozen Phase 8 SFT training configuration (run_id phase8-sft-v1)."
+    sha256: "67ba3f4d5a5778daaafc2490eba1704545edb7e77568b9fc9b11590fb025e1ab"
+    description: "Terra Phase 8 remediation SFT configuration (run_id phase8-sft-v3-remediated); historical v1/v2 configurations remain preserved in Git history."
 
   - artifact_id: "dataset_shard_manifest"
     path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"

@@ -35,6 +35,26 @@ _ANSWERLESS_BEHAVIORS = frozenset(
 )
 
 
+def _tool_error_completion(ex: Example) -> str:
+    """Derive the assistant's useful response to a trusted runtime error.
+
+    The frozen Phase 4 example intentionally has no ``expected_answer`` for
+    ``tool_error``: the runtime error is authoritative, and a numeric answer
+    would be fabricated.  Phase 8 must nevertheless train the *next
+    assistant turn*.  This representation is therefore derived only from the
+    recorded real tool result and is deliberately versioned with the SFT
+    dataset rather than changing the frozen source example.
+    """
+    if not ex.tool_traces:
+        raise SftRenderingError(f"tool-error example {ex.example_id!r} has no trusted tool trace.")
+    result = ex.tool_traces[-1].result
+    error = result.get("error") or {}
+    code, message = error.get("code"), error.get("message")
+    if not isinstance(code, str) or not isinstance(message, str) or not code or not message:
+        raise SftRenderingError(f"tool-error example {ex.example_id!r} has no usable trusted runtime error.")
+    return f"<error>{code}: {message}"
+
+
 class SftRenderingError(ValueError):
     """Raised when an example cannot be rendered into a valid masked sequence."""
 
@@ -71,11 +91,16 @@ def render_segments(ex: Example) -> list[Segment]:
         segments.append(Segment(f"\n<final>{ex.expected_answer}", "supervised"))
     elif ex.expected_behavior in _ANSWERLESS_BEHAVIORS:
         segments.append(Segment(f"\n<{BEHAVIOR_TAG[ex.expected_behavior]}>", "supervised"))
+    elif ex.expected_behavior == "invoke_tool" and ex.category == "tool_error":
+        # The frozen source deliberately ends at the real error result.  For
+        # assistant-focused SFT that would supervise EOS immediately after a
+        # context-only segment, teaching the model to stop instead of explain
+        # the execution failure.  Add a derived, trusted terminal response.
+        segments.append(Segment(f"\n{_tool_error_completion(ex)}", "supervised"))
     elif ex.expected_behavior == "invoke_tool":
-        # Matches dataset.shard.render_training_text exactly: a tool-required
-        # example with no separate expected_answer appends no terminal tag —
-        # the sequence ends after the last <tool_result> block. Not an error.
-        pass
+        raise SftRenderingError(
+            f"invoke_tool example {ex.example_id!r} has no terminal assistant completion."
+        )
     else:
         raise SftRenderingError(
             f"example {ex.example_id!r}: no expected_answer and expected_behavior "
@@ -119,9 +144,8 @@ def tokenize_and_mask(
         else:
             labels.extend([-100] * len(seg_ids))
     ids.append(eos_id)
-    # EOS is supervised: it is the correct "stop" signal immediately
-    # following a supervised segment (every example ends on a supervised
-    # segment by construction — see render_segments).
+    # EOS is supervised: every accepted representation ends on an assistant
+    # segment, including the derived trusted error completion above.
     labels.append(eos_id)
 
     if len(ids) > max_sequence_length:

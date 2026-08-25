@@ -152,6 +152,7 @@ there.
 
 ## Statement
 
-GPT-5.6 Terra has not yet independently reviewed or approved Phase 8.
-Phase 9 has not started and remains unauthorized until Phase 8 is
-approved (with or without remediation).
+This is the historical engineering-completion report. Terra subsequently
+completed independent review and bounded remediation; see
+`reports/TERRA_PHASE8_REVIEW.md` and `reports/PHASE8_REMEDIATION.md`.
+Phase 8 was not approved and Phase 9 remains unauthorized.

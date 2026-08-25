@@ -48,8 +48,12 @@ from juniper_math.sft_rendering import SftRenderingError, tokenize_and_mask
 from juniper_math.smoke_data import compute_stride_selection
 from juniper_math.tokenizer import JuniperTokenizer
 
-SFT_DATASET_ID = "juniper-math-sft-v1"
-SFT_MANIFEST_SCHEMA_VERSION = "1.0.0"
+# v2 changes only the Phase-8-derived representation for tool-error cases:
+# it adds a supervised response derived from the trusted runtime error rather
+# than training EOS directly after a context-only tool result.  The frozen
+# Phase 4 parent corpus is unchanged.
+SFT_DATASET_ID = "juniper-math-sft-v2"
+SFT_MANIFEST_SCHEMA_VERSION = "2.0.0"
 
 
 class SftDataError(ValueError):

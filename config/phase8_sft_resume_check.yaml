@@ -23,7 +23,7 @@
 run_id: "phase8-sft-resume-check-v1"
 architecture_identity: "0.1.0"
 tokenizer_identity: "juniper-math-tokenizer-v1"
-dataset_identity: "juniper-math-sft-v1"
+dataset_identity: "juniper-math-sft-v2"
 tool_protocol_identity: "juniper-tool-protocol-v1"
 
 # Verified in this session by downloading the phase-7-pretraining GitHub
@@ -112,3 +112,4 @@ fixed_generation_prompts:
   - category: "incorrect_supplied_answer"
     prompt: "Is it true that 7 times 8 equals 54?"
 generation_max_new_tokens: 200
+base_regression_validation_examples: 2000

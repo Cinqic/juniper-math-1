@@ -252,18 +252,16 @@ def test_segment_wise_tokenization_matches_joint_tokenization(tokenizer):
         assert mt.ids == joint_ids
 
 
-def test_invoke_tool_without_final_answer_appends_no_terminal_tag(tokenizer):
-    """Matches dataset.shard.render_training_text's own behavior exactly: a
-    tool-required example whose expected_behavior is 'invoke_tool' with no
-    separate expected_answer gets no <final>/<unsupported>/<error> tag —
-    the sequence just ends after the last <tool_result>."""
+def test_tool_error_gets_derived_supervised_error_completion(tokenizer):
+    """The derived Phase 8 representation must train the next assistant
+    turn after a trusted runtime error rather than EOS after context."""
     call = {"protocol_version": "1.0.0", "tool": "calculator.evaluate", "arguments": {"expression": "2 + 2"}}
     result = {
         "protocol_version": "1.0.0",
         "tool": "calculator.evaluate",
-        "status": "success",
-        "result": {"value": "4", "exact": True},
-        "error": None,
+        "status": "error",
+        "result": None,
+        "error": {"code": "DIVISION_BY_ZERO", "message": "Division by zero"},
     }
     ex = Example(
         example_id="test_invoke_only_0001",
@@ -273,7 +271,7 @@ def test_invoke_tool_without_final_answer_appends_no_terminal_tag(tokenizer):
         template_id="t",
         derivation_id="d",
         seed=4,
-        category="tool_use",
+        category="tool_error",
         difficulty="easy",
         synthetic=True,
         split="train",
@@ -289,8 +287,17 @@ def test_invoke_tool_without_final_answer_appends_no_terminal_tag(tokenizer):
         notes="",
     )
     segments = render_segments(ex)
-    assert segments[-1].role == "context"  # last segment is the tool_result, not a terminal tag
-    assert not any("<final>" in s.text or "<unsupported>" in s.text or "<error>" in s.text for s in segments)
+    assert segments[-1].role == "supervised"
+    assert segments[-1].text == "\n<error>DIVISION_BY_ZERO: Division by zero"
+    mt = tokenize_and_mask(ex, tokenizer, 256)
+    assert mt.labels[-1] == mt.ids[-1]
+
+
+def test_answerless_non_error_invoke_tool_is_rejected():
+    ex = _tool_example()
+    ex = Example(**{**ex.__dict__, "expected_answer": None, "expected_behavior": "invoke_tool"})
+    with pytest.raises(SftRenderingError, match="no terminal assistant completion"):
+        render_segments(ex)
 
 
 def test_unknown_answerless_behavior_raises():

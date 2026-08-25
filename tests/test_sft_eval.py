@@ -4,7 +4,9 @@ generation/model behavior."""
 
 from __future__ import annotations
 
-from juniper_math.sft_eval import CaseMetrics, ToolInteractionReport
+from fractions import Fraction
+
+from juniper_math.sft_eval import CaseMetrics, ToolInteractionReport, _parse_number
 
 
 def _case(**overrides) -> CaseMetrics:
@@ -19,7 +21,9 @@ def _case(**overrides) -> CaseMetrics:
         emitted_tool_call=False,
         call_parsed=False,
         tool_name_correct=None,
+        arguments_correct=None,
         execution_successful=None,
+        end_to_end_success=None,
         final_answer_consistent_with_result=None,
         final_answer_correct=True,
         unnecessary_tool_call=False,
@@ -66,18 +70,17 @@ def test_direct_vs_tool_denominators_partition_correctly():
     assert d["missing_required_call"]["denominator"] == 1
 
 
-def test_tool_name_correct_excludes_not_applicable_cases():
-    """A direct (no-tool-required) case where the model didn't invoke
-    anything has tool_name_correct=None (not applicable) — it must not
-    silently count as either a hit or a miss."""
+def test_tool_name_correct_uses_all_required_tool_cases():
+    """Malformed/missing calls are failures, not denominator exclusions."""
     cases = [
         _case(tool_name_correct=None),  # not applicable
-        _case(tool_name_correct=True),
-        _case(tool_name_correct=False),
+        _case(tool_invocation_required=True, tool_required=True, tool_name_correct=True),
+        _case(tool_invocation_required=True, tool_required=True, tool_name_correct=False),
+        _case(tool_invocation_required=True, tool_required=True, tool_name_correct=False),
     ]
-    report = ToolInteractionReport(suite_id="s", n_cases=3, cases=cases)
+    report = ToolInteractionReport(suite_id="s", n_cases=4, cases=cases)
     d = report.as_dict()
-    assert d["tool_name_correct"]["denominator"] == 2  # only the applicable two
+    assert d["tool_name_correct"]["denominator"] == 3
     assert d["tool_name_correct"]["numerator"] == 1
 
 
@@ -99,3 +102,11 @@ def test_n_cases_matches_len_cases():
     d = report.as_dict()
     assert d["n_cases"] == 5
     assert d["correct_routing"]["denominator"] == 5
+
+
+def test_numeric_parser_accepts_valid_final_answer_representations():
+    assert _parse_number("The result is $12.50.") == Fraction(25, 2)
+    assert _parse_number("1,234.5 meters") == Fraction(2469, 2)
+    assert _parse_number("approximately -1.2e-3") == Fraction(-3, 2500)
+    assert _parse_number("The exact result is 7 / 8.") == Fraction(7, 8)
+    assert _parse_number("15%") == Fraction(15)

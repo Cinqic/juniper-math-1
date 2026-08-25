@@ -32,13 +32,14 @@ from juniper_math.generation import GenerationResult, generate
 from juniper_math.model import build_model, count_trainable_parameters
 from juniper_math.paths import REPO_ROOT
 from juniper_math.seed import set_global_seed
-from juniper_math.sft_data import MaskedSftDataset, SftManifest, select_and_record_sft_subset
+from juniper_math.sft_data import SFT_DATASET_ID, MaskedSftDataset, SftManifest, select_and_record_sft_subset
 from juniper_math.sft_eval import run_phase8_eval_suite
 from juniper_math.sft_training_config import (
     SftTrainingConfig,
     load_sft_training_config,
     verify_parent_checkpoint,
 )
+from juniper_math.smoke_data import TokenizedSmokeDataset, select_smoke_examples
 from juniper_math.tokenizer import JuniperTokenizer
 from juniper_math.trainer import (
     TrainState,
@@ -94,6 +95,11 @@ def _load_common(config_path: Path | None) -> tuple[SftTrainingConfig, Architect
         )
     tokenizer = JuniperTokenizer.load()
     verify_parent_checkpoint(training_config)
+    if training_config.dataset_identity != SFT_DATASET_ID:
+        raise JuniperConfigError(
+            f"SFT training config dataset_identity {training_config.dataset_identity!r} does not match "
+            f"the current derived representation {SFT_DATASET_ID!r}."
+        )
     return training_config, architecture, tokenizer
 
 
@@ -102,6 +108,7 @@ class SftDatasets:
     train: MaskedSftDataset
     validation: MaskedSftDataset
     validation_examples: list[Example]
+    base_regression_validation: TokenizedSmokeDataset
     manifest: SftManifest
 
 
@@ -130,8 +137,21 @@ def _build_datasets(
     )
     train_ds = MaskedSftDataset(selections["train"], tokenizer, ss.max_sequence_length)
     val_ds = MaskedSftDataset(selections["validation"], tokenizer, ss.max_sequence_length)
+    base_validation_examples = select_smoke_examples(
+        dataset_config,
+        "validation",
+        training_config.base_regression_validation_examples,
+        training_config.seed,
+    )
+    base_regression_validation = TokenizedSmokeDataset(
+        base_validation_examples, tokenizer, ss.max_sequence_length
+    )
     return SftDatasets(
-        train=train_ds, validation=val_ds, validation_examples=selections["validation"], manifest=manifest
+        train=train_ds,
+        validation=val_ds,
+        validation_examples=selections["validation"],
+        base_regression_validation=base_regression_validation,
+        manifest=manifest,
     )
 
 
@@ -193,6 +213,7 @@ class MilestoneReport:
     step: int
     fraction: float
     validation_loss: float
+    base_regression_validation_loss: float
     category_validation_loss: dict[str, float]
     capability: dict[str, Any]
     tool_interaction: dict[str, Any]
@@ -203,6 +224,7 @@ class MilestoneReport:
             "step": self.step,
             "fraction": self.fraction,
             "validation_loss": self.validation_loss,
+            "base_regression_validation_loss": self.base_regression_validation_loss,
             "category_validation_loss": self.category_validation_loss,
             "capability": self.capability,
             "tool_interaction": self.tool_interaction,
@@ -221,6 +243,9 @@ def run_milestone(
     overall, category_losses = compute_validation_metrics(
         state, datasets, training_config.data.micro_batch_size
     )
+    base_regression = validate(
+        state, datasets.base_regression_validation, training_config.data.micro_batch_size
+    )
     capability = run_capability_suites(
         state.model, tokenizer, state.device, training_config.generation_max_new_tokens, eval_sample_size
     )
@@ -237,6 +262,7 @@ def run_milestone(
         step=state.step,
         fraction=fraction,
         validation_loss=overall["validation_loss"],
+        base_regression_validation_loss=base_regression["validation_loss"],
         category_validation_loss=category_losses,
         capability=capability,
         tool_interaction=tool_report.as_dict(),

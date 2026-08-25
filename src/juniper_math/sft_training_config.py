@@ -90,6 +90,7 @@ class SftTrainingConfig:
     output: SftOutputPaths
     fixed_generation_prompts: list[dict[str, str]]
     generation_max_new_tokens: int
+    base_regression_validation_examples: int
     milestone_fractions: list[float]
     raw: dict[str, Any]
 
@@ -148,6 +149,7 @@ def validate_sft_training_config(config: SftTrainingConfig) -> None:
         ("data.gradient_accumulation_steps", config.data.gradient_accumulation_steps),
         ("schedule.total_steps", config.schedule.total_steps),
         ("generation_max_new_tokens", config.generation_max_new_tokens),
+        ("base_regression_validation_examples", config.base_regression_validation_examples),
     ):
         _positive_int(value, name)
     for name, value in (
@@ -249,6 +251,7 @@ def load_sft_training_config(path: Path | None = None) -> SftTrainingConfig:
             output=SftOutputPaths(**raw["output"]),
             fixed_generation_prompts=list(raw["fixed_generation_prompts"]),
             generation_max_new_tokens=raw["generation_max_new_tokens"],
+            base_regression_validation_examples=raw["base_regression_validation_examples"],
             milestone_fractions=list(raw["milestone_fractions"]),
             raw=raw,
         )

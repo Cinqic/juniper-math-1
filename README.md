@@ -48,7 +48,7 @@ Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
 Phase 6 — Pilot Pretraining:                COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
 Phase 7 — Full Base Pretraining:            COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
-Phase 8 — Mathematical Instruction/Tool SFT: ENGINEERING COMPLETE — AWAITING GPT-5.6 TERRA REVIEW
+Phase 8 — Mathematical Instruction/Tool SFT: NOT APPROVED — REMEDIATION PRESERVED
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -178,8 +178,11 @@ Base, and a real (though much reduced) general-capability regression
 remains. See [`docs/PHASE8_SFT_TRAINING.md`](docs/PHASE8_SFT_TRAINING.md),
 [`reports/PHASE8_RESULTS.md`](reports/PHASE8_RESULTS.md), and
 [`reports/PHASE8_TERRA_HANDOFF.md`](reports/PHASE8_TERRA_HANDOFF.md).
-Phase 8 engineering and self-review are complete; GPT-5.6 Terra has not
-yet independently reviewed or approved it, and Phase 9 is not authorized.
+Terra completed an independent review and bounded remediation. The best
+remediation checkpoint preserved Base loss and improved tool-error completion,
+but direct-answer correctness remained 0/115 on the held-out suite; Phase 8 is
+not approved and Phase 9 is not authorized. See
+[`reports/TERRA_PHASE8_REVIEW.md`](reports/TERRA_PHASE8_REVIEW.md).
 
 ### Phase 2 release verification
 
@@ -260,6 +263,7 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 8 self-review: [`reports/PHASE8_SELF_REVIEW.md`](reports/PHASE8_SELF_REVIEW.md)
 - Phase 8 completion report: [`reports/PHASE8_COMPLETION.md`](reports/PHASE8_COMPLETION.md)
 - Phase 8 Terra handoff package: [`reports/PHASE8_TERRA_HANDOFF.md`](reports/PHASE8_TERRA_HANDOFF.md)
+- Phase 8 independent review and remediation verdict: [`reports/TERRA_PHASE8_REVIEW.md`](reports/TERRA_PHASE8_REVIEW.md), [`reports/PHASE8_REMEDIATION.md`](reports/PHASE8_REMEDIATION.md)
 
 ## Principles
 

@@ -208,8 +208,9 @@ phase_7_engineering:
 phase_8_engineering:
   sonnet_5_implementation: "complete"
   sonnet_5_self_review: "complete"
-  terra_independent_review: "pending"
-  terra_final_approval: "pending"
+  terra_independent_review: "complete"
+  terra_remediation: "complete_not_approved"
+  terra_final_approval: "not_approved"
   candidate_tag: "phase-8-math-sft-candidate"
   final_tag: null
   starting_foundation_commit: "79c14afb291ac04123db16e90d64828ec62d959f"
@@ -225,16 +226,15 @@ phase_8_engineering:
     - "at a larger (n=200) evaluation sample, several tool-format metrics (tool_use_format.valid_rate, argument_execution_successful, terminal_tag_correct) are measurably WORSE on every SFT candidate than on the Base"
     - "no checkpoint (including the Base) achieves nonzero end_to_end_success_on_tool_required or direct_answer_correct on the held-out suite"
     - "overall verdict (reports/PHASE8_RESULTS.md) is an honest 'marginal, mixed outcome', not a demonstrated capability improvement — Terra should treat this as a review-and-likely-remediate case, not a rubber-stamp"
+    - "Terra's remediated 300-step low-LR checkpoint preserves Base regression and reaches 9/53 tool-error end-to-end completions, but remains at 0/115 direct-answer correctness; Phase 8 is not approved"
 
 next_phase:
-  number: 8
-  name: "Mathematical Instruction and Tool Training"
-  status: "ENGINEERING COMPLETE — AWAITING GPT-5.6 TERRA INDEPENDENT REVIEW"
-  started: true
+  number: 9
+  name: "Truthfulness, Calibration, and Mathematical Refinement"
+  status: "UNAUTHORIZED — PHASE 8 NOT APPROVED"
+  started: false
   note: >
-    Phase 7 Full Base Pretraining is independently approved. Phase 8
-    engineering (dataset, SFT pipeline, tool-interaction evaluation harness,
-    training, evaluation, checkpoint selection, self-review) is complete
-    and remotely preserved, but GPT-5.6 Terra has not yet independently
-    reviewed or approved it. Phase 9 remains unauthorized until Phase 8 is
-    approved.
+    Phase 7 Full Base Pretraining is independently approved. Terra completed
+    an independent Phase 8 review and bounded remediation, but no checkpoint
+    met the direct-answer and end-to-end capability gates. Phase 9 remains
+    unauthorized.

@@ -3,6 +3,8 @@
 Canonical config: [`config/training_phase8_sft.yaml`](../config/training_phase8_sft.yaml).
 This document describes the design; see
 [`reports/PHASE8_PLAN.md`](../reports/PHASE8_PLAN.md) for the plan,
+[`reports/TERRA_PHASE8_REVIEW.md`](../reports/TERRA_PHASE8_REVIEW.md) for the
+independent non-approval verdict, and
 [`reports/PHASE8_DATASET.md`](../reports/PHASE8_DATASET.md) for the SFT
 corpus, [`reports/PHASE8_PREFLIGHT.md`](../reports/PHASE8_PREFLIGHT.md) for
 the bounded LR/mixture comparison, and

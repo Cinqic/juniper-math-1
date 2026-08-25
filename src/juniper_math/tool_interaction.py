@@ -72,6 +72,7 @@ class ToolCallAttempt:
     parsed: bool
     parse_error: str | None
     tool_name: str | None
+    call_arguments: dict[str, Any] | None
     result: dict[str, Any] | None  # the REAL runtime result, never model text
 
 
@@ -156,6 +157,7 @@ def run_tool_interaction(
                 parsed=True,
                 parse_error=None,
                 tool_name=call.tool,
+                call_arguments=dict(call.arguments),
                 result=result.to_dict(),
             )
             wire_result = wire_tool_result(result)
@@ -165,6 +167,7 @@ def run_tool_interaction(
                 parsed=False,
                 parse_error=f"{exc.code}: {exc.message}",
                 tool_name=None,
+                call_arguments=None,
                 result=None,
             )
             # A malformed call still gets a real (error) runtime response,

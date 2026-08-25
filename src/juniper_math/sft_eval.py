@@ -23,14 +23,22 @@ from juniper_math.tool_interaction import InteractionTrace, run_tool_interaction
 from juniper_math.tools.config import load_tools_config
 from juniper_math.tools.runtime import ToolRuntime
 
-_LEADING_NUMBER = re.compile(r"-?\d+(?:\.\d+)?(?:/\d+)?")
+# A final response may legitimately contain currency, grouping commas,
+# scientific notation, a unit/percent suffix, or a short explanation before
+# the value.  This intentionally recognizes the first standalone numeric
+# representation rather than requiring the string to begin with a bare
+# integer.  It does not try to evaluate prose or mathematical expressions.
+_NUMBER = re.compile(
+    r"(?<![\w.])[$€£]?\s*(?P<number>[+-]?\d+\s*/\s*\d+|[+-]?(?:\d+(?:,\d{3})*(?:\.\d+)?|\.\d+)"
+    r"(?:[eE][+-]?\d+)?)(?![\w/])"
+)
 
 
 def _parse_number(text: str) -> Fraction | None:
-    match = _LEADING_NUMBER.match(text.strip())
+    match = _NUMBER.search(text)
     if match is None:
         return None
-    token = match.group(0)
+    token = match.group("number").replace(",", "").replace(" ", "")
     try:
         if "/" in token:
             num, den = token.split("/")
@@ -74,7 +82,9 @@ class CaseMetrics:
     emitted_tool_call: bool
     call_parsed: bool
     tool_name_correct: bool | None
+    arguments_correct: bool | None
     execution_successful: bool | None
+    end_to_end_success: bool | None
     final_answer_consistent_with_result: bool | None
     final_answer_correct: bool | None
     unnecessary_tool_call: bool
@@ -115,14 +125,16 @@ class ToolInteractionReport:
             "emitted_tool_call": rate(lambda c: c.emitted_tool_call),
             "call_parsed_valid": rate(lambda c: c.call_parsed),
             "tool_name_correct": rate_over(
-                [c for c in self.cases if c.tool_name_correct is not None],
+                tool_cases,
                 lambda c: bool(c.tool_name_correct),
             ),
+            "arguments_correct": rate_over(tool_cases, lambda c: bool(c.arguments_correct)),
             "argument_execution_successful": rate_over(
-                [c for c in self.cases if c.call_parsed], lambda c: bool(c.execution_successful)
+                tool_cases,
+                lambda c: bool(c.arguments_correct) and bool(c.execution_successful),
             ),
             "end_to_end_success_on_tool_required": rate_over(
-                tool_cases, lambda c: bool(c.execution_successful) and bool(c.final_answer_correct)
+                tool_cases, lambda c: bool(c.end_to_end_success)
             ),
             "final_answer_correct_overall": rate_over(
                 [c for c in self.cases if c.final_answer_correct is not None],
@@ -140,7 +152,8 @@ class ToolInteractionReport:
                 lambda c: bool(c.terminal_tag_correct),
             ),
             "warning": (
-                "Sec. 23 numerator/denominator tool metrics — every rate is null-safe "
+                "phase8-tool-interaction-eval-v2: tool-name, argument, and execution rates are "
+                "over required-tool cases; every rate is null-safe "
                 "(0-case denominators report rate=None, never a fabricated 0.0 or 1.0)."
             ),
         }
@@ -174,17 +187,22 @@ def run_phase8_eval_suite(
         expected_tool = case.get("tool_name")
         model_invoked = trace.emitted_tool_call
         first_attempt = trace.tool_calls[0] if trace.tool_calls else None
-        # Only meaningful when a tool was actually expected AND the model
-        # actually named one: `None == None` (no tool expected, parse
-        # failed so tool_name is None) must never count as a "correct"
-        # match — that would silently reward failure on non-tool cases.
+        expected_arguments = case["tool_traces"][0]["call"]["arguments"] if case.get("tool_traces") else None
+        # Version 2 intentionally includes malformed and missing attempts as
+        # failures on required-tool cases.  Version 1 conditioned this rate
+        # on a fully parsed call, hiding those failures in its denominator.
         tool_name_correct = (
-            (first_attempt.tool_name == expected_tool)
-            if (
+            (first_attempt is not None and first_attempt.tool_name == expected_tool)
+            if tool_required
+            else None
+        )
+        arguments_correct = (
+            (
                 first_attempt is not None
-                and expected_tool is not None
-                and first_attempt.tool_name is not None
+                and first_attempt.tool_name == expected_tool
+                and first_attempt.call_arguments == expected_arguments
             )
+            if tool_required
             else None
         )
         execution_successful = (
@@ -206,6 +224,24 @@ def run_phase8_eval_suite(
         else:
             expected_tag = None
         terminal_tag_correct = (trace.terminal_tag == expected_tag) if expected_tag is not None else None
+        expected_status = case["tool_traces"][0]["result"].get("status") if case.get("tool_traces") else None
+        if not tool_required:
+            end_to_end_success = None
+        elif case.get("expected_answer") is None:
+            # Tool-error tasks have no numeric final answer by design.  A
+            # useful completion executes the intended request, receives the
+            # expected error, and communicates it with the terminal error tag.
+            end_to_end_success = (
+                bool(arguments_correct)
+                and first_attempt is not None
+                and first_attempt.result is not None
+                and first_attempt.result.get("status") == expected_status
+                and trace.terminal_tag == "error"
+            )
+        else:
+            end_to_end_success = (
+                bool(arguments_correct) and bool(execution_successful) and bool(final_correct)
+            )
 
         results.append(
             CaseMetrics(
@@ -219,7 +255,9 @@ def run_phase8_eval_suite(
                 emitted_tool_call=model_invoked,
                 call_parsed=bool(first_attempt is not None and first_attempt.parsed),
                 tool_name_correct=tool_name_correct,
+                arguments_correct=arguments_correct,
                 execution_successful=execution_successful,
+                end_to_end_success=end_to_end_success,
                 final_answer_consistent_with_result=(
                     execution_successful and final_correct if execution_successful is not None else None
                 ),
