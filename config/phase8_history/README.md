@@ -1,7 +1,8 @@
 # Phase 8 Recovery Configuration Index
 
-`config/training_phase8_sft.yaml` is the active recovery configuration, not
-an approved Phase 8 release configuration. The following immutable commits
+`config/training_phase8_sft.yaml` is a historical final-research configuration,
+not authorization for a new run or an approved Phase 8 release configuration.
+The following immutable commits
 contain the exact configuration used by each preserved post-recovery run;
 use `git show <commit>:config/training_phase8_sft.yaml` to materialize one
 without altering the active file.

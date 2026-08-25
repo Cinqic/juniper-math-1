@@ -10,8 +10,8 @@ from juniper_math.metadata import load_project_metadata
 def test_loads_current_status():
     meta = load_project_metadata()
     assert meta.project_name == "Juniper Math 1"
-    assert meta.current_phase == 7
-    assert meta.phase_status == "COMPLETE"
+    assert meta.current_phase == 8
+    assert meta.phase_status == "CONCLUDED — MODEL CHECKPOINT NOT APPROVED"
     assert "five-million-parameter" in meta.research_question
     assert meta.parameter_target == 5004032
 
@@ -35,7 +35,7 @@ def test_missing_file_raises(tmp_path):
 def test_phase_approval_record_present():
     """Phase 4 records its completed independent approval chain."""
     meta = load_project_metadata()
-    assert meta.phase_status == "COMPLETE"
+    assert meta.phase_status == "CONCLUDED — MODEL CHECKPOINT NOT APPROVED"
     approval = meta.phase_approval
     assert approval["sonnet_5_implementation"] == "complete"
     assert approval["terra_independent_review"] == "approved"
@@ -43,13 +43,12 @@ def test_phase_approval_record_present():
     assert approval["starting_foundation_tag"] == "phase-3-tools"
 
 
-def test_phase_7_remains_current_after_phase_8_not_approved():
-    """Terra completed review and remediation, but the capability gate keeps
-    the independently approved current phase at 7 and Phase 9 unauthorized."""
+def test_research_completion_preserves_phase_7_approval_and_retires_roadmap():
+    """Project completion is distinct from an approved Phase 8 checkpoint."""
     meta = load_project_metadata()
-    assert meta.current_phase == 7
+    assert meta.current_phase == 8
     assert meta.next_phase["number"] == 9
-    assert meta.next_phase["status"] == "UNAUTHORIZED — PHASE 8 NOT APPROVED"
+    assert meta.next_phase["status"] == "RETIRED FOR JUNIPER MATH 1 FOLLOWING EARLY RESEARCH CONCLUSION"
     assert meta.next_phase["started"] is False
 
     from juniper_math.metadata import PROJECT_CONFIG_PATH
@@ -71,3 +70,6 @@ def test_phase_7_remains_current_after_phase_8_not_approved():
     assert raw["phase_8_engineering"]["terra_remediation"] == "complete_not_approved"
     assert raw["phase_8_engineering"]["terra_final_approval"] == "not_approved"
     assert raw["phase_8_engineering"]["final_tag"] is None
+    assert raw["project_status"] == "RESEARCH_COMPLETE"
+    assert raw["phase_10"]["status"] == "RETIRED — REPLACED BY RESEARCH-PROJECT CLOSURE"
+    assert raw["final_project_record"]["last_approved_model_phase"] == 7

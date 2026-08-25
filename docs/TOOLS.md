@@ -1,6 +1,6 @@
 # Juniper Math 1 — Phase 3 Tool Protocol (`juniper-tool-protocol-v1`)
 
-Status: implemented, awaiting GPT-5.6 Terra independent review (see
+Status: implemented and historically independently approved in Phase 3 (see
 `reports/PHASE3_TERRA_HANDOFF.md`). This document describes the deterministic
 tool runtime as built, not aspirational future behavior.
 

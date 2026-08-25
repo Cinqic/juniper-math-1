@@ -1,8 +1,22 @@
 # Juniper Math 1
 
-A purpose-built, approximately five-million-parameter mathematical language
-model. **No model with mathematical capability exists yet.** This
-repository has an implemented, mechanically-validated architecture
+A completed, purpose-built, approximately five-million-parameter mathematical
+language-model research project.
+
+> **Status: Research complete.** Juniper Math 1 established meaningful
+> mathematical, tool-use, calibration, and adversarial behaviors, but no
+> tested Phase 8 checkpoint could make those capabilities simultaneously
+> reliable, generalizable, and well retained under the frozen architecture.
+> Phase 8 is a research conclusion, not an approved SFT release.
+
+Read the authoritative [final research conclusion](reports/FINAL_RESEARCH_CONCLUSION.md).
+Phase 7 remains the last approved model checkpoint:
+`checkpoints/phase7-full-v2/step_007483_final.pt` (SHA-256
+`2e8098ab3a5db3c59a82fad19af2050154637fbe0628f3f6b0ca932d6cb6ea60`),
+under tag [`phase-7-pretraining`](https://github.com/Cinqic/juniper-math-1/tree/phase-7-pretraining).
+No Phase 8 model checkpoint is approved.
+
+This repository has an implemented, mechanically-validated architecture
 (Phase 1), a trained, validated math-specific tokenizer (Phase 2), a
 deterministic calculator tool runtime (Phase 3), a frozen dataset and
 evaluation suite (Phase 4), a validated smoke-pretraining pipeline
@@ -48,7 +62,9 @@ Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
 Phase 6 — Pilot Pretraining:                COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
 Phase 7 — Full Base Pretraining:            COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
-Phase 8 — Mathematical Instruction/Tool SFT: NOT APPROVED — REMEDIATION PRESERVED
+Phase 8 — Mathematical Instruction/Tool Study: CONCLUDED — MODEL CHECKPOINT NOT APPROVED
+Phase 9 — Truthfulness, Calibration, Refinement: RETIRED FOR JUNIPER MATH 1
+Phase 10 — Integration, Evaluation, Release: RETIRED — PROJECT CLOSURE REPLACED IT
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -181,7 +197,10 @@ remains. See [`docs/PHASE8_SFT_TRAINING.md`](docs/PHASE8_SFT_TRAINING.md),
 Terra completed an independent review and bounded remediation. The best
 remediation checkpoint preserved Base loss and improved tool-error completion,
 but direct-answer correctness remained 0/115 on the held-out suite; Phase 8 is
-not approved and Phase 9 is not authorized. See
+not approved. Subsequent recovery, replay, safety, explicit-tool, partial-layer,
+and staged-call experiments are preserved in the final conclusion; they exposed
+the same capability/retention trade-off. Phase 9 and Phase 10 are retired for
+Juniper Math 1. See
 [`reports/TERRA_PHASE8_REVIEW.md`](reports/TERRA_PHASE8_REVIEW.md).
 
 ### Phase 2 release verification

@@ -1,7 +1,8 @@
 # Phase 8: Mathematical Instruction and Tool Training (SFT)
 
-Canonical config: [`config/training_phase8_sft.yaml`](../config/training_phase8_sft.yaml).
-This document describes the design; see
+Historical training design. [`config/training_phase8_sft.yaml`](../config/training_phase8_sft.yaml)
+is preserved for reproducibility and must not be treated as authorization for a
+new run. This document describes the design; see
 [`reports/PHASE8_PLAN.md`](../reports/PHASE8_PLAN.md) for the plan,
 [`reports/TERRA_PHASE8_REVIEW.md`](../reports/TERRA_PHASE8_REVIEW.md) for the
 independent non-approval verdict, and

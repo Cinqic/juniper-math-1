@@ -22,9 +22,10 @@ parameter_target: 5004032
 architecture_version: "0.1.0"
 architecture_config: "config/architecture.yaml"
 
-current_phase: 7
-phase_name: "Full Base Pretraining"
-phase_status: "COMPLETE"
+project_status: "RESEARCH_COMPLETE"
+current_phase: 8
+phase_name: "Mathematical Instruction and Tool Adaptation Study"
+phase_status: "CONCLUDED — MODEL CHECKPOINT NOT APPROVED"
 
 primary_hardware:
   cpu: "AMD Ryzen 7 5700G"
@@ -225,16 +226,39 @@ phase_8_engineering:
     - "the corrected run still regresses unmasked full-corpus validation loss by 12.5%-30.7% depending on checkpoint, exceeding the pre-committed 0.05-absolute-nat tolerance"
     - "at a larger (n=200) evaluation sample, several tool-format metrics (tool_use_format.valid_rate, argument_execution_successful, terminal_tag_correct) are measurably WORSE on every SFT candidate than on the Base"
     - "no checkpoint (including the Base) achieves nonzero end_to_end_success_on_tool_required or direct_answer_correct on the held-out suite"
-    - "overall verdict (reports/PHASE8_RESULTS.md) is an honest 'marginal, mixed outcome', not a demonstrated capability improvement — Terra should treat this as a review-and-likely-remediate case, not a rubber-stamp"
+    - "the original Phase 8 result was an honest marginal, mixed outcome rather than a demonstrated capability improvement; later recovery evidence is indexed separately"
     - "Terra's remediated 300-step low-LR checkpoint preserves Base regression and reaches 9/53 tool-error end-to-end completions, but remains at 0/115 direct-answer correctness; Phase 8 is not approved"
+  research_conclusion: "complete"
+  final_checkpoint_approval: "not_approved"
+  final_report: "reports/FINAL_RESEARCH_CONCLUSION.md"
+  experiment_index: "experiments/README.md"
+  conclusion: >
+    The tested frozen architecture and training regimes learned meaningful
+    component behaviors, but no Phase 8 checkpoint simultaneously met the
+    project's direct capability, tool-use, retention, and reliability gates.
 
 next_phase:
   number: 9
   name: "Truthfulness, Calibration, and Mathematical Refinement"
-  status: "UNAUTHORIZED — PHASE 8 NOT APPROVED"
+  status: "RETIRED FOR JUNIPER MATH 1 FOLLOWING EARLY RESEARCH CONCLUSION"
   started: false
   note: >
-    Phase 7 Full Base Pretraining is independently approved. Terra completed
-    an independent Phase 8 review and bounded remediation, but no checkpoint
-    met the direct-answer and end-to-end capability gates. Phase 9 remains
-    unauthorized.
+    Phase 9 assumed an approved Phase 8 capability checkpoint. No such
+    checkpoint exists, so Phase 9 will not be executed for Juniper Math 1.
+
+phase_10:
+  name: "Integration, Evaluation, and Release"
+  status: "RETIRED — REPLACED BY RESEARCH-PROJECT CLOSURE"
+  started: false
+  note: "Phase 10 assumed a release-quality trained model; it is not executed."
+
+final_project_record:
+  last_approved_model_phase: 7
+  approved_checkpoint_path: "checkpoints/phase7-full-v2/step_007483_final.pt"
+  approved_checkpoint_sha256: "2e8098ab3a5db3c59a82fad19af2050154637fbe0628f3f6b0ca932d6cb6ea60"
+  approved_checkpoint_tag: "phase-7-pretraining"
+  phase_8_status: "research_conclusive_not_approved"
+  future_work: >
+    A future Cinqic language-model research effort, not Juniper Math 1 Phase
+    9, may apply the lessons from this project without precommitting to an
+    architecture, parameter count, or release schedule.
