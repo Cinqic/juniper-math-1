@@ -95,6 +95,22 @@ pipeline, configuration, and scope boundary. No later-phase placeholder
 commands remain — every command in `python -m juniper_math --help` is a
 real implementation.
 
+(A `train full-run`/`full-resume-test`/`full-evaluate`/`full-infer`
+Phase 7 section was not added to this document when Phase 7 shipped — a
+pre-existing gap, not introduced here.)
+
+## Functional in Phase 8
+
+| Command | Purpose |
+|---|---|
+| `train sft-run [--config PATH] [--max-steps N] [--eval-sample-size N] [--no-milestone-eval] [--resume-from PATH]` | Run Phase 8 SFT from the verified Phase 7 Base: category-flattened masked-subset selection, training with assistant-focused loss masking, milestone validation/capability/tool-interaction evaluation, checkpointing |
+| `train sft-resume-test [--config PATH]` | Sec. 18 gate for the SFT pipeline: compare an uninterrupted run against an interrupted-and-resumed run |
+| `sft-evaluate --checkpoint PATH [--config PATH] [--sample-size N]` | Run the four frozen v2 suites plus the Phase 8 end-to-end tool-interaction suite against a checkpoint |
+| `sft-infer --checkpoint PATH --prompt TEXT [--max-new-tokens N]` | Generate text from a Phase 8 SFT checkpoint for a single prompt |
+
+See [`docs/PHASE8_SFT_TRAINING.md`](PHASE8_SFT_TRAINING.md) for the full
+SFT pipeline, masking design, and evaluation harness.
+
 ## Examples
 
 ```bash

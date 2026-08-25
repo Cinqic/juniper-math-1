@@ -198,11 +198,43 @@ phase_7_engineering:
     - "tool-use smoke suite had 0% valid parse/name match at every selected candidate"
     - "tool-call emission peaked at 98.4% at 40% and ended at 62.2%; final selection prioritizes full validation and category losses"
 
+# Phase 8 engineering record. `current_phase` stays 7 (the last
+# independently-approved phase) until GPT-5.6 Terra reviews and approves
+# Phase 8, matching every prior phase's own approval sequence — see
+# reports/PHASE8_PLAN.md, reports/PHASE8_DATASET.md,
+# reports/PHASE8_PREFLIGHT.md, reports/PHASE8_RESULTS.md,
+# reports/PHASE8_REGRESSION.md, reports/PHASE8_SELF_REVIEW.md,
+# reports/PHASE8_COMPLETION.md, and reports/PHASE8_TERRA_HANDOFF.md.
+phase_8_engineering:
+  sonnet_5_implementation: "complete"
+  sonnet_5_self_review: "complete"
+  terra_independent_review: "pending"
+  terra_final_approval: "pending"
+  candidate_tag: "phase-8-math-sft-candidate"
+  final_tag: null
+  starting_foundation_commit: "79c14afb291ac04123db16e90d64828ec62d959f"
+  starting_foundation_tag: "phase-7-pretraining"
+  sft_dataset_id: "juniper-math-sft-v1"
+  sft_config: "config/training_phase8_sft.yaml"
+  selected_checkpoint_path: "checkpoints/phase8-sft/step_002700.pt"
+  selected_checkpoint_sha256: "41742e554acb6619df954b7425cebe44ed11ee1edceefb4905ae6025287d0361"
+  selected_checkpoint_remote_preservation: "https://github.com/Cinqic/juniper-math-1/releases/tag/phase-8-math-sft-candidate"
+  known_issues:
+    - "an initial full training run at LR=8e-4 (carried over from Phase 7) caused severe catastrophic forgetting (unmasked full-corpus validation loss increased >5x); rejected and preserved as evidence, corrected by rerunning at LR=2e-4"
+    - "the corrected run still regresses unmasked full-corpus validation loss by 12.5%-30.7% depending on checkpoint, exceeding the pre-committed 0.05-absolute-nat tolerance"
+    - "at a larger (n=200) evaluation sample, several tool-format metrics (tool_use_format.valid_rate, argument_execution_successful, terminal_tag_correct) are measurably WORSE on every SFT candidate than on the Base"
+    - "no checkpoint (including the Base) achieves nonzero end_to_end_success_on_tool_required or direct_answer_correct on the held-out suite"
+    - "overall verdict (reports/PHASE8_RESULTS.md) is an honest 'marginal, mixed outcome', not a demonstrated capability improvement — Terra should treat this as a review-and-likely-remediate case, not a rubber-stamp"
+
 next_phase:
   number: 8
   name: "Mathematical Instruction and Tool Training"
-  status: "AUTHORIZED — NOT STARTED"
-  started: false
+  status: "ENGINEERING COMPLETE — AWAITING GPT-5.6 TERRA INDEPENDENT REVIEW"
+  started: true
   note: >
-    Phase 7 Full Base Pretraining is independently approved. Phase 8 is
-    authorized to begin from the approved Phase 7 Base but has not started.
+    Phase 7 Full Base Pretraining is independently approved. Phase 8
+    engineering (dataset, SFT pipeline, tool-interaction evaluation harness,
+    training, evaluation, checkpoint selection, self-review) is complete
+    and remotely preserved, but GPT-5.6 Terra has not yet independently
+    reviewed or approved it. Phase 9 remains unauthorized until Phase 8 is
+    approved.

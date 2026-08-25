@@ -43,13 +43,15 @@ def test_phase_approval_record_present():
     assert approval["starting_foundation_tag"] == "phase-3-tools"
 
 
-def test_phase_7_approved_phase_8_authorized_not_started():
-    """Phase 7 approval authorizes, but does not start, Phase 8."""
+def test_phase_7_approved_phase_8_engineering_complete_awaiting_terra():
+    """Phase 7 approval authorized Phase 8; Phase 8 engineering is now
+    complete and awaiting GPT-5.6 Terra's independent review (not yet
+    independently approved, so current_phase stays 7)."""
     meta = load_project_metadata()
     assert meta.current_phase == 7
     assert meta.next_phase["number"] == 8
-    assert meta.next_phase["status"] == "AUTHORIZED — NOT STARTED"
-    assert meta.next_phase["started"] is False
+    assert meta.next_phase["status"] == "ENGINEERING COMPLETE — AWAITING GPT-5.6 TERRA INDEPENDENT REVIEW"
+    assert meta.next_phase["started"] is True
 
     from juniper_math.metadata import PROJECT_CONFIG_PATH
 
@@ -64,3 +66,8 @@ def test_phase_7_approved_phase_8_authorized_not_started():
     assert raw["phase_7_engineering"]["terra_remediation"] == "complete"
     assert raw["phase_7_engineering"]["terra_final_approval"] == "approved"
     assert raw["phase_7_engineering"]["final_tag"] == "phase-7-pretraining"
+    assert raw["phase_8_engineering"]["sonnet_5_implementation"] == "complete"
+    assert raw["phase_8_engineering"]["sonnet_5_self_review"] == "complete"
+    assert raw["phase_8_engineering"]["terra_independent_review"] == "pending"
+    assert raw["phase_8_engineering"]["terra_final_approval"] == "pending"
+    assert raw["phase_8_engineering"]["final_tag"] is None

@@ -12,7 +12,7 @@ artifacts:
 
   - artifact_id: "project_metadata"
     path: "config/project.yaml"
-    sha256: "7c284b708954fcf3fbe0eb9159362a31e63a909e31d1ca8b19f3c1c5adfa2bf4"
+    sha256: "b7c0be8db16d21457dc0526659e6dbd26a3ad8ecc4404b9cff7abfc942a62b2a"
     description: "Canonical project metadata and phase status."
 
   - artifact_id: "phase0_eval_suite"
@@ -144,6 +144,16 @@ artifacts:
     path: "evals/phase4_adversarial_v2.json"
     sha256: "8ab94b3510c30a07ada85ffff3f99de3be7f6b934abcab9da3fc4ffefc70b7da"
     description: "Frozen evaluation-only Phase 4 adversarial suite (195 cases, suite_version 2.0.0)."
+
+  - artifact_id: "phase8_instruction_eval_suite_v1"
+    path: "evals/phase8_instruction_v1.json"
+    sha256: "976e8390f5a3947a69e0fe1419672b41bd515435fce172ba385f10d98e5abdef"
+    description: "Frozen Phase 8 held-out instruction/tool-interaction suite (271 cases across all 24 frozen categories, suite_version 1.0.0), disjoint seed namespace from every Phase 4 suite and the training corpus."
+
+  - artifact_id: "phase8_sft_training_config"
+    path: "config/training_phase8_sft.yaml"
+    sha256: "f0657af69023f939acd71a371da0c75bad1cb28076f9cb4bc58d75f04ab9e71d"
+    description: "Frozen Phase 8 SFT training configuration (run_id phase8-sft-v1)."
 
   - artifact_id: "dataset_shard_manifest"
     path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"

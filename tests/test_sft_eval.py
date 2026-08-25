@@ -1,0 +1,101 @@
+"""Sec. 25 'metric denominators correct' tests for juniper_math.sft_eval,
+using hand-built CaseMetrics so the report math is tested in isolation from
+generation/model behavior."""
+
+from __future__ import annotations
+
+from juniper_math.sft_eval import CaseMetrics, ToolInteractionReport
+
+
+def _case(**overrides) -> CaseMetrics:
+    defaults = dict(
+        case_id="c",
+        category="arithmetic",
+        tool_required=False,
+        expected_tool=None,
+        tool_invocation_required=False,
+        model_invoked_tool=False,
+        correct_routing=True,
+        emitted_tool_call=False,
+        call_parsed=False,
+        tool_name_correct=None,
+        execution_successful=None,
+        final_answer_consistent_with_result=None,
+        final_answer_correct=True,
+        unnecessary_tool_call=False,
+        missing_required_call=False,
+        fabricated_result_attempted=False,
+        terminal_tag="final",
+        terminal_tag_correct=True,
+        stopped_reason="terminal_tag",
+    )
+    defaults.update(overrides)
+    return CaseMetrics(**defaults)
+
+
+def test_empty_denominator_reports_none_not_zero():
+    report = ToolInteractionReport(suite_id="s", n_cases=2, cases=[_case(), _case()])
+    d = report.as_dict()
+    # No tool_required cases at all -> tool-specific rates over that subset must be None, not 0.0.
+    assert d["end_to_end_success_on_tool_required"]["rate"] is None
+    assert d["missing_required_call"]["rate"] is None
+
+
+def test_direct_vs_tool_denominators_partition_correctly():
+    cases = [
+        _case(tool_invocation_required=False, unnecessary_tool_call=False),
+        _case(
+            tool_invocation_required=False,
+            unnecessary_tool_call=True,
+            emitted_tool_call=True,
+            correct_routing=False,
+        ),
+        _case(
+            tool_invocation_required=True,
+            missing_required_call=False,
+            execution_successful=True,
+            tool_required=True,
+        ),
+    ]
+    report = ToolInteractionReport(suite_id="s", n_cases=3, cases=cases)
+    d = report.as_dict()
+    assert d["n_direct_cases"] == 2
+    assert d["n_tool_required_cases"] == 1
+    assert d["unnecessary_tool_call"]["denominator"] == 2
+    assert d["unnecessary_tool_call"]["numerator"] == 1
+    assert d["missing_required_call"]["denominator"] == 1
+
+
+def test_tool_name_correct_excludes_not_applicable_cases():
+    """A direct (no-tool-required) case where the model didn't invoke
+    anything has tool_name_correct=None (not applicable) — it must not
+    silently count as either a hit or a miss."""
+    cases = [
+        _case(tool_name_correct=None),  # not applicable
+        _case(tool_name_correct=True),
+        _case(tool_name_correct=False),
+    ]
+    report = ToolInteractionReport(suite_id="s", n_cases=3, cases=cases)
+    d = report.as_dict()
+    assert d["tool_name_correct"]["denominator"] == 2  # only the applicable two
+    assert d["tool_name_correct"]["numerator"] == 1
+
+
+def test_numerator_never_exceeds_denominator_for_every_metric():
+    cases = [
+        _case(),
+        _case(tool_invocation_required=True, tool_required=True),
+        _case(emitted_tool_call=True, call_parsed=True, tool_name_correct=True),
+    ]
+    report = ToolInteractionReport(suite_id="s", n_cases=3, cases=cases)
+    d = report.as_dict()
+    for key, value in d.items():
+        if isinstance(value, dict) and "numerator" in value and value["denominator"]:
+            assert value["numerator"] <= value["denominator"], f"{key} numerator exceeds denominator"
+
+
+def test_n_cases_matches_len_cases():
+    report = ToolInteractionReport(suite_id="s", n_cases=5, cases=[_case() for _ in range(5)])
+    d = report.as_dict()
+    assert d["n_cases"] == 5
+    assert d["correct_routing"]["denominator"] == 5

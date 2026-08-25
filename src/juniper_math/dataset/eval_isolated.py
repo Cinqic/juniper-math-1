@@ -319,6 +319,115 @@ def _make_case(category: str, index: int, seed: int, runtime: ToolRuntime) -> Ex
     return _direct(category, index, seed)
 
 
+PHASE8_SEED_OFFSET = 10_000_000  # keeps every Phase 8 suite id/derivation disjoint from Phase 4's
+
+PHASE8_SUITE_DEFINITIONS: dict[str, dict] = {
+    "phase8_instruction_v1": {
+        "suite_id": "phase8-instruction-v1",
+        "suite_version": "1.0.0",
+        "description": (
+            "Phase 8 held-out instruction/tool-interaction suite: broader per-category coverage "
+            "than any single Phase 4 v2 suite, built before Phase 8 training with a seed namespace "
+            "disjoint from both the training corpus and every existing eval suite. Reuses the same "
+            "evaluation-only constructors as the Phase 4 v2 suites (`_direct`/`_make_case`) so ground "
+            "truth is established the identical, already-reviewed way, just with different "
+            "(category, index, seed) coordinates."
+        ),
+        "categories": {
+            "arithmetic": 15,
+            "operator_precedence": 10,
+            "negative_values": 10,
+            "decimals": 10,
+            "fractions": 10,
+            "percentages": 12,
+            "ratios_proportions": 10,
+            "scientific_notation": 8,
+            "basic_algebra": 12,
+            "expression_translation": 8,
+            "word_problem": 12,
+            "estimation": 8,
+            "numerical_comparison": 10,
+            "multi_step": 10,
+            "unit_conversion": 15,
+            "financial_math": 15,
+            "tool_use": 15,
+            "incorrect_tool_call": 12,
+            "tool_error": 10,
+            "incorrect_supplied_answer": 15,
+            "ambiguity": 12,
+            "missing_information": 12,
+            "undefined_operation": 10,
+            "unsupported_capability": 10,
+        },
+    },
+}
+
+
+def build_phase8_eval_suite(
+    name: str, config: DatasetConfig, tokenizer: JuniperTokenizer, runtime: ToolRuntime
+):
+    """Same construction/verification path as `build_independent_eval_suite`, over
+    `PHASE8_SUITE_DEFINITIONS` and a seed namespace offset by `PHASE8_SEED_OFFSET` so no
+    (category, index, seed) triple this suite uses can coincide with a Phase 4 v2 suite's."""
+    from juniper_math.dataset.eval_suites import SuiteBuildResult
+
+    if name not in PHASE8_SUITE_DEFINITIONS:
+        raise JuniperConfigError(
+            f"Unknown Phase 8 eval suite {name!r}. Known: {sorted(PHASE8_SUITE_DEFINITIONS)}"
+        )
+    spec = PHASE8_SUITE_DEFINITIONS[name]
+    seed = (
+        config.master_seed
+        + config.split.eval_suite_seed_offset
+        + sum(ord(c) for c in name)
+        + PHASE8_SEED_OFFSET
+    )
+    cases: list[dict] = []
+    seen_ids: set[str] = set()
+    # `_make_case("incorrect_supplied_answer", ...)` internally reuses
+    # `_direct("arithmetic", index, seed)` and keeps that call's example_id
+    # unchanged — with the same (index, seed) range as this suite's own
+    # `arithmetic` category, that silently collides two categories onto one
+    # id (a latent bug this session found already present in the frozen
+    # `evals/phase4_calibration_v2.json`, documented in
+    # reports/PHASE8_SELF_REVIEW.md rather than touched, since that file is
+    # a frozen Phase 4 artifact). This suite is new, so it is given a
+    # category-specific index offset instead of reproducing the collision.
+    category_index_offset = {cat: i * 100_000 for i, cat in enumerate(sorted(spec["categories"]))}
+    for category, count in spec["categories"].items():
+        for local_index in range(count):
+            index = local_index + category_index_offset[category]
+            ex = _make_case(category, index, seed, runtime)
+            if ex.example_id in seen_ids:
+                raise JuniperConfigError(
+                    f"phase8 evaluation-only {category}/{index}: duplicate example_id {ex.example_id!r}."
+                )
+            seen_ids.add(ex.example_id)
+            ex = Example(**{**ex.__dict__, "prompt": normalize_text(ex.prompt, config.normalization)})
+            validate_example(ex)
+            ok, detail = ground_truth_ok(ex)
+            if not ok:
+                raise JuniperConfigError(f"phase8 evaluation-only {category}/{index}: {detail}")
+            ex = ex.with_token_count(len(tokenizer.encode(render_training_text(ex))))
+            cases.append(ex.to_dict())
+    payload = {
+        "suite_id": spec["suite_id"],
+        "suite_version": spec["suite_version"],
+        "description": spec["description"],
+        "record_schema": "juniper_math.dataset.schema.Example",
+        "cases": sorted(cases, key=lambda c: c["example_id"]),
+    }
+    text = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    return SuiteBuildResult(
+        name=name,
+        payload=payload,
+        text=text,
+        sha256=sha256_bytes(text.encode("utf-8")),
+        example_count=len(cases),
+        prompts=[c["prompt"] for c in cases],
+    )
+
+
 def build_independent_eval_suite(
     name: str, config: DatasetConfig, tokenizer: JuniperTokenizer, runtime: ToolRuntime
 ):

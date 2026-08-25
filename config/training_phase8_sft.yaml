@@ -1,0 +1,115 @@
+# Juniper Math 1 — Phase 8 SFT (Mathematical Instruction and Tool Training)
+# configuration. Separate from every prior training config; does not modify
+# config/training_phase7_full.yaml or the Phase 7 Base it was produced by.
+#
+# learning_rate: REVISED after the full Sec. 22 Base-regression check (see
+# reports/PHASE8_REGRESSION.md). The original Sec. 19 bounded preflight
+# (reports/PHASE8_PREFLIGHT.md) picked 8e-4 using only tool-format/routing
+# metrics and the SFT-masked validation loss; it did NOT measure the
+# unmasked full-corpus validation loss Sec. 22 requires as the Base
+# regression gate. Measuring that metric after the fact showed 8e-4 causes
+# severe catastrophic forgetting (0.606 -> 3.6+ nats, a >5x increase) while
+# 2e-4 leaves it essentially unchanged (0.606 -> 0.628) at the same step
+# count. 2e-4 is used here as the corrective rerun's rate — see
+# reports/PHASE8_REGRESSION.md for the full comparison and
+# reports/PHASE8_RESULTS.md for the resulting run's tool-metric outcome.
+#
+# Per reports/PHASE8_PLAN.md Sec. 4: Phase 8 does NOT modify or reuse
+# juniper-math-dataset-v1's identity for its own SFT selection — the
+# dataset_identity below names Phase 8's own frozen SFT-selection identity
+# (juniper_math.sft_data.SFT_DATASET_ID), which is itself always DERIVED
+# from the frozen juniper-math-dataset-v1 train/validation splits (verified
+# via parent-checkpoint/parent-dataset hash checks at load time).
+
+run_id: "phase8-sft-v2"
+architecture_identity: "0.1.0"
+tokenizer_identity: "juniper-math-tokenizer-v1"
+dataset_identity: "juniper-math-sft-v1"
+tool_protocol_identity: "juniper-tool-protocol-v1"
+
+# Verified in this session by downloading the phase-7-pretraining GitHub
+# release asset fresh and re-hashing it (reports/PHASE8_PLAN.md Sec. 1).
+parent_checkpoint_path: "checkpoints/phase7-full-v2/step_007483_final.pt"
+parent_checkpoint_sha256: "2e8098ab3a5db3c59a82fad19af2050154637fbe0628f3f6b0ca932d6cb6ea60"
+parent_phase7_tag: "phase-7-pretraining"
+
+seed: 5004032
+
+sft_subset:
+  # Flattened per-category target (juniper_math.sft_data.compute_flattened_targets):
+  # floored at each category's actual availability in the frozen train/
+  # validation splits. See reports/PHASE8_PLAN.md Sec. 4 for the rationale
+  # (proportional-to-corpus sampling would under-represent exactly the
+  # categories whose signal matters most for tool-use routing).
+  train_target_per_category: 1000
+  validation_target_per_category: 150
+  max_sequence_length: 256
+  category_weight_overrides: {}
+
+data:
+  micro_batch_size: 8
+  gradient_accumulation_steps: 2
+  shuffle: true
+
+optimizer:
+  name: "adamw"
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip_norm: 1.0
+
+scheduler:
+  name: "cosine_with_warmup"
+  warmup_ratio: 0.05
+  min_lr_ratio: 0.1
+
+schedule:
+  total_steps: 4500
+  validation_interval: 900
+  checkpoint_interval: 900
+  generation_interval: 900
+  logging_interval: 50
+
+resume_test:
+  interrupt_step: 200
+
+device: "cuda"
+precision: "fp32"
+
+output:
+  checkpoint_dir: "checkpoints/phase8-sft"
+  experiment_dir: "experiments/phase8-sft"
+  sft_dataset_dir: "data/processed/phase8-sft"
+
+milestone_fractions: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
+
+fixed_generation_prompts:
+  - category: "arithmetic"
+    prompt: "12 + 7 ="
+  - category: "word_problem"
+    prompt: "Maria has 24 apples and gives away 9. How many does she have left?"
+  - category: "basic_algebra"
+    prompt: "Solve for x: 2x + 3 = 11"
+  - category: "percentages"
+    prompt: "What is 15% of 240?"
+  - category: "unit_conversion"
+    prompt: "Convert 3 miles to meters."
+  - category: "financial_math"
+    prompt: "What is the simple interest on $500 at 4% annual rate for 2 years?"
+  - category: "multi_step"
+    prompt: "A train travels 60 miles per hour for 2 hours, then 40 miles per hour for 1 hour. How far did it travel in total?"
+  - category: "tool_use"
+    prompt: "Use the calculator to evaluate 84317 * 9926."
+  - category: "no_tool_direct"
+    prompt: "What is 5 times 6?"
+  - category: "ambiguity"
+    prompt: "How much is it?"
+  - category: "missing_information"
+    prompt: "If a shirt is on sale, what is the discounted price?"
+  - category: "unsupported_capability"
+    prompt: "Solve the differential equation dy/dx = y^2 for me."
+  - category: "incorrect_supplied_answer"
+    prompt: "Is it true that 7 times 8 equals 54?"
+generation_max_new_tokens: 200

@@ -1,0 +1,71 @@
+# Phase 8 bounded LR preflight, Candidate B: a much lower fine-tuning learning rate (2e-4)
+# — the conventional choice when fine-tuning an already-pretrained Base rather than training from scratch. See reports/PHASE8_PLAN.md Sec. 9
+# and reports/PHASE8_PREFLIGHT.md for the comparison this feeds.
+
+run_id: "phase8-preflight-b-lr2e-4"
+architecture_identity: "0.1.0"
+tokenizer_identity: "juniper-math-tokenizer-v1"
+dataset_identity: "juniper-math-sft-v1"
+tool_protocol_identity: "juniper-tool-protocol-v1"
+
+parent_checkpoint_path: "checkpoints/phase7-full-v2/step_007483_final.pt"
+parent_checkpoint_sha256: "2e8098ab3a5db3c59a82fad19af2050154637fbe0628f3f6b0ca932d6cb6ea60"
+parent_phase7_tag: "phase-7-pretraining"
+
+seed: 5004032
+
+sft_subset:
+  train_target_per_category: 1000
+  validation_target_per_category: 150
+  max_sequence_length: 256
+  category_weight_overrides: {}
+
+data:
+  micro_batch_size: 8
+  gradient_accumulation_steps: 2
+  shuffle: true
+
+optimizer:
+  name: "adamw"
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  beta1: 0.9
+  beta2: 0.95
+  eps: 1.0e-8
+  grad_clip_norm: 1.0
+
+scheduler:
+  name: "cosine_with_warmup"
+  warmup_ratio: 0.05
+  min_lr_ratio: 0.1
+
+schedule:
+  total_steps: 300
+  validation_interval: 150
+  checkpoint_interval: 300
+  generation_interval: 300
+  logging_interval: 25
+
+resume_test:
+  interrupt_step: 150
+
+device: "cuda"
+precision: "fp32"
+
+output:
+  checkpoint_dir: "checkpoints/phase8-preflight/b-lr2e-4"
+  experiment_dir: "experiments/phase8-preflight/b-lr2e-4"
+  sft_dataset_dir: "data/processed/phase8-preflight-ab"
+
+milestone_fractions: [0.0, 1.0]
+
+fixed_generation_prompts:
+  - category: "arithmetic"
+    prompt: "12 + 7 ="
+  - category: "tool_use"
+    prompt: "Use the calculator to evaluate 84317 * 9926."
+  - category: "no_tool_direct"
+    prompt: "What is 5 times 6?"
+  - category: "ambiguity"
+    prompt: "How much is it?"
+generation_max_new_tokens: 200

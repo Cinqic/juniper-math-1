@@ -48,6 +48,7 @@ Phase 4 — Dataset and Evaluation Freeze:    COMPLETE
 Phase 5 — Smoke Pretraining:                COMPLETE — INDEPENDENTLY APPROVED
 Phase 6 — Pilot Pretraining:                COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
 Phase 7 — Full Base Pretraining:            COMPLETE — INDEPENDENTLY APPROVED WITH REMEDIATION
+Phase 8 — Mathematical Instruction/Tool SFT: ENGINEERING COMPLETE — AWAITING GPT-5.6 TERRA REVIEW
 ```
 
 Phase 0 was implemented and self-reviewed by Claude Sonnet 5, independently
@@ -153,8 +154,32 @@ unlike Phase 5's smoke run — expected at larger scale). See
 [`reports/PHASE6_RESULTS.md`](reports/PHASE6_RESULTS.md) for full results
 and the evidence-backed Phase 7 recommendation. Phase 6 was implemented
 and self-reviewed by Claude Sonnet 5, then independently remediated and
-approved by GPT-5.6 Terra. Phase 7 is complete and Phase 8 is authorized
-but has not started.
+approved by GPT-5.6 Terra. Phase 7 is complete and independently approved.
+
+### Phase 8 — Mathematical Instruction and Tool Training (SFT)
+
+Phase 8 supervises the approved Phase 7 Base on the interaction loop the
+project needs — interpret, decide direct-vs-tool, call a tool or answer or
+clarify or refuse, interpret the real tool result, produce a concise final
+answer — using assistant-focused loss masking over a deterministic,
+category-flattened subset of the frozen corpus (`juniper-math-sft-v1`,
+24,000 train examples across all 24 categories). It also adds the
+project's first genuine end-to-end tool-execution evaluation harness,
+which never trusts a model-fabricated `<tool_result>` (unit-tested
+directly). An initial full run at Phase 7's own learning rate caused
+severe catastrophic forgetting (unmasked validation loss increased >5x);
+this was found via a dedicated Sec. 22-style Base-regression check, the
+run was rejected and preserved as evidence, and a corrected run at a lower
+learning rate was substituted. **The honest result is a marginal, mixed
+outcome, not a demonstrated capability win**: some tool-routing metrics
+improved modestly at the selected checkpoint while others (including one
+established Phase 5-7 tool-format metric) are measurably worse than the
+Base, and a real (though much reduced) general-capability regression
+remains. See [`docs/PHASE8_SFT_TRAINING.md`](docs/PHASE8_SFT_TRAINING.md),
+[`reports/PHASE8_RESULTS.md`](reports/PHASE8_RESULTS.md), and
+[`reports/PHASE8_TERRA_HANDOFF.md`](reports/PHASE8_TERRA_HANDOFF.md).
+Phase 8 engineering and self-review are complete; GPT-5.6 Terra has not
+yet independently reviewed or approved it, and Phase 9 is not authorized.
 
 ### Phase 2 release verification
 
@@ -226,6 +251,15 @@ and successful fresh-clone reconstruction of all tokenizer artifacts.
 - Phase 7 resume-mechanics check: [`reports/PHASE7_RESUME_CHECK.md`](reports/PHASE7_RESUME_CHECK.md)
 - Phase 7 independent review and remediation: [`reports/TERRA_PHASE7_REVIEW.md`](reports/TERRA_PHASE7_REVIEW.md), [`reports/PHASE7_REMEDIATION.md`](reports/PHASE7_REMEDIATION.md)
 - Phase 7 final approval: [`reports/PHASE7_FINAL_APPROVAL.md`](reports/PHASE7_FINAL_APPROVAL.md)
+- Phase 8 SFT training design: [`docs/PHASE8_SFT_TRAINING.md`](docs/PHASE8_SFT_TRAINING.md)
+- Phase 8 plan: [`reports/PHASE8_PLAN.md`](reports/PHASE8_PLAN.md)
+- Phase 8 dataset: [`reports/PHASE8_DATASET.md`](reports/PHASE8_DATASET.md)
+- Phase 8 bounded preflight: [`reports/PHASE8_PREFLIGHT.md`](reports/PHASE8_PREFLIGHT.md)
+- Phase 8 results (Base vs. SFT candidates): [`reports/PHASE8_RESULTS.md`](reports/PHASE8_RESULTS.md)
+- Phase 8 Base-regression analysis: [`reports/PHASE8_REGRESSION.md`](reports/PHASE8_REGRESSION.md)
+- Phase 8 self-review: [`reports/PHASE8_SELF_REVIEW.md`](reports/PHASE8_SELF_REVIEW.md)
+- Phase 8 completion report: [`reports/PHASE8_COMPLETION.md`](reports/PHASE8_COMPLETION.md)
+- Phase 8 Terra handoff package: [`reports/PHASE8_TERRA_HANDOFF.md`](reports/PHASE8_TERRA_HANDOFF.md)
 
 ## Principles
 
@@ -340,6 +374,10 @@ python -m juniper_math train full-run               # Phase 7 full base pretrain
 python -m juniper_math train full-resume-test        # full-scale resume equivalence gate
 python -m juniper_math full-evaluate --checkpoint <path>  # all four frozen v2 suites
 python -m juniper_math full-infer --checkpoint <path> --prompt "2 + 2 ="
+python -m juniper_math train sft-run                # Phase 8 SFT from the verified Phase 7 Base
+python -m juniper_math train sft-resume-test         # SFT-scale resume equivalence gate
+python -m juniper_math sft-evaluate --checkpoint <path>  # frozen v2 suites + Phase 8 tool-interaction suite
+python -m juniper_math sft-infer --checkpoint <path> --prompt "Use the calculator to evaluate 2 + 2."
 ```
 
 Full command reference: [`docs/CLI.md`](docs/CLI.md). No placeholder
