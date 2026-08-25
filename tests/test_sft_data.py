@@ -11,6 +11,7 @@ from juniper_math.dataset.schema import Example
 from juniper_math.dataset.shard import write_manifest, write_shards
 from juniper_math.sft_data import (
     CategoryCounts,
+    MaskedSftDataset,
     SftDataError,
     compute_flattened_targets,
     representation_sha256,
@@ -205,3 +206,13 @@ def test_representation_identity_changes_when_labels_change(tokenizer):
     assert representation_sha256([first], tokenizer, 256) != representation_sha256(
         [changed_label], tokenizer, 256
     )
+
+
+def test_masked_sft_batches_use_dynamic_padding(tokenizer):
+    short = _example("arithmetic", 1)
+    long = Example(**{**_example("arithmetic", 2).__dict__, "prompt": "What is " + "very " * 30 + "large?"})
+    dataset = MaskedSftDataset([short, long], tokenizer, 256)
+    batch = dataset.collate_batch([dataset[0], dataset[1]])
+    assert batch["input_ids"].shape[1] < 256
+    assert batch["labels"][0, -1].item() == -100
+    assert dataset.padding_fraction_for_order(1, 0, True, 2) < 0.5

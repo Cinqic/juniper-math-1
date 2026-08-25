@@ -145,7 +145,34 @@ def loss_bearing_tokens(labels: torch.Tensor) -> int:
 
 def make_loader(dataset: Dataset[Any], indices: list[int], batch_size: int) -> DataLoader:
     subset = torch.utils.data.Subset(dataset, indices)
-    return DataLoader(subset, batch_size=batch_size, shuffle=False, collate_fn=collate_smoke_batch)
+    return DataLoader(subset, batch_size=batch_size, shuffle=False, collate_fn=_collate_fn(dataset))
+
+
+def _base_dataset(dataset: Dataset[Any]) -> Dataset[Any]:
+    while isinstance(dataset, torch.utils.data.Subset):
+        dataset = dataset.dataset
+    return dataset
+
+
+def _collate_fn(dataset: Dataset[Any]):
+    return getattr(_base_dataset(dataset), "collate_batch", collate_smoke_batch)
+
+
+def _epoch_indices(
+    state: TrainState, dataset: Dataset[Any], training_config: TrainingConfigLike
+) -> list[int]:
+    base = _base_dataset(dataset)
+    custom_order = getattr(base, "epoch_order", None)
+    if callable(custom_order):
+        return custom_order(
+            training_config.seed,
+            state.epoch,
+            training_config.data.shuffle,
+            training_config.data.micro_batch_size,
+        )
+    return epoch_order(
+        len(cast(Sized, dataset)), training_config.seed, state.epoch, training_config.data.shuffle
+    )
 
 
 def _next_micro_batches(
@@ -156,9 +183,7 @@ def _next_micro_batches(
     for _ in range(n):
         # torch's Dataset stub does not declare __len__ (it's a per-subclass convention, not part
         # of the ABC); both TokenizedSmokeDataset and PackedPilotDataset define it.
-        order = epoch_order(
-            len(cast(Sized, dataset)), training_config.seed, state.epoch, training_config.data.shuffle
-        )
+        order = _epoch_indices(state, dataset, training_config)
         remaining = len(order) - state.position_in_epoch
         take = min(training_config.data.micro_batch_size, remaining)
         indices = order[state.position_in_epoch : state.position_in_epoch + take]
@@ -167,7 +192,7 @@ def _next_micro_batches(
             state.epoch += 1
             state.position_in_epoch = 0
         items = [dataset[i] for i in indices]
-        batches.append(collate_smoke_batch(items))
+        batches.append(_collate_fn(dataset)(items))
     return batches
 
 
@@ -229,7 +254,7 @@ def train_one_optimizer_step(
 @torch.no_grad()
 def validate(state: TrainState, dataset: Dataset[Any], batch_size: int) -> dict[str, float]:
     state.model.eval()
-    loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=collate_smoke_batch)
+    loader = DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=_collate_fn(dataset))
     total_loss = 0.0
     total_tokens = 0
     for batch in loader:

@@ -45,7 +45,7 @@ from juniper_math.dataset.schema import Example
 from juniper_math.hashing import sha256_file
 from juniper_math.pilot_data import manifest_shard_files, verify_parent_dataset_shards
 from juniper_math.sft_rendering import SftRenderingError, tokenize_and_mask
-from juniper_math.smoke_data import compute_stride_selection
+from juniper_math.smoke_data import compute_stride_selection, epoch_order
 from juniper_math.tokenizer import JuniperTokenizer
 
 # v2 changes only the Phase-8-derived representation for tool-error cases:
@@ -338,11 +338,12 @@ def write_sft_manifest(manifest: SftManifest, path: Path) -> None:
 
 
 class MaskedSftDataset(Dataset):
-    """Eagerly tokenizes+masks an SFT subset into fixed-length tensors, one
-    example per sequence (no packing — see reports/PHASE8_PLAN.md Sec. 4).
-    Same `{input_ids, labels, attention_mask}` tensor contract as
-    `smoke_data.TokenizedSmokeDataset`/`pilot_data.PackedPilotDataset`, so it
-    is a drop-in Dataset for the unmodified `juniper_math.trainer` loop."""
+    """Eagerly tokenize masked SFT examples, padded only at batch time.
+
+    Conversations remain independent sequences: dynamic padding and length
+    buckets reduce compute waste without concatenating examples or allowing
+    cross-example attention.
+    """
 
     def __init__(
         self, examples: list[Example], tokenizer: JuniperTokenizer, max_sequence_length: int
@@ -357,22 +358,17 @@ class MaskedSftDataset(Dataset):
         self._attention_mask: list[torch.Tensor] = []
         self.total_loss_tokens = 0
         self.total_real_tokens = 0
-        self.total_padding_tokens = 0
+        self._lengths: list[int] = []
 
         for ex in examples:
             mt = tokenize_and_mask(ex, tokenizer, max_sequence_length)
             n_real = len(mt.ids)
-            pad_needed = max_sequence_length - n_real
-            input_ids = mt.ids + [self.pad_id] * pad_needed
-            attention_mask = [1] * n_real + [0] * pad_needed
-            labels = mt.labels + [-100] * pad_needed
-
-            self._input_ids.append(torch.tensor(input_ids, dtype=torch.long))
-            self._labels.append(torch.tensor(labels, dtype=torch.long))
-            self._attention_mask.append(torch.tensor(attention_mask, dtype=torch.long))
+            self._input_ids.append(torch.tensor(mt.ids, dtype=torch.long))
+            self._labels.append(torch.tensor(mt.labels, dtype=torch.long))
+            self._attention_mask.append(torch.ones(n_real, dtype=torch.long))
+            self._lengths.append(n_real)
             self.total_loss_tokens += sum(1 for x in mt.labels[1:] if x != -100)
             self.total_real_tokens += n_real
-            self.total_padding_tokens += pad_needed
 
     def __len__(self) -> int:
         return len(self._input_ids)
@@ -384,10 +380,44 @@ class MaskedSftDataset(Dataset):
             "attention_mask": self._attention_mask[idx],
         }
 
-    @property
-    def padding_fraction(self) -> float:
-        total = self.total_real_tokens + self.total_padding_tokens
-        return self.total_padding_tokens / total if total else 0.0
+    def collate_batch(self, items: list[dict[str, torch.Tensor]]) -> dict[str, torch.Tensor]:
+        """Right-pad a batch to its own longest trajectory, never globally."""
+        max_length = max(item["input_ids"].numel() for item in items)
+        padded: dict[str, list[torch.Tensor]] = {"input_ids": [], "labels": [], "attention_mask": []}
+        for item in items:
+            pad_needed = max_length - item["input_ids"].numel()
+            padded["input_ids"].append(
+                torch.nn.functional.pad(item["input_ids"], (0, pad_needed), value=self.pad_id)
+            )
+            padded["labels"].append(torch.nn.functional.pad(item["labels"], (0, pad_needed), value=-100))
+            padded["attention_mask"].append(
+                torch.nn.functional.pad(item["attention_mask"], (0, pad_needed), value=0)
+            )
+        return {key: torch.stack(value, dim=0) for key, value in padded.items()}
+
+    def epoch_order(self, seed: int, epoch: int, shuffle: bool, micro_batch_size: int) -> list[int]:
+        """Deterministic shuffled buckets, sorted only within each bucket."""
+        order = epoch_order(len(self), seed, epoch, shuffle)
+        bucket_size = max(micro_batch_size, micro_batch_size * 32)
+        return [
+            index
+            for start in range(0, len(order), bucket_size)
+            for index in sorted(order[start : start + bucket_size], key=lambda item: self._lengths[item])
+        ]
+
+    def padding_fraction_for_order(
+        self, seed: int, epoch: int, shuffle: bool, micro_batch_size: int
+    ) -> float:
+        """Exact padding fraction for a deterministic epoch's dynamic batches."""
+        order = self.epoch_order(seed, epoch, shuffle, micro_batch_size)
+        real = padding = 0
+        for start in range(0, len(order), micro_batch_size):
+            lengths = [self._lengths[i] for i in order[start : start + micro_batch_size]]
+            if not lengths:
+                continue
+            real += sum(lengths)
+            padding += max(lengths) * len(lengths) - sum(lengths)
+        return padding / (real + padding) if real + padding else 0.0
 
 
 def select_and_record_sft_subset(

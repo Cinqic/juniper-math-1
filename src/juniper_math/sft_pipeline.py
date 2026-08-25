@@ -312,6 +312,12 @@ def run_sft_train(
     set_global_seed(training_config.seed)
 
     datasets = _build_datasets(training_config, tokenizer)
+    train_padding_fraction = datasets.train.padding_fraction_for_order(
+        training_config.seed,
+        epoch=0,
+        shuffle=training_config.data.shuffle,
+        micro_batch_size=training_config.data.micro_batch_size,
+    )
 
     experiment_dir = training_config.output.experiment_path
     checkpoint_dir = training_config.output.checkpoint_path
@@ -343,7 +349,7 @@ def run_sft_train(
             "sft_manifest": datasets.manifest.as_dict(),
             "sft_identity": datasets.manifest.sft_identity,
             "train_examples": len(datasets.train),
-            "train_padding_fraction": datasets.train.padding_fraction,
+            "train_padding_fraction": train_padding_fraction,
             "train_total_loss_tokens": datasets.train.total_loss_tokens,
             "resume_from_step": state.step if resume_from is not None else None,
         },
@@ -425,7 +431,7 @@ def run_sft_train(
         log_path=str(log_path),
         elapsed_seconds=elapsed,
         peak_cuda_memory_bytes=peak_mem,
-        train_padding_fraction=datasets.train.padding_fraction,
+        train_padding_fraction=train_padding_fraction,
         train_total_loss_tokens=datasets.train.total_loss_tokens,
     )
 
