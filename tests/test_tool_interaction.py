@@ -234,3 +234,30 @@ def test_no_context_duplication_across_turns(monkeypatch):
     # The second turn's prompt must be the first prompt + call + real result,
     # NOT that plus a second full copy of the original prompt text.
     assert seen_prompts[1].count("Use the calculator.") == 1
+
+
+def test_host_result_context_matches_sft_newline_format(monkeypatch):
+    """The host inserts precisely the separator used by SFT rendering."""
+    tok = _FakeTokenizer()
+    call_text = '{"protocol_version":"1.0.0","tool":"calculator.evaluate","arguments":{"expression":"2+2"}}'
+    seen_prompts: list[str] = []
+    from juniper_math import tool_interaction as ti_module
+    from juniper_math.generation import GenerationResult
+
+    turns = [f"<tool_call> {call_text}", "<final> 4"]
+
+    def fake_generate(model, t, prompt, max_new_tokens, device, temperature=0.0, seed=None):
+        seen_prompts.append(prompt)
+        full_text = (prompt + " " + turns[len(seen_prompts) - 1]).strip()
+        return GenerationResult(
+            prompt=prompt,
+            text=full_text,
+            token_ids=t.encode(full_text),
+            stopped_on_eos=False,
+        )
+
+    monkeypatch.setattr(ti_module, "generate", fake_generate)
+    runtime = ToolRuntime()
+    run_tool_interaction(None, tok, "Use the calculator.", runtime, torch.device("cpu"), 32)
+    expected = "Use the calculator." + turns[0] + "\n" + wire_tool_result(runtime.execute_text(call_text))
+    assert seen_prompts[1] == expected

@@ -25,9 +25,7 @@ from juniper_math.tools.runtime import ToolRuntime
 
 # A final response may legitimately contain currency, grouping commas,
 # scientific notation, a unit/percent suffix, or a short explanation before
-# the value.  This intentionally recognizes the first standalone numeric
-# representation rather than requiring the string to begin with a bare
-# integer.  It does not try to evaluate prose or mathematical expressions.
+# the value. It does not try to evaluate prose or mathematical expressions.
 _NUMBER = re.compile(
     r"(?<![\w.])[$€£]?\s*(?P<number>[+-]?\d+\s*/\s*\d+|[+-]?(?:\d+(?:,\d{3})*(?:\.\d+)?|\.\d+)"
     r"(?:[eE][+-]?\d+)?)(?![\w/])"
@@ -35,17 +33,20 @@ _NUMBER = re.compile(
 
 
 def _parse_number(text: str) -> Fraction | None:
-    match = _NUMBER.search(text)
-    if match is None:
+    # A final answer often explains intermediate values first ("2 + 3 = 5").
+    # The terminal numeric value is the best unambiguous interpretation of a
+    # concise assistant completion; choosing the first number would score that
+    # example as 2. `Fraction` handles integer and decimal scientific notation.
+    matches = list(_NUMBER.finditer(text))
+    if not matches:
         return None
+    match = matches[-1]
     token = match.group("number").replace(",", "").replace(" ", "")
     try:
         if "/" in token:
             num, den = token.split("/")
             return Fraction(int(num), int(den))
-        if "." in token:
-            return Fraction(token)
-        return Fraction(int(token))
+        return Fraction(token)
     except (ValueError, ZeroDivisionError):
         return None
 

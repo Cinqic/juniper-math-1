@@ -180,7 +180,12 @@ def run_tool_interaction(
         # (up through `block_end` of the newly generated continuation) + the
         # REAL wire result — never from the continuation past that point,
         # which may contain a hallucinated <tool_result>.
-        context = context + new_text[:block_end] + wire_result
+        # SFT rendering places the trusted host result on its own line after
+        # the assistant's call. Keep the live continuation byte-compatible
+        # with that representation; omitting this separator yields
+        # ``...}</tool_call-like-end><tool_result>...`` context never seen in
+        # training.
+        context = context + new_text[:block_end] + "\n" + wire_result
 
     trace.stopped_reason = "max_tool_calls"
     return trace

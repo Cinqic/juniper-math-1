@@ -108,5 +108,13 @@ def test_numeric_parser_accepts_valid_final_answer_representations():
     assert _parse_number("The result is $12.50.") == Fraction(25, 2)
     assert _parse_number("1,234.5 meters") == Fraction(2469, 2)
     assert _parse_number("approximately -1.2e-3") == Fraction(-3, 2500)
+    assert _parse_number("1e3") == Fraction(1000)
+    assert _parse_number("1E3") == Fraction(1000)
+    assert _parse_number("-1e3") == Fraction(-1000)
+    assert _parse_number("1.2e3") == Fraction(1200)
     assert _parse_number("The exact result is 7 / 8.") == Fraction(7, 8)
     assert _parse_number("15%") == Fraction(15)
+
+
+def test_numeric_parser_uses_terminal_number_in_an_explanation():
+    assert _parse_number("We add 2 and 3, so the final answer is 5.") == Fraction(5)
