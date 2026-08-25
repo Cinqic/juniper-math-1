@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from juniper_math.dataset.schema import validate_example
 from juniper_math.dataset.verify import verify_deterministic
-from juniper_math.sft_curriculum import DIRECT_CATEGORIES, build_independent_direct_examples
+from juniper_math.sft_curriculum import (
+    DIRECT_CATEGORIES,
+    SAFETY_CATEGORIES,
+    build_independent_direct_examples,
+    build_independent_safety_examples,
+)
 
 
 def test_independent_curriculum_is_deterministic_and_verifiable():
@@ -27,3 +32,15 @@ def test_independent_curriculum_changes_with_split():
     train = build_independent_direct_examples("train", 1, 7)
     validation = build_independent_direct_examples("validation", 1, 7)
     assert {item.example_id for item in train}.isdisjoint(item.example_id for item in validation)
+
+
+def test_independent_safety_curriculum_is_deterministic_and_answerless():
+    first = build_independent_safety_examples("train", 3, 5004032)
+    second = build_independent_safety_examples("train", 3, 5004032)
+    assert [item.to_dict() for item in first] == [item.to_dict() for item in second]
+    assert len(first) == len(SAFETY_CATEGORIES) * 3
+    for item in first:
+        validate_example(item)
+        assert item.expected_answer is None
+        assert item.tool_required is False
+        assert item.tool_traces == ()

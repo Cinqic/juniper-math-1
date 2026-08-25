@@ -21,10 +21,10 @@
 # from the frozen juniper-math-dataset-v1 train/validation splits (verified
 # via parent-checkpoint/parent-dataset hash checks at load time).
 
-run_id: "phase8-sft-v9-replay-balanced-preflight"
+run_id: "phase8-sft-v10-safety-replay-preflight"
 architecture_identity: "0.1.0"
 tokenizer_identity: "juniper-math-tokenizer-v1"
-dataset_identity: "juniper-math-sft-v5"
+dataset_identity: "juniper-math-sft-v6"
 tool_protocol_identity: "juniper-tool-protocol-v1"
 
 # Verified in this session by downloading the phase-7-pretraining GitHub
@@ -51,6 +51,9 @@ sft_subset:
   # Per direct category, independent (not parent-rephrased) deterministic
   # mathematical records with new structural prompt families.
   independent_direct_examples_per_category: 500
+  # Four independent honesty/safety families prevent direct-math completion
+  # from displacing ambiguity, missing-information, undefined, and refusal behavior.
+  independent_safety_examples_per_category: 1000
   # Fixed-stride ordinary-LM replay from the frozen Phase 7 training corpus.
   # It is represented and hashed separately from masked SFT examples.
   base_replay_examples: 2000
@@ -62,7 +65,7 @@ data:
 
 optimizer:
   name: "adamw"
-  learning_rate: 2.0e-4
+  learning_rate: 1.5e-4
   weight_decay: 0.01
   beta1: 0.9
   beta2: 0.95
@@ -88,9 +91,9 @@ device: "cuda"
 precision: "fp32"
 
 output:
-  checkpoint_dir: "checkpoints/phase8-sft-v9-replay-balanced-preflight"
-  experiment_dir: "experiments/phase8-sft-v9-replay-balanced-preflight"
-  sft_dataset_dir: "data/processed/phase8-sft-v9-replay-balanced-preflight"
+  checkpoint_dir: "checkpoints/phase8-sft-v10-safety-replay-preflight"
+  experiment_dir: "experiments/phase8-sft-v10-safety-replay-preflight"
+  sft_dataset_dir: "data/processed/phase8-sft-v10-safety-replay-preflight"
 
 milestone_fractions: [0.0, 0.3333333333, 0.6666666667, 1.0]
 

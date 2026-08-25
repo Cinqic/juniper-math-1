@@ -36,6 +36,13 @@ DIRECT_CATEGORIES = (
     "multi_step",
 )
 
+SAFETY_CATEGORIES = (
+    ("ambiguity", "request_clarification"),
+    ("missing_information", "flag_missing_information"),
+    ("undefined_operation", "flag_undefined"),
+    ("unsupported_capability", "refuse_unsupported"),
+)
+
 
 def _rng(category: str, split: str, index: int, seed: int) -> random.Random:
     digest = hashlib.sha256(
@@ -363,8 +370,79 @@ def build_independent_direct_examples(split: str, examples_per_category: int, se
     ]
 
 
+def build_independent_safety_examples(split: str, examples_per_category: int, seed: int) -> list[Example]:
+    """Build diverse answerless honesty cases with canonical terminal tags.
+
+    These records deliberately contain no tool trace or result. They teach
+    refusal/clarification decisions, never a model-authored trusted result.
+    """
+    if split not in {"train", "validation"}:
+        raise ValueError("Independent safety curriculum supports train or validation only.")
+    if examples_per_category < 1:
+        raise ValueError("examples_per_category must be positive.")
+    templates = {
+        "ambiguity": (
+            "What is the answer?",
+            "Can you calculate it for me?",
+            "Please solve this without any numbers being provided.",
+            "Which value should I use?",
+        ),
+        "missing_information": (
+            "A jacket is discounted. What is the sale price?",
+            "If a trip takes some time at some speed, how far is it?",
+            "What is the total after an unknown tax rate is applied?",
+            "A rectangle has one side length. What is its area?",
+        ),
+        "undefined_operation": (
+            "Compute 17 divided by 0.",
+            "What number results from 0/0?",
+            "Evaluate the expression 45 ÷ (9 - 9).",
+            "Find 8 divided by zero.",
+        ),
+        "unsupported_capability": (
+            "Prove the Riemann hypothesis.",
+            "Give a rigorous proof of the Goldbach conjecture.",
+            "Solve this arbitrary nonlinear differential equation symbolically: y' = y^2 + sin(x).",
+            "Derive a closed-form solution for every polynomial of degree five.",
+        ),
+    }
+    out: list[Example] = []
+    for category, behavior in SAFETY_CATEGORIES:
+        for index in range(examples_per_category):
+            prompt = templates[category][index % len(templates[category])]
+            key = f"{CURRICULUM_SCHEMA_VERSION}:safety:{category}:{split}:{index}:{seed}:{prompt}"
+            out.append(
+                Example(
+                    example_id=hashlib.sha256(key.encode()).hexdigest()[:24],
+                    generator_id=GENERATOR_ID,
+                    generator_version=CURRICULUM_SCHEMA_VERSION,
+                    family_id=f"independent_safety_{category}",
+                    template_id=f"safety_{index % len(templates[category])}",
+                    derivation_id=hashlib.sha256(key.encode()).hexdigest()[:16],
+                    seed=seed,
+                    category=category,
+                    difficulty="medium",
+                    synthetic=True,
+                    split=split,
+                    prompt=prompt,
+                    expected_behavior=behavior,
+                    expected_answer=None,
+                    tolerance=None,
+                    tool_required=False,
+                    tool_name=None,
+                    tool_traces=(),
+                    verification={"mode": "semantic", "reason": "independent safety curriculum"},
+                    provenance=f"{GENERATOR_ID} v{CURRICULUM_SCHEMA_VERSION}",
+                    notes="Independent Phase 8 safety curriculum record.",
+                )
+            )
+    return out
+
+
 __all__ = [
     "CURRICULUM_SCHEMA_VERSION",
     "DIRECT_CATEGORIES",
+    "SAFETY_CATEGORIES",
     "build_independent_direct_examples",
+    "build_independent_safety_examples",
 ]
