@@ -144,6 +144,7 @@ def _build_datasets(
         tokenizer=tokenizer,
         dataset_config=dataset_config,
         category_weight_overrides=ss.category_weight_overrides or None,
+        direct_prompt_variants=ss.direct_prompt_variants,
     )
     train_ds = MaskedSftDataset(selections["train"], tokenizer, ss.max_sequence_length)
     val_ds = MaskedSftDataset(selections["validation"], tokenizer, ss.max_sequence_length)

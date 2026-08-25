@@ -13,6 +13,7 @@ from juniper_math.sft_data import (
     CategoryCounts,
     MaskedSftDataset,
     SftDataError,
+    augment_direct_instruction_examples,
     compute_flattened_targets,
     representation_sha256,
     select_and_record_sft_subset,
@@ -184,7 +185,10 @@ def test_sft_identity_is_stable_and_order_independent():
         tokenizer_identity="t",
         seed=1,
         max_sequence_length=256,
-        splits={"train": {"example_ids_sha256": "aaa"}, "validation": {"example_ids_sha256": "bbb"}},
+        splits={
+            "train": {"example_ids_sha256": "aaa", "parent_example_ids_sha256": "aaa"},
+            "validation": {"example_ids_sha256": "bbb", "parent_example_ids_sha256": "bbb"},
+        },
     )
     m2 = SftManifest(
         schema_version="1.0.0",
@@ -195,7 +199,10 @@ def test_sft_identity_is_stable_and_order_independent():
         tokenizer_identity="t",
         seed=1,
         max_sequence_length=256,
-        splits={"validation": {"example_ids_sha256": "bbb"}, "train": {"example_ids_sha256": "aaa"}},
+        splits={
+            "validation": {"example_ids_sha256": "bbb", "parent_example_ids_sha256": "bbb"},
+            "train": {"example_ids_sha256": "aaa", "parent_example_ids_sha256": "aaa"},
+        },
     )
     assert m1.sft_identity == m2.sft_identity
 
@@ -216,3 +223,14 @@ def test_masked_sft_batches_use_dynamic_padding(tokenizer):
     assert batch["input_ids"].shape[1] < 256
     assert batch["labels"][0, -1].item() == -100
     assert dataset.padding_fraction_for_order(1, 0, True, 2) < 0.5
+
+
+def test_direct_instruction_augmentation_preserves_parent_ground_truth():
+    parent = _example("arithmetic", 3)
+    augmented = augment_direct_instruction_examples([parent], variants_per_example=2)
+    assert augmented[0] == parent
+    assert len(augmented) == 3
+    assert {item.expected_answer for item in augmented} == {parent.expected_answer}
+    assert {item.split for item in augmented} == {parent.split}
+    assert all(item.tool_traces == () for item in augmented)
+    assert all(item.example_id != parent.example_id for item in augmented[1:])

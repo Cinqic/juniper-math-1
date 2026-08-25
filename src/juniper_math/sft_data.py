@@ -56,6 +56,17 @@ SFT_DATASET_ID = "juniper-math-sft-v3"
 SFT_MANIFEST_SCHEMA_VERSION = "3.0.0"
 SFT_RENDERING_SCHEMA_VERSION = "3.0.0"
 
+_DIRECT_INSTRUCTION_FRAMES = (
+    "Solve this mathematical question and provide the final value.\n{prompt}",
+    "Determine the requested quantity. Reply with the correct final answer.\n{prompt}",
+    "For a homework check, work out the answer to this problem.\n{prompt}",
+    "Answer the following quantitative question accurately.\n{prompt}",
+    "A student asks the question below. Give the mathematically correct response.\n{prompt}",
+    "Read the problem and calculate what it asks for.\n{prompt}",
+    "Find the result requested in this short math task.\n{prompt}",
+    "Use ordinary mathematical reasoning to answer this question.\n{prompt}",
+)
+
 
 class SftDataError(ValueError):
     """Raised for invalid SFT selection, length-rejection, or manifest state."""
@@ -106,6 +117,50 @@ def compute_flattened_targets(
 class SelectionOutcome:
     examples: list[Example]
     audit: dict[str, Any]
+
+
+def augment_direct_instruction_examples(examples: list[Example], variants_per_example: int) -> list[Example]:
+    """Add versioned instructional frames to concrete direct-answer examples.
+
+    The frozen parent records are copied verbatim as the first member of each
+    group. Derived members preserve ground truth, split, and provenance while
+    changing only the user-facing instruction frame. They never synthesize a
+    tool result or alter a parent artifact.
+    """
+    if variants_per_example < 0:
+        raise SftDataError("variants_per_example must be non-negative.")
+    augmented = list(examples)
+    if variants_per_example == 0:
+        return augmented
+    for ex in examples:
+        if ex.tool_required or ex.expected_answer is None:
+            continue
+        for variant in range(variants_per_example):
+            frame_index = int(hashlib.sha256(f"{ex.example_id}:{variant}".encode()).hexdigest(), 16) % len(
+                _DIRECT_INSTRUCTION_FRAMES
+            )
+            augmented.append(
+                Example(
+                    **{
+                        **ex.__dict__,
+                        "example_id": hashlib.sha256(
+                            f"phase8-sft-v3:{ex.example_id}:{variant}".encode()
+                        ).hexdigest()[:24],
+                        "generator_id": "phase8_sft_instruction_augmentation",
+                        "generator_version": SFT_RENDERING_SCHEMA_VERSION,
+                        "family_id": f"instructional_reframe_{ex.category}",
+                        "template_id": f"instruction_frame_{frame_index}",
+                        "derivation_id": f"{ex.example_id}:instruction-frame:{variant}",
+                        "prompt": _DIRECT_INSTRUCTION_FRAMES[frame_index].format(prompt=ex.prompt),
+                        "provenance": (
+                            f"derived Phase 8 instructional frame v{SFT_RENDERING_SCHEMA_VERSION} "
+                            f"from {ex.example_id}"
+                        ),
+                        "notes": "Derived prompt-only SFT augmentation; parent ground truth unchanged.",
+                    },
+                )
+            )
+    return augmented
 
 
 def select_sft_examples(
@@ -272,7 +327,7 @@ class SftManifest:
     def sft_identity(self) -> str:
         """Selection identity: which frozen parent examples were selected."""
         parts = "\n".join(
-            f"{split}:{info['example_ids_sha256']}" for split, info in sorted(self.splits.items())
+            f"{split}:{info['parent_example_ids_sha256']}" for split, info in sorted(self.splits.items())
         )
         return hashlib.sha256(parts.encode("utf-8")).hexdigest()
 
@@ -299,12 +354,15 @@ def build_sft_manifest(
     selections: dict[str, list[Example]],
     audits: dict[str, dict[str, Any]],
     tokenizer: JuniperTokenizer,
+    parent_selections: dict[str, list[Example]] | None = None,
 ) -> SftManifest:
     splits: dict[str, dict[str, Any]] = {}
     for split, examples in selections.items():
+        parent_examples = (parent_selections or selections)[split]
         splits[split] = {
             "example_count": len(examples),
             "example_ids_sha256": _ids_sha256(examples),
+            "parent_example_ids_sha256": _ids_sha256(parent_examples),
             "representation_sha256": representation_sha256(examples, tokenizer, max_sequence_length),
             "category_counts": audits[split]["category_selected_counts"],
             "category_targets": audits[split]["category_targets"],
@@ -430,6 +488,7 @@ def select_and_record_sft_subset(
     tokenizer: JuniperTokenizer,
     dataset_config: DatasetConfig | None = None,
     category_weight_overrides: dict[str, float] | None = None,
+    direct_prompt_variants: int = 0,
 ) -> tuple[dict[str, list[Example]], SftManifest]:
     dataset_config = dataset_config or load_dataset_config()
     verify_parent_dataset_shards(dataset_config)
@@ -450,10 +509,24 @@ def select_and_record_sft_subset(
         dataset_config, "validation", val_targets, seed, tokenizer, max_sequence_length
     )
 
-    selections = {"train": train_outcome.examples, "validation": val_outcome.examples}
+    parent_selections = {"train": train_outcome.examples, "validation": val_outcome.examples}
+    selections = {
+        split: augment_direct_instruction_examples(examples, direct_prompt_variants)
+        for split, examples in parent_selections.items()
+    }
     audits = {"train": train_outcome.audit, "validation": val_outcome.audit}
+    for split, examples in selections.items():
+        audits[split]["direct_instruction_variants_per_parent"] = direct_prompt_variants
+        audits[split]["total_examples_after_instruction_augmentation"] = len(examples)
     manifest = build_sft_manifest(
-        dataset_config, tokenizer_identity, seed, max_sequence_length, selections, audits, tokenizer
+        dataset_config,
+        tokenizer_identity,
+        seed,
+        max_sequence_length,
+        selections,
+        audits,
+        tokenizer,
+        parent_selections=parent_selections,
     )
     write_sft_manifest(manifest, output_dir / "sft_manifest.json")
     (output_dir / "sft_selection_audit.json").write_text(
@@ -472,6 +545,7 @@ __all__ = [
     "SftManifest",
     "build_sft_manifest",
     "compute_flattened_targets",
+    "augment_direct_instruction_examples",
     "count_categories",
     "representation_sha256",
     "select_and_record_sft_subset",

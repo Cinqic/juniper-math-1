@@ -45,6 +45,9 @@ sft_subset:
   validation_target_per_category: 150
   max_sequence_length: 256
   category_weight_overrides: {}
+  # Deterministic derived copies with distinct instructional framing for
+  # concrete direct-answer cases. Frozen parent records are not changed.
+  direct_prompt_variants: 1
 
 data:
   micro_batch_size: 8

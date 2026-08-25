@@ -152,7 +152,7 @@ artifacts:
 
   - artifact_id: "phase8_sft_training_config"
     path: "config/training_phase8_sft.yaml"
-    sha256: "f00d57123aff6046ca65bd4dae0725d15440a2c2b46cdca9e4ad2dec2bf527c4"
+    sha256: "65a29685b92d1cf3788cd0b080c1f61a2144720acd7b162ba28119a09611924f"
     description: "Phase 8 recovery SFT configuration (run_id phase8-sft-v4-recovery); historical rejected configurations remain preserved in Git history."
 
   - artifact_id: "dataset_shard_manifest"
