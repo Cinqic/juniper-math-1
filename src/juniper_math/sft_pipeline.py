@@ -134,6 +134,11 @@ def _build_datasets(
             f"config/dataset.yaml declares {dataset_config.dataset_id!r}."
         )
     ss = training_config.sft_subset
+    replay_train_examples = (
+        select_smoke_examples(dataset_config, "train", ss.base_replay_examples, training_config.seed)
+        if ss.base_replay_examples
+        else []
+    )
     selections, manifest = select_and_record_sft_subset(
         tokenizer_identity=training_config.tokenizer_identity,
         seed=training_config.seed,
@@ -146,8 +151,11 @@ def _build_datasets(
         category_weight_overrides=ss.category_weight_overrides or None,
         direct_prompt_variants=ss.direct_prompt_variants,
         independent_direct_examples_per_category=ss.independent_direct_examples_per_category,
+        replay_examples={"train": replay_train_examples, "validation": []},
     )
-    train_ds = MaskedSftDataset(selections["train"], tokenizer, ss.max_sequence_length)
+    train_ds = MaskedSftDataset(
+        selections["train"], tokenizer, ss.max_sequence_length, replay_examples=replay_train_examples
+    )
     val_ds = MaskedSftDataset(selections["validation"], tokenizer, ss.max_sequence_length)
     base_validation_examples = select_smoke_examples(
         dataset_config,

@@ -49,6 +49,7 @@ class SftSubsetConfig:
     category_weight_overrides: dict[str, float] = field(default_factory=dict)
     direct_prompt_variants: int = 0
     independent_direct_examples_per_category: int = 0
+    base_replay_examples: int = 0
 
 
 @dataclass(frozen=True)
@@ -144,6 +145,7 @@ def validate_sft_training_config(config: SftTrainingConfig) -> None:
         "sft_subset.independent_direct_examples_per_category",
         allow_zero=True,
     )
+    _positive_int(ss.base_replay_examples, "sft_subset.base_replay_examples", allow_zero=True)
     if not isinstance(ss.category_weight_overrides, dict) or not all(
         isinstance(k, str) and isinstance(v, (int, float)) and v > 0
         for k, v in ss.category_weight_overrides.items()

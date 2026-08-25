@@ -42,6 +42,7 @@ from torch.utils.data import Dataset
 from juniper_math.dataset.config import DatasetConfig, load_dataset_config
 from juniper_math.dataset.io import example_from_dict
 from juniper_math.dataset.schema import Example
+from juniper_math.dataset.shard import render_training_text
 from juniper_math.hashing import sha256_file
 from juniper_math.pilot_data import manifest_shard_files, verify_parent_dataset_shards
 from juniper_math.sft_curriculum import build_independent_direct_examples
@@ -53,9 +54,9 @@ from juniper_math.tokenizer import JuniperTokenizer
 # it adds a supervised response derived from the trusted runtime error rather
 # than training EOS directly after a context-only tool result.  The frozen
 # Phase 4 parent corpus is unchanged.
-SFT_DATASET_ID = "juniper-math-sft-v4"
-SFT_MANIFEST_SCHEMA_VERSION = "4.0.0"
-SFT_RENDERING_SCHEMA_VERSION = "4.0.0"
+SFT_DATASET_ID = "juniper-math-sft-v5"
+SFT_MANIFEST_SCHEMA_VERSION = "5.0.0"
+SFT_RENDERING_SCHEMA_VERSION = "5.0.0"
 
 _DIRECT_INSTRUCTION_FRAMES = (
     "Solve this mathematical question and provide the final value.\n{prompt}",
@@ -283,6 +284,20 @@ def representation_sha256(
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def replay_representation_sha256(
+    examples: list[Example], tokenizer: JuniperTokenizer, max_sequence_length: int
+) -> str:
+    """Hash exact ordinary-LM replay trajectories, including their labels."""
+    records = []
+    budget = max_sequence_length - 2
+    for ex in sorted(examples, key=lambda item: item.example_id):
+        body = tokenizer.encode(render_training_text(ex))[:budget]
+        ids = [tokenizer.token_to_id("<s>"), *body, tokenizer.token_to_id("</s>")]
+        records.append({"example_id": ex.example_id, "input_ids": ids, "labels": ids})
+    payload = json.dumps(records, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def _difficulty_counts(examples: list[Example]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for e in examples:
@@ -335,7 +350,8 @@ class SftManifest:
     def sft_identity(self) -> str:
         """Selection identity: which frozen parent examples were selected."""
         parts = "\n".join(
-            f"{split}:{info['parent_example_ids_sha256']}" for split, info in sorted(self.splits.items())
+            f"{split}:{info['parent_example_ids_sha256']}:{info.get('replay_example_ids_sha256', '')}"
+            for split, info in sorted(self.splits.items())
         )
         return hashlib.sha256(parts.encode("utf-8")).hexdigest()
 
@@ -348,7 +364,13 @@ class SftManifest:
             "tokenizer_identity": self.tokenizer_identity,
             "renderer_schema_version": self.renderer_schema_version,
             "max_sequence_length": self.max_sequence_length,
-            "splits": {split: info["representation_sha256"] for split, info in sorted(self.splits.items())},
+            "splits": {
+                split: {
+                    "sft": info["representation_sha256"],
+                    "replay": info.get("replay_representation_sha256"),
+                }
+                for split, info in sorted(self.splits.items())
+            },
         }
         canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
         return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
@@ -363,6 +385,7 @@ def build_sft_manifest(
     audits: dict[str, dict[str, Any]],
     tokenizer: JuniperTokenizer,
     parent_selections: dict[str, list[Example]] | None = None,
+    replay_selections: dict[str, list[Example]] | None = None,
 ) -> SftManifest:
     splits: dict[str, dict[str, Any]] = {}
     for split, examples in selections.items():
@@ -380,6 +403,12 @@ def build_sft_manifest(
             "tool_required_count": sum(1 for e in examples if e.tool_required),
             "family_count": len({e.family_id for e in examples}),
         }
+        replay = (replay_selections or {}).get(split, [])
+        splits[split]["replay_example_count"] = len(replay)
+        splits[split]["replay_example_ids_sha256"] = _ids_sha256(replay)
+        splits[split]["replay_representation_sha256"] = replay_representation_sha256(
+            replay, tokenizer, max_sequence_length
+        )
     return SftManifest(
         schema_version=SFT_MANIFEST_SCHEMA_VERSION,
         sft_dataset_id=SFT_DATASET_ID,
@@ -412,7 +441,11 @@ class MaskedSftDataset(Dataset):
     """
 
     def __init__(
-        self, examples: list[Example], tokenizer: JuniperTokenizer, max_sequence_length: int
+        self,
+        examples: list[Example],
+        tokenizer: JuniperTokenizer,
+        max_sequence_length: int,
+        replay_examples: list[Example] | None = None,
     ) -> None:
         if not examples:
             raise SftDataError("MaskedSftDataset requires at least one example.")
@@ -434,6 +467,16 @@ class MaskedSftDataset(Dataset):
             self._attention_mask.append(torch.ones(n_real, dtype=torch.long))
             self._lengths.append(n_real)
             self.total_loss_tokens += sum(1 for x in mt.labels[1:] if x != -100)
+            self.total_real_tokens += n_real
+        for ex in replay_examples or []:
+            body = tokenizer.encode(render_training_text(ex))[: max_sequence_length - 2]
+            ids = [tokenizer.token_to_id("<s>"), *body, tokenizer.token_to_id("</s>")]
+            n_real = len(ids)
+            self._input_ids.append(torch.tensor(ids, dtype=torch.long))
+            self._labels.append(torch.tensor(ids, dtype=torch.long))
+            self._attention_mask.append(torch.ones(n_real, dtype=torch.long))
+            self._lengths.append(n_real)
+            self.total_loss_tokens += max(0, n_real - 1)
             self.total_real_tokens += n_real
 
     def __len__(self) -> int:
@@ -498,6 +541,7 @@ def select_and_record_sft_subset(
     category_weight_overrides: dict[str, float] | None = None,
     direct_prompt_variants: int = 0,
     independent_direct_examples_per_category: int = 0,
+    replay_examples: dict[str, list[Example]] | None = None,
 ) -> tuple[dict[str, list[Example]], SftManifest]:
     dataset_config = dataset_config or load_dataset_config()
     verify_parent_dataset_shards(dataset_config)
@@ -545,6 +589,7 @@ def select_and_record_sft_subset(
         audits,
         tokenizer,
         parent_selections=parent_selections,
+        replay_selections=replay_examples,
     )
     write_sft_manifest(manifest, output_dir / "sft_manifest.json")
     (output_dir / "sft_selection_audit.json").write_text(
