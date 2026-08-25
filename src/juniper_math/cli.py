@@ -662,8 +662,12 @@ def _cmd_train_sft_run(args: argparse.Namespace) -> int:
     print(f"PASS: SFT training run {report.training_config.run_id} complete")
     print(f"  device:                 {report.device}")
     print(f"  parameters:             {report.parameter_count:,}")
+    train_info = report.sft_manifest.splits.get("train", {})
     print(
-        f"  train examples:         {report.sft_manifest.splits.get('train', {}).get('example_count', 0):,}"
+        "  train trajectories:     "
+        f"{train_info.get('example_count', 0) + train_info.get('replay_example_count', 0):,} "
+        f"({train_info.get('example_count', 0):,} SFT + "
+        f"{train_info.get('replay_example_count', 0):,} replay)"
     )
     print(f"  train padding fraction: {report.train_padding_fraction:.4f}")
     print(f"  train loss-bearing tok: {report.train_total_loss_tokens:,}")
