@@ -40,9 +40,13 @@ The versioned `juniper-math-sft-v2` derived representation adds a supervised
 runtime error; no frozen Phase 4 artifact changed. A 900-step, 5e-5 run from
 the verified Phase 7 Base recorded unmasked regression at every milestone.
 The best (300-step) checkpoint has SHA-256
-`012d00c42dd044fab0d0bdc3bc3eb09351ce0070e41f1866ae562d` and +0.006737
+`012d00c42dd044fab0d0bdc3f84dab4cd3bc3eb09351ce0070e41f1866ae562d` and +0.006737
 nats regression. It achieved 9/53 tool-required end-to-end successes, but
 0/115 direct-answer correctness on the corrected n=200 held-out evaluation.
+
+It is remotely preserved only as the clearly labeled prerelease
+`phase-8-terra-remediation-rejected`; a fresh asset download re-hashed to the
+same SHA-256. This is non-release research evidence, not an approval tag.
 
 That fails the pre-registered actual-task-completion gate. The remediation
 checkpoint, historical 8e-4 run, and original candidate are preserved as
