@@ -385,6 +385,7 @@ def run_sft_train(
             checkpoint_dir,
             log_path,
             source_commit,
+            checkpoint_extra={"source_tree_state": source_tree_state},
         )
         _maybe_milestone(target_step)
 
@@ -399,6 +400,7 @@ def run_sft_train(
         source_commit,
         extra={
             "final": True,
+            "source_tree_state": source_tree_state,
             "parent_checkpoint_path": training_config.parent_checkpoint_path,
             "parent_checkpoint_sha256": training_config.parent_checkpoint_sha256,
             "parent_phase7_tag": training_config.parent_phase7_tag,

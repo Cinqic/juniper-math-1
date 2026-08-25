@@ -341,6 +341,7 @@ def run_training(
     log_path: Path,
     git_commit: str,
     on_metrics=None,
+    checkpoint_extra: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Train `state` from its current step up to (and including) `end_step`.
 
@@ -365,7 +366,7 @@ def run_training(
 
         if sched.checkpoint_interval and state.step % sched.checkpoint_interval == 0:
             path = checkpoint_dir / f"step_{state.step:06d}.pt"
-            save_state(state, architecture, training_config, path, git_commit)
+            save_state(state, architecture, training_config, path, git_commit, extra=checkpoint_extra)
             append_jsonl(log_path, {"event": "checkpoint", "step": state.step, "path": str(path)})
 
     return {"final_step": state.step, "tokens_seen": state.tokens_seen, "loss_history": state.loss_history}
