@@ -29,6 +29,7 @@ from juniper_math.tokenizer import JuniperTokenizer
 from juniper_math.tools.protocol import CANONICAL_SEPARATORS
 
 Role = Literal["context", "supervised"]
+TOOL_CALL_ONLY_NOTE_PREFIX = "phase8_sft_stage:tool_call_only"
 
 _ANSWERLESS_BEHAVIORS = frozenset(
     {"refuse_unsupported", "flag_undefined", "flag_missing_information", "request_clarification"}
@@ -78,6 +79,7 @@ def render_segments(ex: Example) -> list[Segment]:
     `<error>` tag (the assistant's concluding action).
     """
     segments = [Segment(ex.prompt, "context")]
+    call_only = ex.notes.startswith(TOOL_CALL_ONLY_NOTE_PREFIX)
     for trace in ex.tool_traces:
         call_json = json.dumps(
             trace.call, sort_keys=True, separators=CANONICAL_SEPARATORS, ensure_ascii=False
@@ -86,6 +88,11 @@ def render_segments(ex: Example) -> list[Segment]:
             trace.result, sort_keys=True, separators=CANONICAL_SEPARATORS, ensure_ascii=False
         )
         segments.append(Segment(f"\n<tool_call>{call_json}", "supervised"))
+        if call_only:
+            # At live inference the host injects the result immediately after
+            # a parsed call.  This stage teaches only the decision and wire
+            # payload; it never teaches the model to produce a result block.
+            return segments
         segments.append(Segment(f"\n<tool_result>{result_json}", "context"))
     if ex.expected_answer is not None:
         segments.append(Segment(f"\n<final>{ex.expected_answer}", "supervised"))
@@ -161,6 +168,7 @@ __all__ = [
     "Role",
     "Segment",
     "SftRenderingError",
+    "TOOL_CALL_ONLY_NOTE_PREFIX",
     "render_segments",
     "rendered_text",
     "tokenize_and_mask",

@@ -153,6 +153,7 @@ def _build_datasets(
         independent_direct_examples_per_category=ss.independent_direct_examples_per_category,
         independent_safety_examples_per_category=ss.independent_safety_examples_per_category,
         independent_tool_examples_per_category=ss.independent_tool_examples_per_category,
+        independent_tool_call_only_examples_per_category=ss.independent_tool_call_only_examples_per_category,
         replay_examples={"train": replay_train_examples, "validation": []},
     )
     train_ds = MaskedSftDataset(

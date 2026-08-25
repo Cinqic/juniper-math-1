@@ -10,8 +10,10 @@ from juniper_math.sft_curriculum import (
     TOOL_BUILDERS,
     build_independent_direct_examples,
     build_independent_safety_examples,
+    build_independent_tool_call_only_examples,
     build_independent_tool_examples,
 )
+from juniper_math.sft_rendering import rendered_text
 
 
 def test_independent_curriculum_is_deterministic_and_verifiable():
@@ -58,3 +60,12 @@ def test_independent_tool_curriculum_is_deterministic_and_runtime_backed():
         assert item.tool_required is True
         assert len(item.tool_traces) == 1
         assert item.tool_traces[0].result["status"] == "success"
+
+
+def test_tool_call_only_curriculum_never_renders_a_trusted_result():
+    items = build_independent_tool_call_only_examples("train", 1, 5004032)
+    for item in items:
+        text = rendered_text(item)
+        assert "<tool_call>" in text
+        assert "<tool_result>" not in text
+        assert "<final>" not in text

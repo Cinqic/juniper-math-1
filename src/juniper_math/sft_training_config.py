@@ -51,6 +51,7 @@ class SftSubsetConfig:
     independent_direct_examples_per_category: int = 0
     independent_safety_examples_per_category: int = 0
     independent_tool_examples_per_category: int = 0
+    independent_tool_call_only_examples_per_category: int = 0
     base_replay_examples: int = 0
 
 
@@ -157,6 +158,11 @@ def validate_sft_training_config(config: SftTrainingConfig) -> None:
     _positive_int(
         ss.independent_tool_examples_per_category,
         "sft_subset.independent_tool_examples_per_category",
+        allow_zero=True,
+    )
+    _positive_int(
+        ss.independent_tool_call_only_examples_per_category,
+        "sft_subset.independent_tool_call_only_examples_per_category",
         allow_zero=True,
     )
     _positive_int(ss.base_replay_examples, "sft_subset.base_replay_examples", allow_zero=True)

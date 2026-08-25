@@ -48,6 +48,7 @@ from juniper_math.pilot_data import manifest_shard_files, verify_parent_dataset_
 from juniper_math.sft_curriculum import (
     build_independent_direct_examples,
     build_independent_safety_examples,
+    build_independent_tool_call_only_examples,
     build_independent_tool_examples,
 )
 from juniper_math.sft_rendering import SftRenderingError, tokenize_and_mask
@@ -58,9 +59,9 @@ from juniper_math.tokenizer import JuniperTokenizer
 # it adds a supervised response derived from the trusted runtime error rather
 # than training EOS directly after a context-only tool result.  The frozen
 # Phase 4 parent corpus is unchanged.
-SFT_DATASET_ID = "juniper-math-sft-v7"
-SFT_MANIFEST_SCHEMA_VERSION = "7.0.0"
-SFT_RENDERING_SCHEMA_VERSION = "7.0.0"
+SFT_DATASET_ID = "juniper-math-sft-v8"
+SFT_MANIFEST_SCHEMA_VERSION = "8.0.0"
+SFT_RENDERING_SCHEMA_VERSION = "8.0.0"
 
 _DIRECT_INSTRUCTION_FRAMES = (
     "Solve this mathematical question and provide the final value.\n{prompt}",
@@ -547,6 +548,7 @@ def select_and_record_sft_subset(
     independent_direct_examples_per_category: int = 0,
     independent_safety_examples_per_category: int = 0,
     independent_tool_examples_per_category: int = 0,
+    independent_tool_call_only_examples_per_category: int = 0,
     replay_examples: dict[str, list[Example]] | None = None,
 ) -> tuple[dict[str, list[Example]], SftManifest]:
     dataset_config = dataset_config or load_dataset_config()
@@ -595,12 +597,23 @@ def select_and_record_sft_subset(
             for ex in independent:
                 tokenize_and_mask(ex, tokenizer, max_sequence_length)
             selections[split].extend(independent)
+    if independent_tool_call_only_examples_per_category:
+        for split in selections:
+            independent = build_independent_tool_call_only_examples(
+                split, independent_tool_call_only_examples_per_category, seed
+            )
+            for ex in independent:
+                tokenize_and_mask(ex, tokenizer, max_sequence_length)
+            selections[split].extend(independent)
     audits = {"train": train_outcome.audit, "validation": val_outcome.audit}
     for split, examples in selections.items():
         audits[split]["direct_instruction_variants_per_parent"] = direct_prompt_variants
         audits[split]["independent_direct_examples_per_category"] = independent_direct_examples_per_category
         audits[split]["independent_safety_examples_per_category"] = independent_safety_examples_per_category
         audits[split]["independent_tool_examples_per_category"] = independent_tool_examples_per_category
+        audits[split]["independent_tool_call_only_examples_per_category"] = (
+            independent_tool_call_only_examples_per_category
+        )
         audits[split]["total_examples_after_instruction_augmentation"] = len(examples)
     manifest = build_sft_manifest(
         dataset_config,

@@ -23,6 +23,7 @@ from juniper_math.dataset.generators.tools import (
 )
 from juniper_math.dataset.schema import Example
 from juniper_math.dataset.verify import evaluate_expression
+from juniper_math.sft_rendering import TOOL_CALL_ONLY_NOTE_PREFIX
 from juniper_math.tools.runtime import ToolRuntime
 
 CURRICULUM_SCHEMA_VERSION = "1.0.0"
@@ -489,6 +490,32 @@ def build_independent_tool_examples(split: str, examples_per_category: int, seed
     return out
 
 
+def build_independent_tool_call_only_examples(
+    split: str, examples_per_category: int, seed: int
+) -> list[Example]:
+    """Create separate call-construction supervision from runtime traces.
+
+    The rendering marker is part of the versioned representation and stops
+    supervision after the assistant's call. Host results are deliberately
+    absent from this stage and remain context-only in full trajectories.
+    """
+    full = build_independent_tool_examples(split, examples_per_category, seed + 17)
+    out = []
+    for source in full:
+        key = f"{CURRICULUM_SCHEMA_VERSION}:tool-call-only:{split}:{seed}:{source.example_id}"
+        out.append(
+            replace(
+                source,
+                example_id=hashlib.sha256(key.encode()).hexdigest()[:24],
+                family_id=f"{source.family_id}_call_only",
+                template_id=f"{source.template_id}_call_only",
+                derivation_id=hashlib.sha256(key.encode()).hexdigest()[:16],
+                notes=f"{TOOL_CALL_ONLY_NOTE_PREFIX}; runtime-verified call stage only.",
+            )
+        )
+    return out
+
+
 __all__ = [
     "CURRICULUM_SCHEMA_VERSION",
     "DIRECT_CATEGORIES",
@@ -497,4 +524,5 @@ __all__ = [
     "build_independent_direct_examples",
     "build_independent_safety_examples",
     "build_independent_tool_examples",
+    "build_independent_tool_call_only_examples",
 ]
