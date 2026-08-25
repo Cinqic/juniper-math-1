@@ -84,6 +84,7 @@ class SftTrainingConfig:
     parent_checkpoint_sha256: str
     parent_phase7_tag: str
     seed: int
+    trainable_last_n_layers: int
     sft_subset: SftSubsetConfig
     data: DataConfig
     optimizer: OptimizerConfig
@@ -136,6 +137,7 @@ def validate_sft_training_config(config: SftTrainingConfig) -> None:
     ):
         raise JuniperConfigError("parent_checkpoint_sha256 must be a 64-character hex SHA-256 digest.")
     _positive_int(config.seed, "seed", allow_zero=True)
+    _positive_int(config.trainable_last_n_layers, "trainable_last_n_layers", allow_zero=True)
 
     ss = config.sft_subset
     _positive_int(ss.train_target_per_category, "sft_subset.train_target_per_category")
@@ -262,6 +264,7 @@ def load_sft_training_config(path: Path | None = None) -> SftTrainingConfig:
             parent_checkpoint_sha256=raw["parent_checkpoint_sha256"],
             parent_phase7_tag=raw["parent_phase7_tag"],
             seed=raw["seed"],
+            trainable_last_n_layers=raw.get("trainable_last_n_layers", 0),
             sft_subset=SftSubsetConfig(**raw["sft_subset"]),
             data=DataConfig(**raw["data"]),
             optimizer=OptimizerConfig(**raw["optimizer"]),

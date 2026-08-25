@@ -35,6 +35,7 @@ def test_loads_real_frozen_config():
     config = load_sft_training_config()
     assert config.dataset_identity == "juniper-math-sft-v7"
     assert config.tool_protocol_identity == "juniper-tool-protocol-v1"
+    assert config.trainable_last_n_layers == 2
     assert len(config.parent_checkpoint_sha256) == 64
 
 

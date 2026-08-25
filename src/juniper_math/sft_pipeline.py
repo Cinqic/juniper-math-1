@@ -195,6 +195,20 @@ def init_sft_state(
     )
     state.model.load_state_dict(model.state_dict(), strict=True)
     state.model.to(device)
+    trainable_last_n_layers = training_config.trainable_last_n_layers
+    if trainable_last_n_layers:
+        if trainable_last_n_layers > len(state.model.blocks):
+            raise JuniperConfigError(
+                f"trainable_last_n_layers={trainable_last_n_layers} exceeds "
+                f"the frozen architecture's {len(state.model.blocks)} transformer blocks."
+            )
+        for parameter in state.model.parameters():
+            parameter.requires_grad_(False)
+        for block in state.model.blocks[-trainable_last_n_layers:]:
+            for parameter in block.parameters():
+                parameter.requires_grad_(True)
+        for parameter in state.model.final_norm.parameters():
+            parameter.requires_grad_(True)
     return state
 
 

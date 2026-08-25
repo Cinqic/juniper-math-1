@@ -152,8 +152,8 @@ artifacts:
 
   - artifact_id: "phase8_sft_training_config"
     path: "config/training_phase8_sft.yaml"
-    sha256: "708ffd65fe0d7e5e1cd9462b70cfeb43be90ec91f73d3e3f35e0b75384628437"
-    description: "Phase 8 safety-and-runtime-tool LR=2e-4 bounded preflight configuration (run_id phase8-sft-v13-safety-tool-lr2e-4-preflight); historical rejected and preflight configurations remain preserved in Git history."
+    sha256: "23bdb0fdeeded7f23ae24b465a289ba98adde0b49215a55f9d5c90bbcf330dc8"
+    description: "Phase 8 last-two-block safety-and-runtime-tool LR=2e-4 bounded preflight configuration (run_id phase8-sft-v14-last2-safety-tool-preflight); historical rejected and preflight configurations remain preserved in Git history."
 
   - artifact_id: "dataset_shard_manifest"
     path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"
