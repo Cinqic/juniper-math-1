@@ -125,6 +125,8 @@ class ToolInteractionReport:
             "correct_routing": rate(lambda c: c.correct_routing),
             "emitted_tool_call": rate(lambda c: c.emitted_tool_call),
             "call_parsed_valid": rate(lambda c: c.call_parsed),
+            "required_tool_call_emitted": rate_over(tool_cases, lambda c: c.emitted_tool_call),
+            "required_tool_call_parsed_valid": rate_over(tool_cases, lambda c: c.call_parsed),
             "tool_name_correct": rate_over(
                 tool_cases,
                 lambda c: bool(c.tool_name_correct),
@@ -153,8 +155,8 @@ class ToolInteractionReport:
                 lambda c: bool(c.terminal_tag_correct),
             ),
             "warning": (
-                "phase8-tool-interaction-eval-v2: tool-name, argument, and execution rates are "
-                "over required-tool cases; every rate is null-safe "
+                "phase8-tool-interaction-eval-v2: required-tool emission, parsing, tool-name, "
+                "argument, and execution rates are over required-tool cases; every rate is null-safe "
                 "(0-case denominators report rate=None, never a fabricated 0.0 or 1.0)."
             ),
         }

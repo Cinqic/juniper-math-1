@@ -68,6 +68,8 @@ def test_direct_vs_tool_denominators_partition_correctly():
     assert d["unnecessary_tool_call"]["denominator"] == 2
     assert d["unnecessary_tool_call"]["numerator"] == 1
     assert d["missing_required_call"]["denominator"] == 1
+    assert d["required_tool_call_emitted"]["denominator"] == 1
+    assert d["required_tool_call_parsed_valid"]["denominator"] == 1
 
 
 def test_tool_name_correct_uses_all_required_tool_cases():
@@ -82,6 +84,17 @@ def test_tool_name_correct_uses_all_required_tool_cases():
     d = report.as_dict()
     assert d["tool_name_correct"]["denominator"] == 3
     assert d["tool_name_correct"]["numerator"] == 1
+
+
+def test_required_tool_parsing_uses_all_required_cases():
+    cases = [
+        _case(tool_invocation_required=True, tool_required=True, emitted_tool_call=True, call_parsed=True),
+        _case(tool_invocation_required=True, tool_required=True, emitted_tool_call=True, call_parsed=False),
+        _case(tool_invocation_required=True, tool_required=True, emitted_tool_call=False, call_parsed=False),
+    ]
+    d = ToolInteractionReport(suite_id="s", n_cases=3, cases=cases).as_dict()
+    assert d["required_tool_call_emitted"] == {"numerator": 2, "denominator": 3, "rate": 2 / 3}
+    assert d["required_tool_call_parsed_valid"] == {"numerator": 1, "denominator": 3, "rate": 1 / 3}
 
 
 def test_numerator_never_exceeds_denominator_for_every_metric():
