@@ -159,10 +159,7 @@ phase_5_engineering:
   starting_foundation_tag: "phase-4-dataset"
   acceptance_source_commit: "a7a290b0edcb220c5a8d3edcdc5a572e9fd722c3"
 
-# Phase 6 engineering record — implementation and self-review complete,
-# independent review by GPT-5.6 Terra not yet performed. `current_phase`
-# stays 5 (the last independently-approved phase) until that review
-# completes, matching every prior phase's own approval sequence — see
+# Phase 6 engineering record — historical approval record. See
 # reports/PHASE6_RESULTS.md, reports/PHASE6_SELF_REVIEW.md, and
 # reports/PHASE6_COMPLETION.md.
 phase_6_engineering:
@@ -199,9 +196,8 @@ phase_7_engineering:
     - "tool-use smoke suite had 0% valid parse/name match at every selected candidate"
     - "tool-call emission peaked at 98.4% at 40% and ended at 62.2%; final selection prioritizes full validation and category losses"
 
-# Phase 8 engineering record. `current_phase` stays 7 (the last
-# independently-approved phase) until GPT-5.6 Terra reviews and approves
-# Phase 8, matching every prior phase's own approval sequence — see
+# Phase 8 engineering record — concluded research evidence. Phase 7 remains
+# the last approved model checkpoint; project completion is recorded above — see
 # reports/PHASE8_PLAN.md, reports/PHASE8_DATASET.md,
 # reports/PHASE8_PREFLIGHT.md, reports/PHASE8_RESULTS.md,
 # reports/PHASE8_REGRESSION.md, reports/PHASE8_SELF_REVIEW.md,
