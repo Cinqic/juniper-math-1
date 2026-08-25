@@ -21,7 +21,7 @@
 # from the frozen juniper-math-dataset-v1 train/validation splits (verified
 # via parent-checkpoint/parent-dataset hash checks at load time).
 
-run_id: "phase8-sft-v10-safety-replay-preflight"
+run_id: "phase8-sft-v11-safety-replay-milestones"
 architecture_identity: "0.1.0"
 tokenizer_identity: "juniper-math-tokenizer-v1"
 dataset_identity: "juniper-math-sft-v6"
@@ -78,22 +78,22 @@ scheduler:
   min_lr_ratio: 0.1
 
 schedule:
-  total_steps: 900
-  validation_interval: 300
-  checkpoint_interval: 300
-  generation_interval: 300
+  total_steps: 600
+  validation_interval: 200
+  checkpoint_interval: 200
+  generation_interval: 200
   logging_interval: 50
 
 resume_test:
-  interrupt_step: 200
+  interrupt_step: 150
 
 device: "cuda"
 precision: "fp32"
 
 output:
-  checkpoint_dir: "checkpoints/phase8-sft-v10-safety-replay-preflight"
-  experiment_dir: "experiments/phase8-sft-v10-safety-replay-preflight"
-  sft_dataset_dir: "data/processed/phase8-sft-v10-safety-replay-preflight"
+  checkpoint_dir: "checkpoints/phase8-sft-v11-safety-replay-milestones"
+  experiment_dir: "experiments/phase8-sft-v11-safety-replay-milestones"
+  sft_dataset_dir: "data/processed/phase8-sft-v11-safety-replay-milestones"
 
 milestone_fractions: [0.0, 0.3333333333, 0.6666666667, 1.0]
 
