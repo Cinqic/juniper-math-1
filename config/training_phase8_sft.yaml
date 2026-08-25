@@ -21,7 +21,7 @@
 # from the frozen juniper-math-dataset-v1 train/validation splits (verified
 # via parent-checkpoint/parent-dataset hash checks at load time).
 
-run_id: "phase8-sft-v12-explicit-tool-preflight"
+run_id: "phase8-sft-v13-safety-tool-lr2e-4-preflight"
 architecture_identity: "0.1.0"
 tokenizer_identity: "juniper-math-tokenizer-v1"
 dataset_identity: "juniper-math-sft-v7"
@@ -67,7 +67,7 @@ data:
 
 optimizer:
   name: "adamw"
-  learning_rate: 1.5e-4
+  learning_rate: 2.0e-4
   weight_decay: 0.01
   beta1: 0.9
   beta2: 0.95
@@ -93,9 +93,9 @@ device: "cuda"
 precision: "fp32"
 
 output:
-  checkpoint_dir: "checkpoints/phase8-sft-v12-explicit-tool-preflight"
-  experiment_dir: "experiments/phase8-sft-v12-explicit-tool-preflight"
-  sft_dataset_dir: "data/processed/phase8-sft-v12-explicit-tool-preflight"
+  checkpoint_dir: "checkpoints/phase8-sft-v13-safety-tool-lr2e-4-preflight"
+  experiment_dir: "experiments/phase8-sft-v13-safety-tool-lr2e-4-preflight"
+  sft_dataset_dir: "data/processed/phase8-sft-v13-safety-tool-lr2e-4-preflight"
 
 milestone_fractions: [0.0, 0.3333333333, 0.6666666667, 1.0]
 
