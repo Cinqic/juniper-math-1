@@ -52,8 +52,9 @@ from juniper_math.tokenizer import JuniperTokenizer
 # it adds a supervised response derived from the trusted runtime error rather
 # than training EOS directly after a context-only tool result.  The frozen
 # Phase 4 parent corpus is unchanged.
-SFT_DATASET_ID = "juniper-math-sft-v2"
-SFT_MANIFEST_SCHEMA_VERSION = "2.0.0"
+SFT_DATASET_ID = "juniper-math-sft-v3"
+SFT_MANIFEST_SCHEMA_VERSION = "3.0.0"
+SFT_RENDERING_SCHEMA_VERSION = "3.0.0"
 
 
 class SftDataError(ValueError):
@@ -212,6 +213,20 @@ def _ids_sha256(examples: list[Example]) -> str:
     return hashlib.sha256("\n".join(ids).encode("utf-8")).hexdigest()
 
 
+def representation_sha256(
+    examples: list[Example], tokenizer: JuniperTokenizer, max_sequence_length: int
+) -> str:
+    """Hash exact token IDs and labels, rather than only selected example IDs."""
+    records = []
+    for ex in sorted(examples, key=lambda item: item.example_id):
+        tokenization = tokenize_and_mask(ex, tokenizer, max_sequence_length)
+        records.append(
+            {"example_id": ex.example_id, "input_ids": tokenization.ids, "labels": tokenization.labels}
+        )
+    payload = json.dumps(records, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
 def _difficulty_counts(examples: list[Example]) -> dict[str, int]:
     counts: dict[str, int] = {}
     for e in examples:
@@ -237,6 +252,7 @@ class SftManifest:
     seed: int
     max_sequence_length: int
     splits: dict[str, dict[str, Any]]
+    renderer_schema_version: str = SFT_RENDERING_SCHEMA_VERSION
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -248,18 +264,31 @@ class SftManifest:
             "tokenizer_identity": self.tokenizer_identity,
             "seed": self.seed,
             "max_sequence_length": self.max_sequence_length,
+            "renderer_schema_version": self.renderer_schema_version,
             "splits": self.splits,
         }
 
     @property
     def sft_identity(self) -> str:
-        """SHA-256 over the sorted example-id hashes of every split — Phase
-        8's own frozen SFT-selection identity (analogous to
-        DATASET_IDENTITY.sha256 for the parent corpus)."""
+        """Selection identity: which frozen parent examples were selected."""
         parts = "\n".join(
             f"{split}:{info['example_ids_sha256']}" for split, info in sorted(self.splits.items())
         )
         return hashlib.sha256(parts.encode("utf-8")).hexdigest()
+
+    @property
+    def sft_representation_identity(self) -> str:
+        """Identity of the exact token IDs and supervision labels used for SFT."""
+        payload = {
+            "parent_dataset_identity": self.parent_dataset_identity,
+            "selection_identity": self.sft_identity,
+            "tokenizer_identity": self.tokenizer_identity,
+            "renderer_schema_version": self.renderer_schema_version,
+            "max_sequence_length": self.max_sequence_length,
+            "splits": {split: info["representation_sha256"] for split, info in sorted(self.splits.items())},
+        }
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def build_sft_manifest(
@@ -269,12 +298,14 @@ def build_sft_manifest(
     max_sequence_length: int,
     selections: dict[str, list[Example]],
     audits: dict[str, dict[str, Any]],
+    tokenizer: JuniperTokenizer,
 ) -> SftManifest:
     splits: dict[str, dict[str, Any]] = {}
     for split, examples in selections.items():
         splits[split] = {
             "example_count": len(examples),
             "example_ids_sha256": _ids_sha256(examples),
+            "representation_sha256": representation_sha256(examples, tokenizer, max_sequence_length),
             "category_counts": audits[split]["category_selected_counts"],
             "category_targets": audits[split]["category_targets"],
             "category_rejected_oversized": audits[split]["category_rejected_oversized"],
@@ -300,6 +331,7 @@ def write_sft_manifest(manifest: SftManifest, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     payload = manifest.as_dict()
     payload["sft_identity"] = manifest.sft_identity
+    payload["sft_representation_identity"] = manifest.sft_representation_identity
     path.write_text(
         json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n", encoding="utf-8"
     )
@@ -391,7 +423,7 @@ def select_and_record_sft_subset(
     selections = {"train": train_outcome.examples, "validation": val_outcome.examples}
     audits = {"train": train_outcome.audit, "validation": val_outcome.audit}
     manifest = build_sft_manifest(
-        dataset_config, tokenizer_identity, seed, max_sequence_length, selections, audits
+        dataset_config, tokenizer_identity, seed, max_sequence_length, selections, audits, tokenizer
     )
     write_sft_manifest(manifest, output_dir / "sft_manifest.json")
     (output_dir / "sft_selection_audit.json").write_text(
@@ -411,6 +443,7 @@ __all__ = [
     "build_sft_manifest",
     "compute_flattened_targets",
     "count_categories",
+    "representation_sha256",
     "select_and_record_sft_subset",
     "select_sft_examples",
     "write_sft_manifest",

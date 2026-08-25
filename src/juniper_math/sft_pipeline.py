@@ -62,6 +62,16 @@ def _git_commit() -> str:
     return commit
 
 
+def require_clean_source_tree(source_commit: str, source_tree_state: str) -> None:
+    """Reject approval-candidate SFT runs without immutable source provenance."""
+    unavailable = "unavailable (git not found or not a repository)"
+    if source_tree_state != "clean" or source_commit in {"unknown", unavailable}:
+        raise JuniperConfigError(
+            "Phase 8 approval-candidate training requires a clean committed source tree. "
+            "Use a separately labeled development workflow for exploratory dirty-tree work."
+        )
+
+
 def _resolve_device(requested: str) -> torch.device:
     if requested == "cuda" and not torch.cuda.is_available():
         print(
@@ -297,6 +307,7 @@ def run_sft_train(
     source_commit, source_tree_state = __import__(
         "juniper_math.cli", fromlist=["describe_git_state"]
     ).describe_git_state()
+    require_clean_source_tree(source_commit, source_tree_state)
     device = _resolve_device(training_config.device)
     set_global_seed(training_config.seed)
 

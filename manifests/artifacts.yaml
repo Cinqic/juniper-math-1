@@ -152,8 +152,8 @@ artifacts:
 
   - artifact_id: "phase8_sft_training_config"
     path: "config/training_phase8_sft.yaml"
-    sha256: "67ba3f4d5a5778daaafc2490eba1704545edb7e77568b9fc9b11590fb025e1ab"
-    description: "Terra Phase 8 remediation SFT configuration (run_id phase8-sft-v3-remediated); historical v1/v2 configurations remain preserved in Git history."
+    sha256: "f00d57123aff6046ca65bd4dae0725d15440a2c2b46cdca9e4ad2dec2bf527c4"
+    description: "Phase 8 recovery SFT configuration (run_id phase8-sft-v4-recovery); historical rejected configurations remain preserved in Git history."
 
   - artifact_id: "dataset_shard_manifest"
     path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"

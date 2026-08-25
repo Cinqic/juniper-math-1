@@ -13,6 +13,7 @@ from juniper_math.sft_data import (
     CategoryCounts,
     SftDataError,
     compute_flattened_targets,
+    representation_sha256,
     select_and_record_sft_subset,
     select_sft_examples,
 )
@@ -196,3 +197,11 @@ def test_sft_identity_is_stable_and_order_independent():
         splits={"validation": {"example_ids_sha256": "bbb"}, "train": {"example_ids_sha256": "aaa"}},
     )
     assert m1.sft_identity == m2.sft_identity
+
+
+def test_representation_identity_changes_when_labels_change(tokenizer):
+    first = _example("arithmetic", 1)
+    changed_label = Example(**{**first.__dict__, "expected_answer": "999"})
+    assert representation_sha256([first], tokenizer, 256) != representation_sha256(
+        [changed_label], tokenizer, 256
+    )

@@ -5,6 +5,8 @@ cases."""
 
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 import yaml
 
@@ -31,13 +33,27 @@ def _mutated(tmp_path, **overrides):
 
 def test_loads_real_frozen_config():
     config = load_sft_training_config()
-    assert config.dataset_identity == "juniper-math-sft-v2"
+    assert config.dataset_identity == "juniper-math-sft-v3"
     assert config.tool_protocol_identity == "juniper-tool-protocol-v1"
     assert len(config.parent_checkpoint_sha256) == 64
 
 
-def test_verify_parent_checkpoint_passes_against_real_base():
-    config = load_sft_training_config()
+def test_verify_parent_checkpoint_passes_with_self_contained_fixture(tmp_path, monkeypatch):
+    """Unit tests must not require a release-only checkpoint in a CI clone.
+
+    Production training still calls the same fail-closed verifier against the
+    actual Phase 7 release asset.  This test only proves the verifier's
+    success path with controlled bytes and a matching declared digest.
+    """
+    checkpoint = tmp_path / "fixtures" / "phase7-base.pt"
+    checkpoint.parent.mkdir()
+    checkpoint.write_bytes(b"controlled test checkpoint")
+    config = replace(
+        load_sft_training_config(),
+        parent_checkpoint_path="fixtures/phase7-base.pt",
+        parent_checkpoint_sha256="e94708e19f47085e7a99d9033a44a37d28f991490be1c5383d4926355c9c3f61",
+    )
+    monkeypatch.setattr("juniper_math.sft_training_config.REPO_ROOT", tmp_path)
     verify_parent_checkpoint(config)  # must not raise
 
 
