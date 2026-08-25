@@ -7,8 +7,10 @@ from juniper_math.dataset.verify import verify_deterministic
 from juniper_math.sft_curriculum import (
     DIRECT_CATEGORIES,
     SAFETY_CATEGORIES,
+    TOOL_BUILDERS,
     build_independent_direct_examples,
     build_independent_safety_examples,
+    build_independent_tool_examples,
 )
 
 
@@ -44,3 +46,15 @@ def test_independent_safety_curriculum_is_deterministic_and_answerless():
         assert item.expected_answer is None
         assert item.tool_required is False
         assert item.tool_traces == ()
+
+
+def test_independent_tool_curriculum_is_deterministic_and_runtime_backed():
+    first = build_independent_tool_examples("train", 2, 5004032)
+    second = build_independent_tool_examples("train", 2, 5004032)
+    assert [item.to_dict() for item in first] == [item.to_dict() for item in second]
+    assert len(first) == len(TOOL_BUILDERS) * 2
+    for item in first:
+        validate_example(item)
+        assert item.tool_required is True
+        assert len(item.tool_traces) == 1
+        assert item.tool_traces[0].result["status"] == "success"

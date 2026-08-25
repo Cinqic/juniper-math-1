@@ -12,11 +12,18 @@ from __future__ import annotations
 
 import hashlib
 import random
+from dataclasses import replace
 from fractions import Fraction
 
 from juniper_math.dataset.generators.common import fmt_frac
+from juniper_math.dataset.generators.tools import (
+    make_financial_math,
+    make_tool_use,
+    make_unit_conversion,
+)
 from juniper_math.dataset.schema import Example
 from juniper_math.dataset.verify import evaluate_expression
+from juniper_math.tools.runtime import ToolRuntime
 
 CURRICULUM_SCHEMA_VERSION = "1.0.0"
 GENERATOR_ID = "phase8_independent_direct_curriculum"
@@ -41,6 +48,12 @@ SAFETY_CATEGORIES = (
     ("missing_information", "flag_missing_information"),
     ("undefined_operation", "flag_undefined"),
     ("unsupported_capability", "refuse_unsupported"),
+)
+
+TOOL_BUILDERS = (
+    ("unit_conversion", make_unit_conversion),
+    ("financial_math", make_financial_math),
+    ("tool_use", make_tool_use),
 )
 
 
@@ -439,10 +452,49 @@ def build_independent_safety_examples(split: str, examples_per_category: int, se
     return out
 
 
+def build_independent_tool_examples(split: str, examples_per_category: int, seed: int) -> list[Example]:
+    """Derive fresh, host-executed tool trajectories for each production tool.
+
+    The frozen parent corpus is never modified. Each call/result pair is made
+    by the real registered runtime, then re-identified as an independently
+    versioned Phase 8 record so it cannot be mistaken for parent selection.
+    """
+    if split not in {"train", "validation"}:
+        raise ValueError("Independent tool curriculum supports train or validation only.")
+    if examples_per_category < 1:
+        raise ValueError("examples_per_category must be positive.")
+    runtime = ToolRuntime()
+    out: list[Example] = []
+    for category, builder in TOOL_BUILDERS:
+        for index in range(examples_per_category):
+            source = builder(index + 1_000_000, seed, runtime).with_split(split)
+            key = f"{CURRICULUM_SCHEMA_VERSION}:tool:{category}:{split}:{index}:{seed}:{source.example_id}"
+            out.append(
+                replace(
+                    source,
+                    example_id=hashlib.sha256(key.encode()).hexdigest()[:24],
+                    generator_id=GENERATOR_ID,
+                    generator_version=CURRICULUM_SCHEMA_VERSION,
+                    family_id=f"independent_tool_{category}",
+                    template_id=f"independent_{source.template_id}",
+                    derivation_id=hashlib.sha256(key.encode()).hexdigest()[:16],
+                    seed=seed,
+                    provenance=(
+                        f"{GENERATOR_ID} v{CURRICULUM_SCHEMA_VERSION}; call/result executed by "
+                        "the registered Phase 3 ToolRuntime"
+                    ),
+                    notes="Independent Phase 8 runtime-executed tool curriculum record.",
+                )
+            )
+    return out
+
+
 __all__ = [
     "CURRICULUM_SCHEMA_VERSION",
     "DIRECT_CATEGORIES",
     "SAFETY_CATEGORIES",
+    "TOOL_BUILDERS",
     "build_independent_direct_examples",
     "build_independent_safety_examples",
+    "build_independent_tool_examples",
 ]
