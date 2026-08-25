@@ -591,9 +591,7 @@ def select_and_record_sft_subset(
             selections[split].extend(independent)
     if independent_tool_examples_per_category:
         for split in selections:
-            independent = build_independent_tool_examples(
-                split, independent_tool_examples_per_category, seed
-            )
+            independent = build_independent_tool_examples(split, independent_tool_examples_per_category, seed)
             for ex in independent:
                 tokenize_and_mask(ex, tokenizer, max_sequence_length)
             selections[split].extend(independent)
