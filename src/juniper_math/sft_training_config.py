@@ -48,6 +48,7 @@ class SftSubsetConfig:
     max_sequence_length: int
     category_weight_overrides: dict[str, float] = field(default_factory=dict)
     direct_prompt_variants: int = 0
+    independent_direct_examples_per_category: int = 0
 
 
 @dataclass(frozen=True)
@@ -138,6 +139,11 @@ def validate_sft_training_config(config: SftTrainingConfig) -> None:
     _positive_int(ss.validation_target_per_category, "sft_subset.validation_target_per_category")
     _positive_int(ss.max_sequence_length, "sft_subset.max_sequence_length")
     _positive_int(ss.direct_prompt_variants, "sft_subset.direct_prompt_variants", allow_zero=True)
+    _positive_int(
+        ss.independent_direct_examples_per_category,
+        "sft_subset.independent_direct_examples_per_category",
+        allow_zero=True,
+    )
     if not isinstance(ss.category_weight_overrides, dict) or not all(
         isinstance(k, str) and isinstance(v, (int, float)) and v > 0
         for k, v in ss.category_weight_overrides.items()

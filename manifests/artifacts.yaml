@@ -152,8 +152,8 @@ artifacts:
 
   - artifact_id: "phase8_sft_training_config"
     path: "config/training_phase8_sft.yaml"
-    sha256: "25c3a5a08518cdb969df0d68fa830b36ec5b8fd8282dc871396e3977c1baeabb"
-    description: "Phase 8 full recovery SFT configuration (run_id phase8-sft-v5-full-recovery); historical rejected and preflight configurations remain preserved in Git history."
+    sha256: "7e9f44d856c60555309022ef99906b1e676912561ad32cd5a223d2031d20f587"
+    description: "Phase 8 independent-direct-curriculum preflight configuration (run_id phase8-sft-v6-curriculum-preflight); historical rejected and preflight configurations remain preserved in Git history."
 
   - artifact_id: "dataset_shard_manifest"
     path: "data/processed/juniper-math-dataset-v1/shard_manifest.json"

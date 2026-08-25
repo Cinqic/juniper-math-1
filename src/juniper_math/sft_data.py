@@ -44,6 +44,7 @@ from juniper_math.dataset.io import example_from_dict
 from juniper_math.dataset.schema import Example
 from juniper_math.hashing import sha256_file
 from juniper_math.pilot_data import manifest_shard_files, verify_parent_dataset_shards
+from juniper_math.sft_curriculum import build_independent_direct_examples
 from juniper_math.sft_rendering import SftRenderingError, tokenize_and_mask
 from juniper_math.smoke_data import compute_stride_selection, epoch_order
 from juniper_math.tokenizer import JuniperTokenizer
@@ -52,9 +53,9 @@ from juniper_math.tokenizer import JuniperTokenizer
 # it adds a supervised response derived from the trusted runtime error rather
 # than training EOS directly after a context-only tool result.  The frozen
 # Phase 4 parent corpus is unchanged.
-SFT_DATASET_ID = "juniper-math-sft-v3"
-SFT_MANIFEST_SCHEMA_VERSION = "3.0.0"
-SFT_RENDERING_SCHEMA_VERSION = "3.0.0"
+SFT_DATASET_ID = "juniper-math-sft-v4"
+SFT_MANIFEST_SCHEMA_VERSION = "4.0.0"
+SFT_RENDERING_SCHEMA_VERSION = "4.0.0"
 
 _DIRECT_INSTRUCTION_FRAMES = (
     "Solve this mathematical question and provide the final value.\n{prompt}",
@@ -296,6 +297,13 @@ def _behavior_counts(examples: list[Example]) -> dict[str, int]:
     return counts
 
 
+def _category_counts(examples: list[Example]) -> dict[str, int]:
+    counts: dict[str, int] = {}
+    for e in examples:
+        counts[e.category] = counts.get(e.category, 0) + 1
+    return counts
+
+
 @dataclass(frozen=True)
 class SftManifest:
     schema_version: str
@@ -364,7 +372,7 @@ def build_sft_manifest(
             "example_ids_sha256": _ids_sha256(examples),
             "parent_example_ids_sha256": _ids_sha256(parent_examples),
             "representation_sha256": representation_sha256(examples, tokenizer, max_sequence_length),
-            "category_counts": audits[split]["category_selected_counts"],
+            "category_counts": _category_counts(examples),
             "category_targets": audits[split]["category_targets"],
             "category_rejected_oversized": audits[split]["category_rejected_oversized"],
             "difficulty_counts": _difficulty_counts(examples),
@@ -489,6 +497,7 @@ def select_and_record_sft_subset(
     dataset_config: DatasetConfig | None = None,
     category_weight_overrides: dict[str, float] | None = None,
     direct_prompt_variants: int = 0,
+    independent_direct_examples_per_category: int = 0,
 ) -> tuple[dict[str, list[Example]], SftManifest]:
     dataset_config = dataset_config or load_dataset_config()
     verify_parent_dataset_shards(dataset_config)
@@ -514,9 +523,18 @@ def select_and_record_sft_subset(
         split: augment_direct_instruction_examples(examples, direct_prompt_variants)
         for split, examples in parent_selections.items()
     }
+    if independent_direct_examples_per_category:
+        for split in selections:
+            independent = build_independent_direct_examples(
+                split, independent_direct_examples_per_category, seed
+            )
+            for ex in independent:
+                tokenize_and_mask(ex, tokenizer, max_sequence_length)
+            selections[split].extend(independent)
     audits = {"train": train_outcome.audit, "validation": val_outcome.audit}
     for split, examples in selections.items():
         audits[split]["direct_instruction_variants_per_parent"] = direct_prompt_variants
+        audits[split]["independent_direct_examples_per_category"] = independent_direct_examples_per_category
         audits[split]["total_examples_after_instruction_augmentation"] = len(examples)
     manifest = build_sft_manifest(
         dataset_config,
